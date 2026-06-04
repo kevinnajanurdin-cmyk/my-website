@@ -46,6 +46,7 @@
       </a>
       <nav class="primary-nav" aria-label="Primary">
         <a href="#fund">Fund</a>
+        <a href="approach.html">Approach</a>
         <a href="#founders">Founders</a>
         <a href="#insights">Insights</a>
         <a href="#invest">Invest</a>
@@ -81,6 +82,9 @@
 
       <div class="hero-video" role="button" tabindex="0" aria-label="Play introduction video">
         <div class="hero-video-thumb">
+          <video class="hero-video-el" playsinline preload="metadata">
+            <source src="assets/hero.mp4" type="video/mp4" />
+          </video>
           <span class="play-icon" aria-hidden="true">▶</span>
         </div>
         <p class="hero-video-caption">Watch our investment philosophy</p>
@@ -163,8 +167,8 @@
     <!-- THE FOUNDER-LED ADVANTAGE -->
     <section class="odds" id="invest">
       <aside class="odds-rail" aria-hidden="true">
-        <span class="odds-rail-mark"></span>
         <span class="odds-rail-label">The Founder-led Advantage</span>
+        <span class="odds-rail-mark"></span>
       </aside>
       <div class="odds-head">
         <h2 class="section-title">The Founder-led Advantage</h2>
@@ -305,6 +309,7 @@
           <div>
             <h4>Fund</h4>
             <a href="#fund">Strategy</a>
+            <a href="approach.html">Approach</a>
             <a href="#invest">Performance</a>
             <a href="#portal">Investor Portal</a>
           </div>
@@ -334,12 +339,13 @@
     <aside class="founder-panel-inner">
       <button class="founder-panel-close" data-close aria-label="Close">×</button>
       <div class="founder-panel-photo">
+        <img class="panel-scene" id="panel-scene" alt="" />
         <div class="founder-panel-photo-inner" id="panel-photo">
           <span id="panel-initials"></span>
         </div>
       </div>
       <div class="founder-panel-body">
-        <p class="founder-panel-eyebrow" id="panel-company"></p>
+        <div class="panel-logo-slot"><img class="panel-logo" id="panel-logo" alt="" /></div>
         <h3 class="founder-panel-name" id="panel-name"></h3>
         <p class="founder-panel-role" id="panel-role"></p>
         <dl class="founder-panel-stats">

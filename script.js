@@ -155,6 +155,50 @@ const LOGO_FILES = {
 const logoUrl = (company) =>
   `assets/companies/${encodeURIComponent(LOGO_FILES[company] || "").replace(/%2F/g, "/")}`;
 
+// Per-company render height (px). Tuned individually based on each source
+// file's visible content (some PNGs have heavy transparent whitespace, so they
+// need a larger height than aspect ratio alone would suggest).
+const LOGO_HEIGHTS = {
+  "Tesla":         70,   // T + TESLA stacked, narrow visible footprint
+  "Mercado Libre": 58,   // square, fully filled
+  "Money Forward": 74,   // icon + text, ~30% vertical whitespace
+  "Nvidia":        52,   // compact icon, full fill
+  "XPeng":         54,   // icon + wordmark
+  "Figma":         66,   // F + text, ~50% vertical whitespace
+  "Roblox":        78,   // wide wordmark + heavy whitespace (VFill 0.32)
+  "Rocket Lab":    36,   // wordmark
+  "Palantir":      30,   // wordmark
+  "Axon":          30,   // wordmark
+  "CATL":          28,   // wordmark
+  "Pro Medicus":   26,   // wordmark
+  "Coinbase":      26,   // wordmark
+  "Lumine":        24,   // wide wordmark
+  "Fortinet":      20,   // very wide wordmark
+};
+
+// Map company → scene/brand photo in assets/scenes/ (null = none yet)
+const SCENE_FILES = {
+  "Tesla": "tesla.webp",
+  "Nvidia": "nvidia.png",
+  "Palantir": "palantir.png",
+  "Coinbase": "coinbase.png",
+  "XPeng": "xpeng.png",
+  "Figma": "figma.png",
+  "Rocket Lab": "rocketlab.webp",
+  "Money Forward": "moneyforward.webp",
+  "Axon": "axon.webp",
+  "Lumine": "lumine.jpg",
+  "Fortinet": "fortinet.jpg",
+  "CATL": "catl.jpg",
+  "Pro Medicus": "promedicus.jpg",
+  "Mercado Libre": "mercadolibre.webp",
+  "Roblox": "roblox.jpg",
+};
+const sceneUrl = (company) => {
+  const f = SCENE_FILES[company];
+  return f ? `assets/scenes/${f}` : null;
+};
+
 // ─── Render founders into Coverflow stage ──────────────
 const stage = document.getElementById("coverflow-stage");
 const cards = [];
@@ -186,7 +230,8 @@ if (stage) {
 const panel = document.getElementById("founder-panel");
 const panelEls = {
   photo: document.getElementById("panel-photo"),
-  company: document.getElementById("panel-company"),
+  scene: document.getElementById("panel-scene"),
+  logo: document.getElementById("panel-logo"),
   name: document.getElementById("panel-name"),
   role: document.getElementById("panel-role"),
   founded: document.getElementById("panel-founded"),
@@ -200,7 +245,6 @@ function openPanel(i) {
   const f = founders[i];
   if (!f) return;
   activeIdx = i;
-  panelEls.company.textContent = f.company;
   panelEls.name.textContent = `${f.first} ${f.last}`;
   panelEls.role.textContent = f.role;
   panelEls.founded.textContent = f.founded;
@@ -208,16 +252,23 @@ function openPanel(i) {
   panelEls.geo.textContent = f.geo;
   panelEls.thesis.textContent = f.thesis;
   panelEls.photo.style.setProperty("--accent", f.accent);
-  // Update logo image in panel
-  let img = panelEls.photo.querySelector("img.panel-logo");
-  if (!img) {
-    img = document.createElement("img");
-    img.className = "panel-logo";
-    img.alt = "";
-    panelEls.photo.appendChild(img);
+
+  // Company logo now sits above the founder name (greyscale).
+  panelEls.logo.src = logoUrl(f.company);
+  panelEls.logo.alt = f.company;
+  // Adjust height per-company so all logos look roughly the same visual size
+  // (their source files have very different aspect ratios).
+  panelEls.logo.style.height = (LOGO_HEIGHTS[f.company] || 44) + "px";
+
+  // Photo: use the company scene shot if we have one, else the founder portrait.
+  const photo = sceneUrl(f.company) || portraitUrl(f.company);
+  if (photo) {
+    panelEls.scene.src = photo;
+    panelEls.scene.hidden = false;
+  } else {
+    panelEls.scene.removeAttribute("src");
+    panelEls.scene.hidden = true;
   }
-  img.src = logoUrl(f.company);
-  img.alt = f.company;
 
   panel.classList.add("open");
   panel.setAttribute("aria-hidden", "false");
@@ -649,8 +700,19 @@ if (video && heroSection) {
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onScroll, { passive: true });
 
-  video.addEventListener("click", () => {
-    const cap = video.querySelector(".hero-video-caption");
-    if (cap) cap.textContent = "Drop an <iframe> in .hero-video-thumb when ready.";
-  });
+  const videoEl = video.querySelector(".hero-video-el");
+  if (videoEl) {
+    const start = () => {
+      videoEl.controls = true;
+      video.classList.add("is-playing");
+      videoEl.play();
+    };
+    video.addEventListener("click", start, { once: true });
+    video.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        video.click();
+      }
+    });
+  }
 }
