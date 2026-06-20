@@ -72,6 +72,9 @@
       </div>
     </section>
 
+    <!-- Everything below scrolls up OVER the pinned intro (curtain effect) -->
+    <div class="approach-curtain">
+
     <!-- TEAM — portrait below intro (HIDDEN) ─────────────
     <section class="fund-section fund-section-tight approach-team approach-team-entry">
       <div class="container">
@@ -117,49 +120,40 @@
     </section>
 
     <!-- INVESTMENT PROCESS — sticky funnel + scroll-driven stage panels -->
-    <section class="fund-section fund-section-band">
+    <section class="fund-section fund-section-band" aria-label="Investment Process">
       <div class="container">
-        <header class="fund-section-head">
-          <h2 class="fund-h2">Investment Process</h2>
-        </header>
-
         <!-- Funnel: pinned to viewport while user scrolls.
              Three trapezoid rows stack to form the funnel; each reveals
              as scroll progress reaches its threshold. -->
         <div class="funnel-scroll-track">
           <div class="funnel-pin">
+            <canvas class="funnel-dots" id="funnel-dots" aria-hidden="true"></canvas>
             <div class="funnel-frame">
-              <p class="funnel-label funnel-label-top">~7,000 founder-led stocks</p>
+              <div class="funnel-center">
+                <p class="funnel-label funnel-eyebrow">The Investable Universe</p>
+                <div class="funnel-count-line">
+                  <p class="funnel-count" id="funnel-count">7,000</p>
+                  <!-- zero-width anchor: the unit hangs off the number's
+                       right edge without affecting its centring -->
+                  <span class="funnel-count-unit-anchor"><span class="funnel-count-unit">stocks</span></span>
+                </div>
 
-              <div class="funnel-rows">
-                <div class="funnel-row" data-stage="1">
-                  <div class="funnel-row-inner">
-                    <span class="funnel-row-num" aria-hidden="true">01</span>
-                    <h3 class="funnel-row-title">Strong Founder</h3>
-                    <p class="funnel-row-text">We rank the strongest founders using an intensive assessment combining qualitative judgements with a structured quantitative framework.</p>
+                <!-- The three filters below the count, shown one at a time —
+                     each crossfades in while its wave of dots is culled -->
+                <div class="funnel-stage">
+                  <div class="funnel-stage-item">
+                    <h3 class="funnel-stage-title">Strong Founder</h3>
+                    <p class="funnel-stage-text">Intensive founder assessment</p>
+                  </div>
+                  <div class="funnel-stage-item">
+                    <h3 class="funnel-stage-title">Strong Business</h3>
+                    <p class="funnel-stage-text">Rigorous bottom-up company research</p>
+                  </div>
+                  <div class="funnel-stage-item">
+                    <h3 class="funnel-stage-title">Margin of Safety</h3>
+                    <p class="funnel-stage-text">Attractive purchase price</p>
                   </div>
                 </div>
-                <div class="funnel-row" data-stage="2">
-                  <div class="funnel-row-inner">
-                    <span class="funnel-row-num" aria-hidden="true">02</span>
-                    <h3 class="funnel-row-title">Strong Business</h3>
-                    <p class="funnel-row-text">We assess each company to ensure the founder is building durable economics with high incremental returns on equity.</p>
-                  </div>
-                </div>
-                <div class="funnel-row" data-stage="3">
-                  <div class="funnel-row-inner">
-                    <span class="funnel-row-num" aria-hidden="true">03</span>
-                    <h3 class="funnel-row-title">Margin of Safety</h3>
-                    <p class="funnel-row-text">We invest only when the potential total rate of return provides a strong margin of safety against our long-term target.</p>
-                  </div>
-                </div>
-              </div>
-
-              <p class="funnel-label funnel-label-bottom">15&ndash;25 stocks</p>
-
-              <!-- Subtle scroll-progress indicator on the right edge -->
-              <div class="funnel-progress" aria-hidden="true">
-                <span class="funnel-progress-fill"></span>
               </div>
             </div>
           </div>
@@ -195,6 +189,8 @@
         </div>
       </div>
     </section>
+
+    </div><!-- /.approach-curtain -->
 
   </main>
 
@@ -282,15 +278,30 @@
         });
       }
 
-      // Dark sticky header while the dark intro band is in view.
+      // The intro is pinned (position: sticky) beneath the page; the rest
+      // of the content scrolls up over it like a curtain. Keep the dark
+      // header while the intro is still visible behind the curtain, and
+      // gently fade/settle the intro copy as it is buried. (Scroll math —
+      // an IntersectionObserver can't work here: the pinned intro never
+      // leaves the viewport, it only gets covered.)
       var introEl = document.querySelector('.approach-intro');
-      if (introEl && 'IntersectionObserver' in window) {
-        document.body.classList.add('over-hero');
-        new IntersectionObserver(function (entries) {
-          entries.forEach(function (e) {
-            document.body.classList.toggle('over-hero', e.isIntersecting);
-          });
-        }, { rootMargin: '-90px 0px 0px 0px', threshold: 0 }).observe(introEl);
+      var introInner = introEl ? introEl.querySelector('.container') : null;
+      var curtainEl = document.querySelector('.approach-curtain');
+      var introReduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (introEl) document.body.classList.add('over-hero');
+
+      function syncIntro() {
+        if (!introEl || !curtainEl) return;
+        // covered = how far the curtain has travelled toward the header's
+        // bottom edge (90px) — at 1 the dark intro is fully hidden
+        var crTop = curtainEl.getBoundingClientRect().top;
+        var runway = crTop + window.scrollY - 90;
+        var covered = Math.min(1, Math.max(0, window.scrollY / Math.max(1, runway)));
+        document.body.classList.toggle('over-hero', covered < 1);
+        if (introInner && !introReduceMotion) {
+          introInner.style.opacity = (1 - 0.65 * covered).toFixed(3);
+          introInner.style.transform = 'translateY(' + (covered * 24).toFixed(1) + 'px)';
+        }
       }
 
       // Reveal-on-scroll (plain scroll math — no IO/rAF dependency).
@@ -306,40 +317,249 @@
         }
       }
 
-      // Funnel: pinned while user scrolls through .funnel-scroll-track.
-      // Each row reveals at its scroll threshold (translateY + opacity).
-      // Previous rows stay revealed (fixed in place).
-      var rows         = [].slice.call(document.querySelectorAll('.funnel-row'));
-      var track        = document.querySelector('.funnel-scroll-track');
-      var progressFill = document.querySelector('.funnel-progress-fill');
-
-      // Each row's threshold: progress at which it reveals (0..1).
-      // Row 1 reveals on first sight of the section, then rows 2 and 3 follow.
-      var THRESHOLDS = [0.05, 0.38, 0.72];
-
-      function syncFunnel() {
-        if (!track || !rows.length) return;
-        var rect = track.getBoundingClientRect();
-        var vh = window.innerHeight || document.documentElement.clientHeight || 1;
-        var totalScroll = rect.height - vh;
-        if (totalScroll <= 0) return;
-        var scrolled = -rect.top;
-        var progress = scrolled / totalScroll;
-
-        if (progressFill) {
-          progressFill.style.height = Math.max(0, Math.min(100, progress * 100)).toFixed(1) + '%';
-        }
-
-        for (var i = 0; i < rows.length; i++) {
-          rows[i].classList.toggle('revealed', progress >= THRESHOLDS[i]);
-        }
-      }
-
-      function onScroll() { onReveal(); syncFunnel(); }
+      function onScroll() { onReveal(); syncIntro(); }
 
       onScroll();
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', onScroll, { passive: true });
+    })();
+
+    // ─── Funnel dots: the investable universe, culled by the funnel ──
+    // A full-bleed constellation of dots (the ~7,000-stock universe) fills the
+    // pinned viewport and diffuses upward, its density tapering smoothly
+    // to zero at the section top.
+    // Dots hold their positions and are culled — fading out in place,
+    // fully stationary — in three waves timed to the funnel row
+    // reveals. The 15 survivors converge into a row above the "15–25 stocks"
+    // caption at the end. Scroll-scrubbed: no free-running animation loop.
+    (function initFunnelDots() {
+      var track = document.querySelector('.funnel-scroll-track');
+      var pin = document.querySelector('.funnel-pin');
+      var canvas = document.getElementById('funnel-dots');
+      var frame = document.querySelector('.funnel-frame');
+      var centerEl = document.querySelector('.funnel-center');
+      var stageEls = [].slice.call(document.querySelectorAll('.funnel-stage-item'));
+      var countEl = document.getElementById('funnel-count');
+      var eyebrowEl = document.querySelector('.funnel-eyebrow');
+      if (!track || !pin || !canvas || !frame || !centerEl) return;
+
+      var reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var ctx = canvas.getContext('2d');
+      var SURVIVORS = 15;
+
+      // Cull waves timed to the row reveals (0.05 / 0.38 / 0.72)
+      var WINDOWS = [[0.06, 0.40], [0.40, 0.72], [0.72, 0.95]];
+      var FADE = 0.06; // each dot's individual fade length, in progress units
+
+      var TOTAL = 7000;                      // displayed universe size
+      var STAGE_W = [0.58, 0.27, 0.15];      // must match build()'s stage split
+      var lastCount = "";
+
+      var W = 0, H = 0, EXT = 0, dots = [], geom = null;
+
+      var clamp01 = function (v) { return Math.max(0, Math.min(1, v)); };
+      var smooth = function (t) { return t * t * (3 - 2 * t); };
+
+      // Landing-row position in canvas space: the 15 survivors settle just
+      // beneath the composition (count + filter columns), close to the rest.
+      // The centre group's box is layout-stable (the caption transforms are
+      // visual only), so rect-based measurement doesn't wobble.
+      function measure() {
+        var cvR = canvas.getBoundingClientRect();
+        var frR = frame.getBoundingClientRect();
+        var ctR = centerEl.getBoundingClientRect();
+        geom = {
+          rowY: ctR.bottom - cvR.top + 48,
+          cx: frR.left + frR.width / 2 - cvR.left,      // scene centre line
+          fw: frR.width,
+        };
+      }
+
+      // Sample a y position over the extended canvas. Density is full in the
+      // pinned area (y >= EXT) and tapers smoothly to zero toward the section
+      // top, so the field diffuses up through the heading with no hard edge.
+      function sampleY() {
+        for (var k = 0; k < 8; k++) {
+          var y = Math.random() * (EXT + H);
+          if (y >= EXT || Math.random() < smooth(y / EXT)) return y;
+        }
+        return EXT + Math.random() * H;
+      }
+
+      function build() {
+        // count scales with the full area; the taper means the extension
+        // contributes roughly half its area's worth of dots
+        var n = Math.round(Math.min(1500, Math.max(500, (W * (H + EXT * 0.5)) / 1100)));
+        dots = [];
+        for (var i = 0; i < n; i++) {
+          var roll = Math.random();
+          dots.push({
+            x: Math.random() * W,
+            y: sampleY(),
+            r: 0.7 + Math.random() * 1.1,
+            stage: roll < 0.58 ? 1 : roll < 0.85 ? 2 : 3, // which wave culls it
+            jitter: Math.random(),                        // moment within the wave
+            survivor: false,
+            slot: -1,
+          });
+        }
+        // survivors stay within the pinned area so the final glide is on-screen
+        var mainIdx = [];
+        for (var j = 0; j < n; j++) { if (dots[j].y >= EXT) mainIdx.push(j); }
+        var chosen = new Set();
+        while (chosen.size < Math.min(SURVIVORS, mainIdx.length)) {
+          chosen.add(mainIdx[Math.floor(Math.random() * mainIdx.length)]);
+        }
+        var slot = 0;
+        chosen.forEach(function (i) {
+          dots[i].survivor = true;
+          dots[i].slot = slot++;
+        });
+      }
+
+      function resize() {
+        // Full-bleed: span the viewport width (sans scrollbar), pin height,
+        // plus an upward extension reaching the top of the section (canvas
+        // is shifted up by EXT via style.top).
+        var w = document.documentElement.clientWidth;
+        var h = pin.clientHeight;
+        var section = track.closest('.fund-section');
+        var ext = section
+          ? Math.max(0, Math.round(track.getBoundingClientRect().top - section.getBoundingClientRect().top))
+          : 0;
+        if (!w || !h) return false;
+        if (w !== W || h !== H || ext !== EXT) {
+          W = w; H = h; EXT = ext;
+          var dpr = Math.min(2, window.devicePixelRatio || 1);
+          canvas.width = Math.round(W * dpr);
+          canvas.height = Math.round((H + EXT) * dpr);
+          canvas.style.width = W + 'px';
+          canvas.style.height = (H + EXT) + 'px';
+          canvas.style.top = -EXT + 'px';
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          build();
+        }
+        measure(); // cheap — keep in sync with font/layout shifts
+        return true;
+      }
+
+      function render(p) {
+        ctx.clearRect(0, 0, W, H + EXT);
+        var g = geom;
+        // survivors drift to the row over the final third of the runway —
+        // a long window so the convergence reads as gradual, not a snap
+        var conv = smooth(clamp01((p - 0.64) / 0.33));
+        var gap = Math.min(20, (g.fw * 0.4) / (SURVIVORS - 1));
+        var rowX0 = g.cx - (gap * (SURVIVORS - 1)) / 2;
+
+        for (var i = 0; i < dots.length; i++) {
+          var d = dots[i];
+          var x, y, r = d.r, alpha;
+          if (d.survivor) {
+            // hold position until the end, then glide into the landing row
+            alpha = 0.55 + 0.45 * conv;
+            x = d.x + (rowX0 + d.slot * gap - d.x) * conv;
+            y = d.y + (g.rowY - d.y) * conv;
+            r = d.r + (2.6 - d.r) * conv;
+          } else {
+            // fade out strictly in place at this dot's own moment within its
+            // wave — no movement at all, or the dots read as page scroll
+            var win = WINDOWS[d.stage - 1];
+            var at = win[0] + d.jitter * (win[1] - win[0] - FADE);
+            var t = smooth(clamp01((p - at) / FADE));
+            alpha = 0.32 * (1 - t);
+            if (alpha <= 0.004) continue;
+            x = d.x;
+            y = d.y;
+          }
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fillStyle = d.survivor
+            ? 'rgba(255,255,255,' + alpha.toFixed(3) + ')'
+            : 'rgba(168,178,194,' + alpha.toFixed(3) + ')';
+          ctx.fill();
+        }
+
+        // Countdown — same wave windows as the dot culls, so the number and
+        // the visible constellation always agree. Each wave's contribution
+        // ramps as its dots' fade moments pass (jitter is uniform across the
+        // window, so linear progress through the window ≈ fraction culled).
+        var culled = 0;
+        for (var s = 0; s < 3; s++) {
+          var ww = WINDOWS[s];
+          culled += STAGE_W[s] * clamp01((p - ww[0]) / (ww[1] - ww[0] - FADE));
+        }
+        var remaining = Math.max(
+          SURVIVORS,
+          Math.round(TOTAL - (TOTAL - SURVIVORS) * culled)
+        );
+        var txt = remaining.toLocaleString('en-AU');
+        if (countEl && txt !== lastCount) {
+          countEl.textContent = txt;
+          lastCount = txt;
+        }
+
+        // Stage captions — the three filters appear consecutively, each
+        // fading in as its wave begins culling, and stay once shown. A long
+        // eased window plus a gentle rise keeps the entrance soft.
+        for (var si = 0; si < stageEls.length; si++) {
+          var st = smooth(clamp01((p - WINDOWS[si][0]) / 0.14));
+          var so = st.toFixed(3);
+          if (stageEls[si].style.opacity !== so) {
+            stageEls[si].style.opacity = so;
+            stageEls[si].style.transform = 'translateY(' + ((1 - st) * 14).toFixed(1) + 'px)';
+          }
+        }
+
+        // "The Investable Universe" eyebrow fades out partway through the funnel
+        if (eyebrowEl) {
+          var eo = (1 - smooth(clamp01((p - 0.34) / 0.22))).toFixed(3);
+          if (eyebrowEl.style.opacity !== eo) eyebrowEl.style.opacity = eo;
+        }
+      }
+
+      function progress() {
+        var rect = track.getBoundingClientRect();
+        var total = rect.height - (window.innerHeight || document.documentElement.clientHeight || 1);
+        return total > 0 ? clamp01(-rect.top / total) : 1;
+      }
+
+      var repaint = function () {
+        if (resize()) render(reduceMotion ? 1 : progress());
+      };
+
+      repaint();
+      window.addEventListener('resize', repaint, { passive: true });
+      if ('ResizeObserver' in window) new ResizeObserver(repaint).observe(pin);
+
+      if (reduceMotion) return;
+
+      var ticking = false;
+      var parked = '';
+      window.addEventListener('scroll', function () {
+        var rect = track.getBoundingClientRect();
+        var vh = window.innerHeight || document.documentElement.clientHeight || 1;
+        if (rect.bottom < 0 || rect.top > vh) {
+          // Off-screen: park the canvas in the resolved state for the side
+          // it left on (end state below the scene, start state above it).
+          // Without this, a fast scroll can freeze a mid-cull frame whose
+          // stray dots peek back out at the section's edges.
+          var state = rect.bottom < 0 ? 'end' : 'start';
+          if (parked !== state) {
+            parked = state;
+            if (resize()) render(state === 'end' ? 1 : 0);
+          }
+          return;
+        }
+        parked = '';
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(function () {
+            if (resize()) render(progress());
+            ticking = false;
+          });
+        }
+      }, { passive: true });
     })();
   </script>
 </body>
