@@ -3156,3 +3156,48 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
     animation: none;
   }
 }
+
+/* ── Scroll-cover: the hero owns the first screen, the article rises over it ── */
+/* Float the back-link over the hero so the image centres in the full space
+   below the header rather than being pushed down by it. */
+.page-essay .essay { position: relative; }
+.page-essay .essay-back-wrap {
+  position: fixed;      /* stay stationary while the hero scrolls */
+  top: 92px;            /* just below the sticky site header */
+  left: 0;
+  right: 0;
+  z-index: 1;           /* on the hero layer; the rising article covers it */
+}
+.page-essay .essay-portrait {
+  position: sticky;
+  top: 92px;            /* sit just below the sticky site header */
+  z-index: 1;
+  min-height: calc(100vh - 92px);   /* reserve the whole first screen */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.page-essay .essay-portrait img {
+  max-height: calc(100vh - 92px - clamp(24px, 5vh, 56px));
+}
+.page-essay .essay-header,
+.page-essay .essay-body,
+.page-essay .essay-foot {
+  position: relative;
+  z-index: 2;           /* opaque panel that slides over the portrait */
+  background: var(--bg);
+}
+.page-essay .essay-header {
+  border-radius: 22px 22px 0 0;            /* rounded leading edge as it rises */
+  box-shadow: 0 -24px 60px -24px rgba(20, 30, 50, .22);
+}
+@media (max-width: 540px) {
+  .page-essay .essay-back-wrap { top: 76px; }
+  .page-essay .essay-portrait {
+    top: 76px;
+    min-height: calc(100vh - 76px);
+  }
+  .page-essay .essay-portrait img {
+    max-height: calc(100vh - 76px - clamp(16px, 4vh, 40px));
+  }
+}
