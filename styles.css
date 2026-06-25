@@ -1906,7 +1906,7 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
   margin: 0;
   font-family: var(--sans);
   font-weight: 600;
-  font-size: clamp(36px, 3.8vw, 52px);
+  font-size: clamp(26px, 2.4vw, 34px);
   line-height: 1.05;
   letter-spacing: -.01em;
   color: var(--ink);
