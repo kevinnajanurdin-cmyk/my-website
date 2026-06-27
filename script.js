@@ -324,6 +324,12 @@ if (coverflow && cards.length) {
   const FALLOFF = 0.26;     // opacity falloff per step (1 - x*FALLOFF)
   const MIN_OPACITY = 0.12;
 
+  // Entrance: on load the cards fan out from behind the lead card. `entrance`
+  // ramps 0 → 1; renderCoverflow scales each card's spread/depth/rotation and
+  // the off-centre cards' opacity by it. Reduced motion jumps straight to 1.
+  const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let entrance = prefersReduced ? 1 : 0;
+
   function renderCoverflow() {
     const active = cfPos;
     const activeInt = Math.round(active);
@@ -336,10 +342,12 @@ if (coverflow && cards.length) {
       // Soft cap on far-away cards so they don't fly off-screen too aggressively
       const clamped = Math.sign(offset) * Math.min(abs, 6);
 
-      const tx = clamped * SPREAD_X;
-      const tz = -abs * DEPTH_Z;
-      const ry = -clamped * ROTATE_Y;
-      const opacity = abs > 4 ? 0 : Math.max(MIN_OPACITY, 1 - abs * FALLOFF);
+      const tx = clamped * SPREAD_X * entrance;
+      const tz = -abs * DEPTH_Z * entrance;
+      const ry = -clamped * ROTATE_Y * entrance;
+      const base = abs > 4 ? 0 : Math.max(MIN_OPACITY, 1 - abs * FALLOFF);
+      // Lead card is present from the first frame; the rest fade in as they fan out.
+      const opacity = abs < 0.5 ? base : base * entrance;
       const zi = 100 - Math.round(abs * 10);
 
       card.style.transform =
@@ -373,6 +381,23 @@ if (coverflow && cards.length) {
   // Initial paint
   renderCoverflow();
   window.addEventListener("resize", renderCoverflow, { passive: true });
+
+  // Play the fan-out entrance once, in step with the stage's CSS fade-in.
+  if (!prefersReduced) {
+    const ease = (p) => 1 - Math.pow(1 - p, 3); // easeOutCubic
+    const DURATION = 900;
+    const startEntrance = (t0) => {
+      const step = (t) => {
+        const p = Math.min(1, (t - t0) / DURATION);
+        entrance = ease(p);
+        renderCoverflow();
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    // Hold ~350ms so the fan-out begins with the stage fade-in (CSS delay).
+    setTimeout(() => requestAnimationFrame(startEntrance), 350);
+  }
 
   // ─── Hover-to-flick navigation ───────────────────────
   // The carousel no longer responds to page scroll. Instead the cursor's

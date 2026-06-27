@@ -203,11 +203,11 @@ body.over-hero .btn-outline:hover { color: var(--dark); }
   top: 20%;
   left: -14%;
   background: linear-gradient(330deg,
-    rgba(82, 112, 140, .24) 0%,
-    rgba(44, 60, 86, .10) 40%,
-    transparent 65%);
+    rgba(82, 112, 140, .34) 0%,
+    rgba(44, 60, 86, .16) 42%,
+    transparent 68%);
   border-right: none;
-  border-left: 1px solid rgba(170, 186, 208, .08);
+  border-left: 1px solid rgba(170, 186, 208, .15);
 }
 .hero-shape-right {
   bottom: -28%;
@@ -934,6 +934,11 @@ body.over-hero .btn-outline:hover { color: var(--dark); }
   position: relative;
   width: 100%;
   min-height: 0;
+  /* Entrance: the card stack fades in as the cards fan out (opacity only —
+     transform is reserved for the static nudge below + the per-card JS
+     transforms, so animating it here would fight them). */
+  opacity: 0;
+  animation: coverflow-fade .9s cubic-bezier(.2,.7,.2,1) .35s forwards;
   /* Nudge the carousel down a tiny bit (matches the +10px on name/role,
      progress, hint so the spacing between them is unchanged). */
   transform: translateY(10px);
@@ -1094,6 +1099,33 @@ body.over-hero .btn-outline:hover { color: var(--dark); }
   /* Cancel the parent's +3vh shift, then nudge down with the name/role +
      progress line (16 + 10px), plus 6px more to open the gap above the hint. */
   transform: translateY(calc(-3vh + 32px));
+}
+
+/* ─── COVERFLOW: staggered entrance for the trailing elements ───
+   The heading reveals via the scroll observer (.coverflow-head.reveal) and the
+   cards fan out via JS; the meta, progress and hint then fade up in sequence so
+   the whole hero composition settles from the top down. */
+/* Opacity-only fades: each of these carries a static positioning transform
+   (the +44px / +26px / -3vh nudges), so a translate-based rise would override
+   it and shift the element. Fade in place to keep their positions intact. */
+.coverflow-meta,
+.coverflow-progress,
+.coverflow-hint {
+  opacity: 0;
+  animation: coverflow-fade .8s cubic-bezier(.2,.7,.2,1) forwards;
+}
+.coverflow-meta { animation-delay: .9s; }
+.coverflow-progress { animation-delay: 1.05s; }
+.coverflow-hint { animation-delay: 1.2s; }
+@keyframes coverflow-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .coverflow-stage,
+  .coverflow-meta,
+  .coverflow-progress,
+  .coverflow-hint { opacity: 1; animation: none; }
 }
 
 /* ─── COVERFLOW: tighter on smaller screens ────────────── */
