@@ -177,6 +177,21 @@
       </div>
     </section>
 
+    <!-- INTRO VIDEO (relocated from homepage hero) — hidden ───────── -->
+    <section class="fund-section approach-video-section" aria-label="Investment philosophy video" style="display:none">
+      <div class="container">
+        <div class="hero-video approach-video" role="button" tabindex="0" aria-label="Play introduction video" data-reveal>
+          <div class="hero-video-thumb">
+            <video class="hero-video-el" playsinline preload="metadata">
+              <source src="assets/hero.mp4" type="video/mp4" />
+            </video>
+            <span class="play-icon" aria-hidden="true">▶</span>
+          </div>
+          <p class="hero-video-caption">Watch our investment philosophy</p>
+        </div>
+      </div>
+    </section>
+
     <!-- CLOSING CTA ──────────────────────────────────────── -->
     <section class="fund-section">
       <div class="container">
@@ -261,6 +276,23 @@
       // Footer year
       var y = document.getElementById('year');
       if (y) y.textContent = new Date().getFullYear();
+
+      // Intro video — click / Enter to play with native controls
+      var introVideo = document.querySelector('.approach-video');
+      if (introVideo) {
+        var vEl = introVideo.querySelector('.hero-video-el');
+        if (vEl) {
+          var startVideo = function () {
+            vEl.controls = true;
+            introVideo.classList.add('is-playing');
+            vEl.play();
+          };
+          introVideo.addEventListener('click', startVideo, { once: true });
+          introVideo.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); introVideo.click(); }
+          });
+        }
+      }
 
       // Mobile menu toggle
       var toggle = document.querySelector('.menu-toggle');
@@ -347,8 +379,10 @@
       var ctx = canvas.getContext('2d');
       var SURVIVORS = 15;
 
-      // Cull waves timed to the row reveals (0.05 / 0.38 / 0.72)
-      var WINDOWS = [[0.06, 0.40], [0.40, 0.72], [0.72, 0.95]];
+      // Cull waves — compressed into the first ~60% of the runway so the
+      // universe dims/clears early, leaving the back half for the slow gather.
+      // (Also drives the countdown + filter captions, which stay in sync.)
+      var WINDOWS = [[0.06, 0.25], [0.25, 0.43], [0.43, 0.58]];
       var FADE = 0.06; // each dot's individual fade length, in progress units
 
       var TOTAL = 7000;                      // displayed universe size
@@ -446,9 +480,10 @@
       function render(p) {
         ctx.clearRect(0, 0, W, H + EXT);
         var g = geom;
-        // survivors drift to the row over the final third of the runway —
-        // a long window so the convergence reads as gradual, not a snap
-        var conv = smooth(clamp01((p - 0.64) / 0.33));
+        // survivors drift to the row over ~the back half of the runway —
+        // a long, early-starting window (paired with the taller scroll-track)
+        // so the gather plays out slowly and legibly, not as a quick snap
+        var conv = smooth(clamp01((p - 0.50) / 0.47));
         var gap = Math.min(20, (g.fw * 0.4) / (SURVIVORS - 1));
         var rowX0 = g.cx - (gap * (SURVIVORS - 1)) / 2;
 
@@ -467,7 +502,7 @@
             var win = WINDOWS[d.stage - 1];
             var at = win[0] + d.jitter * (win[1] - win[0] - FADE);
             var t = smooth(clamp01((p - at) / FADE));
-            alpha = 0.32 * (1 - t);
+            alpha = 0.50 * (1 - t);
             if (alpha <= 0.004) continue;
             x = d.x;
             y = d.y;
@@ -534,7 +569,6 @@
 
       if (reduceMotion) return;
 
-      var ticking = false;
       var parked = '';
       window.addEventListener('scroll', function () {
         var rect = track.getBoundingClientRect();
@@ -552,13 +586,12 @@
           return;
         }
         parked = '';
-        if (!ticking) {
-          ticking = true;
-          requestAnimationFrame(function () {
-            if (resize()) render(progress());
-            ticking = false;
-          });
-        }
+        // Draw synchronously, in step with the scroll. The scene is light
+        // (≤1500 dots), so the old requestAnimationFrame throttle bought
+        // nothing but a one-frame lag: during a fast scroll the canvas could
+        // fall a frame behind and flash a stale mid-cull frame — stray dots
+        // clipped above the next section. Drawing here keeps it exact.
+        if (resize()) render(progress());
       }, { passive: true });
     })();
   </script>

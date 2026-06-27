@@ -195,7 +195,7 @@ body.over-hero .btn-outline:hover { color: var(--dark); }
   z-index: 1;
   transform: rotate(45deg);
   opacity: 0;
-  animation: hero-shape-in 2.2s ease-out 1.6s forwards;
+  animation: hero-shape-in 1s ease-out .4s forwards;
   transition: transform .6s cubic-bezier(.2,.7,.2,1);
   will-change: transform, opacity;
 }
@@ -210,8 +210,8 @@ body.over-hero .btn-outline:hover { color: var(--dark); }
   border-left: 1px solid rgba(170, 186, 208, .08);
 }
 .hero-shape-right {
-  bottom: -8%;
-  right: -8%;
+  bottom: -28%;
+  right: -28%;
   background: linear-gradient(330deg,
     rgba(60, 86, 114, .46) 0%,
     rgba(44, 60, 86, .24) 52%,
@@ -219,7 +219,7 @@ body.over-hero .btn-outline:hover { color: var(--dark); }
   border-left: 1px solid rgba(170, 186, 208, .14);
 }
 @keyframes hero-shape-in {
-  to { opacity: .95; }
+  to { opacity: .22; }
 }
 
 /* Hero glow — a soft luminous depth, like light alive beneath the surface. */
@@ -369,7 +369,6 @@ body.over-hero .btn-outline:hover { color: var(--dark); }
 /* ─── ABOUT ────────────────────────────────────────────── */
 .about {
   padding: clamp(96px, 14vh, 160px) 0;
-  border-top: 1px solid var(--line);
 }
 .about-inner { max-width: 1000px; margin: 0 auto; }
 .about-headline {
@@ -878,40 +877,66 @@ body.over-hero .btn-outline:hover { color: var(--dark); }
 .footer-bottom a:hover { color: var(--on-dark); }
 
 /* ─── FOUNDERS COVERFLOW ───────────────────────────────── */
+.page-home .hero-founders {
+  margin-top: -93px;
+}
 .coverflow {
   position: relative;
   background: var(--bg);
-  /* scroll runway: ~40vh per founder + 100vh for the pin */
-  height: calc(15 * 40vh + 100vh);
+  /* Carousel is navigated by hover, not scroll — so it's a single full
+     screen rather than a tall scroll runway. */
+  height: 100vh;
+  /* Contain only the cards' sideways spill. `clip` on the x-axis (vs an
+     all-sides clip on the pin) leaves the y-axis free, so the decorative
+     hero diamonds flow down past the "About the Fund" seam instead of being
+     sliced flat there. `clip` (not `hidden`) avoids creating a scroll
+     container. */
+  overflow-x: clip;
 }
 .coverflow-pin {
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow: hidden;
+  /* No overflow clip here: clipping all four sides sliced the decorative hero
+     diamonds flat at the pin's bottom edge — the hard line at the "About the
+     Fund" seam. The cards' sideways spill is instead contained horizontally by
+     `.coverflow { overflow-x: clip }`, which lets the diamonds bleed past the
+     bottom edge and flow into the next section. */
+  overflow: visible;
 }
 .coverflow-inner {
   height: 100%;
   display: grid;
   grid-template-rows: auto 1fr auto auto auto;
   align-items: center;
-  gap: clamp(16px, 2vh, 28px);
-  padding: clamp(96px, 12vh, 140px) 24px clamp(32px, 5vh, 56px);
+  gap: clamp(28px, 4.5vh, 56px);
+  padding: clamp(93px, 9vh, 108px) 24px clamp(32px, 5vh, 56px);
   max-width: 1400px;
   margin: 0 auto;
+  /* Shift the carousel composition (heading + cards + meta + progress) as one
+     unit. The earlier -28px raise, plus 3vh ("3% lower") back down. The hint
+     is pinned separately (see .coverflow-hint) so it stays put. */
+  transform: translateY(calc(3vh - 28px));
 }
 .coverflow-head {
   text-align: center;
+  margin-top: clamp(28px, 6vh, 72px);
 }
 .coverflow-head .section-title {
   font-size: clamp(28px, 3.5vw, 48px);
   margin: 16px 0 0;
+  /* Nudge the title up slightly (transform so the grid's 1fr stage doesn't
+     absorb the shift). */
+  transform: translateY(-16px);
 }
 
 .coverflow-stage {
   position: relative;
   width: 100%;
   min-height: 0;
+  /* Nudge the carousel down a tiny bit (matches the +10px on name/role,
+     progress, hint so the spacing between them is unchanged). */
+  transform: translateY(10px);
   perspective: 1600px;
   perspective-origin: 50% 50%;
   transform-style: preserve-3d;
@@ -1008,6 +1033,8 @@ body.over-hero .btn-outline:hover { color: var(--dark); }
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  /* Nudge the active founder name/role down (18 + 16 + 10px). */
+  transform: translateY(44px);
 }
 .coverflow-active-name {
   font-family: var(--serif);
@@ -1031,6 +1058,8 @@ body.over-hero .btn-outline:hover { color: var(--dark); }
   flex-direction: column;
   align-items: stretch;
   gap: 14px;
+  /* Nudge the progress line down (16 + 10px, with name/role + hint). */
+  transform: translateY(26px);
 }
 .coverflow-progress-bar {
   position: relative;
@@ -1062,11 +1091,13 @@ body.over-hero .btn-outline:hover { color: var(--dark); }
   text-transform: uppercase;
   color: var(--ink-mute);
   margin: 0;
+  /* Cancel the parent's +3vh shift, then nudge down with the name/role +
+     progress line (16 + 10px), plus 6px more to open the gap above the hint. */
+  transform: translateY(calc(-3vh + 32px));
 }
 
 /* ─── COVERFLOW: tighter on smaller screens ────────────── */
 @media (max-width: 900px) {
-  .coverflow { height: calc(15 * 50vh + 100vh); }
   .cover-card { width: 200px; height: 280px; margin-left: -100px; margin-top: -140px; }
   .cover-card-fallback { font-size: 64px; }
 }
@@ -1306,6 +1337,7 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
   body { font-size: 17px; }
   .header-inner { height: 76px; }
   .brand-logo { height: 48px; }
+  .page-home .hero-founders { margin-top: -77px; }
   .footer-links { grid-template-columns: 1fr 1fr; }
   .insights-list li { grid-template-columns: 1fr; gap: 6px; }
   .footer-bottom { flex-direction: column; }
@@ -2090,6 +2122,19 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
   .js [data-reveal] { opacity: 1 !important; transform: none !important; transition: none; }
 }
 
+/* The intro video reveals from a blur, but the generic [data-reveal].is-visible
+   rule above only restores opacity/transform — so the blur(10px) on .hero-video
+   never clears. Reset (and transition) the filter here too. */
+.js .hero-video {
+  transition: opacity .7s cubic-bezier(.2,.7,.2,1) var(--d, 0s),
+              transform .7s cubic-bezier(.2,.7,.2,1) var(--d, 0s),
+              filter .7s cubic-bezier(.2,.7,.2,1) var(--d, 0s);
+}
+.hero-video.is-visible { filter: none; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-video { filter: none !important; }
+}
+
 /* ── Hero (navy, single line, compact) ────────────────────── */
 .approach-hero {
   background: var(--dark);
@@ -2244,7 +2289,7 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
 
 .funnel-scroll-track {
   position: relative;
-  height: 220vh;
+  height: 300vh; /* taller = more scroll runway so the dot gather plays out slowly */
 }
 .funnel-pin {
   position: sticky;
@@ -3232,4 +3277,27 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
   .page-essay .essay-portrait img {
     max-height: calc(100vh - 76px - clamp(16px, 4vh, 40px));
   }
+}
+
+/* ── Short deep-navy gradient at the foot of the large dark sections ──
+   Layered over the flat --dark fill: a brief fade into the site's deep
+   blue (#070a14) across the bottom ~120px, leaving the rest of the panel
+   unchanged. Sits in the background layer, so it never dims the text on
+   top. (.hero is excluded — it already has its own bottom-corner vignette.) */
+.odds,
+.fund-section-band,
+.approach-hero,
+.approach-intro,
+.insights-intro,
+.ins-subscribe {
+  background: linear-gradient(to top, rgba(7, 10, 20, 0.5) 0%, rgba(7, 10, 20, 0) 120px), var(--dark);
+}
+
+/* Investable-universe (funnel) section only — also fade in from the TOP, with
+   a longer reach down the section, over the shared short bottom gradient. */
+.fund-section-band[aria-label="Investment Process"] {
+  background:
+    linear-gradient(to bottom, rgba(7, 10, 20, 0.5) 0%, rgba(7, 10, 20, 0) 360px),
+    linear-gradient(to top,    rgba(7, 10, 20, 0.5) 0%, rgba(7, 10, 20, 0) 120px),
+    var(--dark);
 }
