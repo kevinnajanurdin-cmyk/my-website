@@ -314,8 +314,8 @@ const cfProgress = document.getElementById("cf-progress");
 if (coverflow && cards.length) {
   const total = cards.length;
   const pad2 = (n) => String(n).padStart(2, "0");
-  let cfTicking = false;
   let lastActiveInt = -1;
+  let cfPos = 0;            // floating active index (0 … total-1), hover-driven
 
   // Tunables — feel free to adjust
   const SPREAD_X = 240;     // px between adjacent cards on the arc
@@ -324,14 +324,8 @@ if (coverflow && cards.length) {
   const FALLOFF = 0.26;     // opacity falloff per step (1 - x*FALLOFF)
   const MIN_OPACITY = 0.12;
 
-  function updateCoverflow() {
-    const rect = coverflow.getBoundingClientRect();
-    const scrollable = coverflow.offsetHeight - window.innerHeight;
-    const progress = scrollable > 0
-      ? Math.max(0, Math.min(1, -rect.top / scrollable))
-      : 0;
-
-    const active = progress * (total - 1);
+  function renderCoverflow() {
+    const active = cfPos;
     const activeInt = Math.round(active);
 
     for (let i = 0; i < total; i++) {
@@ -364,21 +358,85 @@ if (coverflow && cards.length) {
       lastActiveInt = activeInt;
     }
 
+    const progress = total > 1 ? active / (total - 1) : 0;
     if (cfProgress) cfProgress.style.transform = `scaleX(${progress.toFixed(4)})`;
-    cfTicking = false;
   }
 
-  const onCfScroll = () => {
-    if (!cfTicking) {
-      requestAnimationFrame(updateCoverflow);
-      cfTicking = true;
-    }
+  // Set the floating position (clamped) and repaint only if it changed.
+  const setPos = (p) => {
+    const next = Math.max(0, Math.min(total - 1, p));
+    if (next === cfPos) return;
+    cfPos = next;
+    renderCoverflow();
   };
 
   // Initial paint
-  updateCoverflow();
-  window.addEventListener("scroll", onCfScroll, { passive: true });
-  window.addEventListener("resize", onCfScroll, { passive: true });
+  renderCoverflow();
+  window.addEventListener("resize", renderCoverflow, { passive: true });
+
+  // ─── Hover-to-flick navigation ───────────────────────
+  // The carousel no longer responds to page scroll. Instead the cursor's
+  // horizontal distance from the centred card drives it: just past the card
+  // edge it eases forward/back slowly; toward the screen edges it accelerates.
+  // Direction follows the side the cursor is on (right = next, left = prev).
+  const centerX = () => window.innerWidth / 2;
+  const cardHalf = () => (cards[0] ? cards[0].offsetWidth : 280) / 2;
+
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches &&
+      matchMedia("(hover: hover)").matches) {
+    const MIN_STEP = 0.013;  // founders/frame just past the card edge (~0.8/s)
+    const MAX_STEP = 0.13;   // founders/frame at the screen edge (~8/s)
+    const RAMP = 1.4;        // acceleration curve from MIN → MAX with distance
+    const DEAD_PAD = 12;     // px of neutral space beyond the card edge
+    let pointerX = null;
+    let hoverRaf = null;
+
+    // Run only while the carousel is on-screen and no modal is open.
+    const onScreen = () => {
+      const r = coverflow.getBoundingClientRect();
+      return r.bottom > 0 && r.top < window.innerHeight &&
+        !document.body.classList.contains("panel-open");
+    };
+
+    const tick = () => {
+      if (pointerX == null || !onScreen()) { hoverRaf = null; return; }
+      const cx = centerX();
+      const dead = cardHalf() + DEAD_PAD;
+      const dx = pointerX - cx;
+      const adx = Math.abs(dx);
+      if (adx > dead) {
+        const reach = Math.max(1, cx - dead);
+        const t = Math.min(1, (adx - dead) / reach);
+        const speed = MIN_STEP + (MAX_STEP - MIN_STEP) * Math.pow(t, RAMP);
+        setPos(cfPos + Math.sign(dx) * speed);
+      }
+      hoverRaf = requestAnimationFrame(tick);
+    };
+
+    const pin = coverflow.querySelector(".coverflow-pin") || coverflow;
+    pin.addEventListener("mousemove", (e) => {
+      pointerX = e.clientX;
+      if (hoverRaf == null) hoverRaf = requestAnimationFrame(tick);
+    }, { passive: true });
+    pin.addEventListener("mouseleave", () => { pointerX = null; });
+  }
+
+  // ─── Touch: drag to flick (mobile, where hover is unavailable) ───
+  if (matchMedia("(hover: none)").matches || "ontouchstart" in window) {
+    const stageEl = document.getElementById("coverflow-stage") || coverflow;
+    let touchX = null, touchStartPos = 0;
+    stageEl.addEventListener("touchstart", (e) => {
+      touchX = e.touches[0].clientX;
+      touchStartPos = cfPos;
+    }, { passive: true });
+    stageEl.addEventListener("touchmove", (e) => {
+      if (touchX == null) return;
+      const dx = e.touches[0].clientX - touchX;
+      const perCard = window.innerWidth / 3;   // drag this far → one founder
+      setPos(touchStartPos - dx / perCard);
+    }, { passive: true });
+    stageEl.addEventListener("touchend", () => { touchX = null; });
+  }
 }
 
 // ─── Animated counters ─────────────────────────────────
@@ -700,7 +758,7 @@ if (odds.length) {
 })();
 
 // ─── Hero glow + shape parallax ──────────────────────
-const heroEl = document.querySelector(".hero");
+const heroEl = document.querySelector("[data-hero-stage]") || document.querySelector(".hero");
 const glow = document.querySelector(".hero-glow");
 const shapes = document.querySelectorAll(".hero-shape");
 if (heroEl && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -730,7 +788,7 @@ if (heroEl && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
 
 // ─── Hero ripple (interactive water surface) ───────────
 (function initRipple() {
-  const hero = document.querySelector(".hero");
+  const hero = document.querySelector("[data-hero-stage]") || document.querySelector(".hero");
   const canvas = document.getElementById("hero-ripple");
   if (!hero || !canvas) return;
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -848,6 +906,7 @@ if (heroEl && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
 })();
 
 // ─── Header: transparent over hero, opaque elsewhere ───
+// (The founders hero is light, so the header keeps its normal dark text.)
 const heroForHeader = document.querySelector(".hero");
 if (heroForHeader) {
   const headerIO = new IntersectionObserver(

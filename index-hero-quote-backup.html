@@ -63,35 +63,32 @@
 
   <main id="top">
 
-    <!-- HERO — founders carousel -->
-    <section class="hero-founders" id="founders" aria-label="The founders we back">
-      <div class="coverflow coverflow--hero">
-        <div class="coverflow-pin" data-hero-stage>
-          <span class="hero-shape hero-shape-left" aria-hidden="true"></span>
-          <span class="hero-shape hero-shape-right" aria-hidden="true"></span>
-          <div class="coverflow-inner">
-            <header class="coverflow-head">
-              <p class="section-eyebrow">The founders we back</p>
-              <h2 class="section-title">Fifteen founders<br/>building the next decade.</h2>
-            </header>
+    <!-- HERO -->
+    <section class="hero">
+      <span class="hero-glow" aria-hidden="true"></span>
+      <span class="hero-shape hero-shape-left" aria-hidden="true"></span>
+      <span class="hero-shape hero-shape-right" aria-hidden="true"></span>
+      <canvas class="hero-ripple" id="hero-ripple" aria-hidden="true"></canvas>
+      <div class="container hero-inner">
+        <p class="eyebrow">Founder-led global equities</p>
+        <blockquote class="hero-quote">
+          <span>A source within</span>
+          <span>Deep inside</span>
+          <span>Sets in motion</span>
+          <span>What occurs outside</span>
+        </blockquote>
+      </div>
 
-            <div class="coverflow-stage" id="coverflow-stage" aria-roledescription="carousel">
-              <!-- cards rendered by script.js -->
-            </div>
+      <div class="cinema-overlay" id="cinema-overlay" aria-hidden="true"></div>
 
-            <div class="coverflow-meta">
-              <p class="coverflow-active-name" id="cf-name">&nbsp;</p>
-              <p class="coverflow-active-role" id="cf-role">&nbsp;</p>
-            </div>
-
-            <div class="coverflow-progress" aria-hidden="true">
-              <span class="coverflow-progress-bar">
-                <span class="coverflow-progress-fill" id="cf-progress"></span>
-              </span>
-            </div>
-            <p class="coverflow-hint">Click a founder to learn about their story</p>
-          </div>
+      <div class="hero-video" role="button" tabindex="0" aria-label="Play introduction video">
+        <div class="hero-video-thumb">
+          <video class="hero-video-el" playsinline preload="metadata">
+            <source src="assets/hero.mp4" type="video/mp4" />
+          </video>
+          <span class="play-icon" aria-hidden="true">▶</span>
         </div>
+        <p class="hero-video-caption">Watch our investment philosophy</p>
       </div>
     </section>
 
@@ -214,14 +211,43 @@
       </div>
     </section>
 
+    <!-- FOUNDERS COVERFLOW -->
+    <section class="coverflow" id="founders">
+      <div class="coverflow-pin">
+        <div class="coverflow-inner">
+          <header class="coverflow-head">
+            <p class="section-eyebrow">The founders we back</p>
+            <h2 class="section-title">Fifteen founders<br/>building the next decade.</h2>
+          </header>
+
+          <div class="coverflow-stage" id="coverflow-stage" aria-roledescription="carousel">
+            <!-- cards rendered by script.js -->
+          </div>
+
+          <div class="coverflow-meta">
+            <p class="coverflow-active-name" id="cf-name">&nbsp;</p>
+            <p class="coverflow-active-role" id="cf-role">&nbsp;</p>
+          </div>
+
+          <div class="coverflow-progress" aria-hidden="true">
+            <span class="coverflow-progress-bar">
+              <span class="coverflow-progress-fill" id="cf-progress"></span>
+            </span>
+            <span class="coverflow-progress-index" id="cf-index">01 / 15</span>
+          </div>
+          <p class="coverflow-hint">Scroll · or click a founder to read the thesis</p>
+        </div>
+      </div>
+    </section>
+
     <!-- INSIGHTS TEASER -->
     <section class="insights" id="insights">
       <div class="container insights-inner">
         <div class="insights-text">
           <p class="section-eyebrow">Insights</p>
-          <h2 class="section-title">Essays from the desk.</h2>
-          <p>Monthly notes on founders we admire, businesses we own, and the structural shifts shaping the next decade.</p>
-          <a href="insights.html" class="btn btn-primary">Read our latest essay</a>
+          <h2 class="section-title">Letters from the desk.</h2>
+          <p>Quarterly notes on founders we admire, businesses we own, and the structural shifts shaping the next decade of compounding.</p>
+          <a href="insights.html" class="btn btn-primary">Read our latest letter</a>
         </div>
         <ul class="insights-list">
           <li>
