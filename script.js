@@ -20,12 +20,6 @@ if (toggle) {
 // ─── Founders data ─────────────────────────────────────
 const founders = [
   {
-    first: "Elon", last: "Musk", company: "Tesla",
-    role: "Co-founder & CEO", founded: "2003", sector: "Robotics",
-    geo: "United States", accent: "#cc1f2e",
-    thesis: "The most consequential industrial founder of his generation — a vertical integrator who turned electric vehicles, energy storage and autonomy into a single compounding flywheel."
-  },
-  {
     first: "Jensen", last: "Huang", company: "Nvidia",
     role: "Co-founder & CEO", founded: "1993", sector: "AI Hardware",
     geo: "United States", accent: "#76b900",
@@ -42,6 +36,12 @@ const founders = [
     role: "Co-founder & CEO", founded: "2012", sector: "FinTech",
     geo: "United States", accent: "#0052ff",
     thesis: "The most regulated, most trusted on-ramp to digital assets. A founder who has earned the right to lead the category through every cycle."
+  },
+  {
+    first: "Elon", last: "Musk", company: "Tesla",
+    role: "Co-founder & CEO", founded: "2003", sector: "Robotics",
+    geo: "United States", accent: "#cc1f2e",
+    thesis: "The most consequential industrial founder of his generation — a vertical integrator who turned electric vehicles, energy storage and autonomy into a single compounding flywheel."
   },
   {
     first: "He", last: "Xiaopeng", company: "XPeng",

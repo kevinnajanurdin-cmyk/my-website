@@ -353,10 +353,11 @@
       var ctx = canvas.getContext('2d');
       var SURVIVORS = 15;
 
-      // Cull waves — compressed into the first ~60% of the runway so the
-      // universe dims/clears early, leaving the back half for the slow gather.
+      // Cull waves — spread across the first ~78% of the (long) runway so the
+      // countdown ticks through many values, leaving the final stretch for a
+      // gather sized to the ORIGINAL scroll pace (see conv below).
       // (Also drives the countdown + filter captions, which stay in sync.)
-      var WINDOWS = [[0.06, 0.25], [0.25, 0.43], [0.43, 0.58]];
+      var WINDOWS = [[0.06, 0.32], [0.32, 0.57], [0.57, 0.78]];
       var FADE = 0.06; // each dot's individual fade length, in progress units
 
       var TOTAL = 7000;                      // displayed universe size
@@ -454,10 +455,11 @@
       function render(p) {
         ctx.clearRect(0, 0, W, H + EXT);
         var g = geom;
-        // survivors drift to the row over ~the back half of the runway —
-        // a long, early-starting window (paired with the taller scroll-track)
-        // so the gather plays out slowly and legibly, not as a quick snap
-        var conv = smooth(clamp01((p - 0.50) / 0.47));
+        // survivors drift to the row over the final stretch. The span (0.29)
+        // is tuned so that, on the long scroll-track, the gather covers the same
+        // ~94vh of scroll as the original 300vh layout — i.e. the gather pace is
+        // unchanged even though the countdown ahead of it is now much longer.
+        var conv = smooth(clamp01((p - 0.68) / 0.29));
         var gap = Math.min(20, (g.fw * 0.4) / (SURVIVORS - 1));
         var rowX0 = g.cx - (gap * (SURVIVORS - 1)) / 2;
 
@@ -508,21 +510,20 @@
           lastCount = txt;
         }
 
-        // Stage captions — the three filters appear consecutively, each
-        // fading in as its wave begins culling, and stay once shown. A long
-        // eased window plus a gentle rise keeps the entrance soft.
+        // Stage captions — the three filters appear consecutively as each
+        // wave begins culling. Crossing the wave's start toggles a class; the
+        // fade itself is a time-based CSS transition, so each header eases in
+        // smoothly on its own clock rather than being scrubbed by the scroll.
         for (var si = 0; si < stageEls.length; si++) {
-          var st = smooth(clamp01((p - WINDOWS[si][0]) / 0.14));
-          var so = st.toFixed(3);
-          if (stageEls[si].style.opacity !== so) {
-            stageEls[si].style.opacity = so;
-            stageEls[si].style.transform = 'translateY(' + ((1 - st) * 14).toFixed(1) + 'px)';
+          var on = p >= WINDOWS[si][0];
+          if (stageEls[si].classList.contains('is-visible') !== on) {
+            stageEls[si].classList.toggle('is-visible', on);
           }
         }
 
         // "The Investable Universe" eyebrow fades out partway through the funnel
         if (eyebrowEl) {
-          var eo = (1 - smooth(clamp01((p - 0.34) / 0.22))).toFixed(3);
+          var eo = (1 - smooth(clamp01((p - 0.45) / 0.30))).toFixed(3);
           if (eyebrowEl.style.opacity !== eo) eyebrowEl.style.opacity = eo;
         }
       }

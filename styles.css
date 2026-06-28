@@ -2304,7 +2304,9 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
 
 .funnel-scroll-track {
   position: relative;
-  height: 300vh; /* taller = more scroll runway so the dot gather plays out slowly */
+  height: 430vh; /* taller = more scroll runway: more frames per scroll, so the
+                    countdown steps through more values. The cull windows fill
+                    most of this; the gather span is sized to keep its original pace. */
 }
 .funnel-pin {
   position: sticky;
@@ -2410,7 +2412,18 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
 }
 .funnel-stage-item {
   opacity: 0;
+  transform: translateY(14px);
+  /* Time-based fade: a scroll crossing toggles .is-visible; the transition
+     plays smoothly on its own clock, independent of scroll speed. */
+  transition: opacity .7s ease, transform .7s ease;
   text-align: center;
+}
+.funnel-stage-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .funnel-stage-item { transition: none; }
 }
 .funnel-stage-title {
   margin: 0 0 8px;

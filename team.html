@@ -284,13 +284,6 @@
         [].slice.call(document.querySelectorAll('.team-member')).forEach(function (m) {
           m.setAttribute('role', 'button');
           m.setAttribute('tabindex', '0');
-          var bio = m.querySelector('.team-bio');
-          if (bio && !m.querySelector('.team-toggle')) {
-            var toggle = document.createElement('span');
-            toggle.className = 'team-toggle';
-            toggle.setAttribute('aria-hidden', 'true');
-            bio.parentNode.insertBefore(toggle, bio);
-          }
           m.addEventListener('click', function () { openTeam(m); });
           m.addEventListener('keydown', function (e) {
             if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openTeam(m); }
