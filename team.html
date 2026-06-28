@@ -10,6 +10,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
+  <!-- Prioritise the first (visible) team row: shared backdrop + Investment Team cut-outs -->
+  <link rel="preload" as="image" href="assets/team/background.jpg">
+  <link rel="preload" as="image" href="assets/team/joseph-ziller-cutout.png" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/team/wendy-herringer-cutout.png" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/team/kevin-najanurdin-cutout.png" fetchpriority="high">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body class="page-team">
@@ -71,19 +76,19 @@
           <h2 class="team-group-title">Investment Team</h2>
           <div class="team-grid">
             <article class="team-member">
-              <div class="team-photo"><img class="team-photo-bg" src="assets/team/background.jpg" alt="" aria-hidden="true" loading="lazy" /><img class="team-photo-img" src="assets/team/joseph-ziller-cutout.png" alt="Joseph Ziller" loading="lazy" /></div>
+              <div class="team-photo"><img class="team-photo-bg" src="assets/team/background.jpg" alt="" aria-hidden="true" loading="lazy" /><img class="team-photo-img" src="assets/team/joseph-ziller-cutout.png" alt="Joseph Ziller" fetchpriority="high" /></div>
               <h3 class="team-name">Joseph Ziller</h3>
               <p class="team-role">CIO &amp; Founder</p>
               <p class="team-bio">Joseph has over 21 years of experience as a portfolio manager, equity analyst and accountant. Prior to establishing Ziller Funds Management, Joseph spent 11 years at Maple-Brown Abbott where he held various roles within the investment team, including serving as deputy portfolio manager of $1b in client funds. Previously Joseph held roles with Deloitte Corporate Finance and KPMG Audit. He has completed the CFA, CA, PRM and CAIA programs and has been awarded the respective charters.</p>
             </article>
             <article class="team-member">
-              <div class="team-photo"><img class="team-photo-bg" src="assets/team/background.jpg" alt="" aria-hidden="true" loading="lazy" /><img class="team-photo-img" src="assets/team/wendy-herringer-cutout.png" alt="Wendy Herringer" loading="lazy" /></div>
+              <div class="team-photo"><img class="team-photo-bg" src="assets/team/background.jpg" alt="" aria-hidden="true" loading="lazy" /><img class="team-photo-img" src="assets/team/wendy-herringer-cutout.png" alt="Wendy Herringer" fetchpriority="high" /></div>
               <h3 class="team-name">Wendy Herringer</h3>
               <p class="team-role">Deputy Portfolio Manager</p>
               <p class="team-bio">Wendy has 20 years of investment experience. Prior to joining Ziller Funds Management, she held global equity portfolio management roles at Northcape and Baring Asset Management. Previously, Wendy worked as an emerging markets and fixed income analyst at ABN Amro Asset Management and HSBC Asset Management. She has completed the CFA program and has been awarded the respective charter.</p>
             </article>
             <article class="team-member">
-              <div class="team-photo"><img class="team-photo-bg" src="assets/team/background.jpg" alt="" aria-hidden="true" loading="lazy" /><img class="team-photo-img" src="assets/team/kevin-najanurdin-cutout.png" alt="Kevin Najanurdin" loading="lazy" /></div>
+              <div class="team-photo"><img class="team-photo-bg" src="assets/team/background.jpg" alt="" aria-hidden="true" loading="lazy" /><img class="team-photo-img" src="assets/team/kevin-najanurdin-cutout.png" alt="Kevin Najanurdin" fetchpriority="high" /></div>
               <h3 class="team-name">Kevin Najanurdin</h3>
               <p class="team-role">Investment Analyst</p>
               <p class="team-bio">Kevin has 3 years of investment and research experience. Prior to joining Ziller Funds Management, he worked at Selector Funds Management in portfolio research and reporting, focusing on high-quality Australian equities. Kevin also founded several entrepreneurial ventures in Indonesia and holds a Bachelor of Economics (Finance) from the University of Sydney.</p>
