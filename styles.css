@@ -934,17 +934,20 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   position: relative;
   width: 100%;
   min-height: 0;
-  /* Entrance: the card stack fades in as the cards fan out (opacity only —
-     transform is reserved for the static nudge below + the per-card JS
-     transforms, so animating it here would fight them). */
+  /* Entrance: the card stack fades in (opacity only — transform is reserved
+     for the static nudge below + the per-card JS transforms). The fade is
+     gated on the `cards-ready` class JS adds once the cards are built, so an
+     empty stage never flashes. */
   opacity: 0;
-  animation: coverflow-fade .9s cubic-bezier(.2,.7,.2,1) .35s forwards;
   /* Nudge the carousel down a tiny bit (matches the +10px on name/role,
      progress, hint so the spacing between them is unchanged). */
   transform: translateY(10px);
   perspective: 1600px;
   perspective-origin: 50% 50%;
   transform-style: preserve-3d;
+}
+.coverflow-stage.cards-ready {
+  animation: coverflow-fade .9s cubic-bezier(.2,.7,.2,1) .35s forwards;
 }
 .cover-card {
   position: absolute;

@@ -113,21 +113,21 @@ const founders = [
 
 // Map company → portrait filename in assets/founders/ (null = no portrait)
 const PORTRAIT_FILES = {
-  "Tesla": "elon.png",
-  "Nvidia": "jensen.png",
-  "Palantir": "alex.png",
-  "Coinbase": "brian.png",
-  "XPeng": "xiaopeng.png",
-  "Figma": "dylan.png",
-  "Rocket Lab": "peter.png",
-  "Money Forward": "yosuke.png",
-  "Axon": "rick.png",
-  "Lumine": "nyland.png",
-  "Fortinet": "ken.png",
-  "CATL": "robin.png",
-  "Pro Medicus": "sam.png",
-  "Mercado Libre": "marcos.png",
-  "Roblox": "baszucki.png",
+  "Tesla": "elon.jpg",
+  "Nvidia": "jensen.jpg",
+  "Palantir": "alex.jpg",
+  "Coinbase": "brian.jpg",
+  "XPeng": "xiaopeng.jpg",
+  "Figma": "dylan.jpg",
+  "Rocket Lab": "peter.jpg",
+  "Money Forward": "yosuke.jpg",
+  "Axon": "rick.jpg",
+  "Lumine": "nyland.jpg",
+  "Fortinet": "ken.jpg",
+  "CATL": "robin.jpg",
+  "Pro Medicus": "sam.jpg",
+  "Mercado Libre": "marcos.jpg",
+  "Roblox": "baszucki.jpg",
 };
 const portraitUrl = (company) => {
   const f = PORTRAIT_FILES[company];
@@ -211,8 +211,11 @@ if (stage) {
     card.setAttribute("aria-label", `${f.first} ${f.last}, ${f.company}`);
     const url = portraitUrl(f.company);
     const initials = (f.first[0] + f.last[0]).toUpperCase();
+    // Carousel is above the fold: eager-load the first cards (lead gets high
+    // fetch priority); lazy-load the rest further along the arc.
+    const imgAttrs = i < 6 ? (i === 0 ? ' fetchpriority="high"' : '') : ' loading="lazy"';
     const inner = url
-      ? `<img src="${url}" alt="${f.first} ${f.last}" loading="lazy" />`
+      ? `<img src="${url}" alt="${f.first} ${f.last}"${imgAttrs} />`
       : `<span class="cover-card-fallback">${initials}</span>`;
     card.innerHTML = `
       ${inner}
@@ -224,6 +227,8 @@ if (stage) {
     stage.appendChild(card);
     cards.push(card);
   });
+  // Cards exist now — let the stage fade in (prevents an empty-stage flash).
+  stage.classList.add("cards-ready");
 }
 
 // ─── Founder detail panel ──────────────────────────────
