@@ -179,11 +179,11 @@ const LOGO_HEIGHTS = {
 // Map company → scene/brand photo in assets/scenes/ (null = none yet)
 const SCENE_FILES = {
   "Tesla": "tesla.webp",
-  "Nvidia": "nvidia.png",
-  "Palantir": "palantir.png",
-  "Coinbase": "coinbase.png",
-  "XPeng": "xpeng.png",
-  "Figma": "figma.png",
+  "Nvidia": "nvidia.jpg",
+  "Palantir": "palantir.jpg",
+  "Coinbase": "coinbase.jpg",
+  "XPeng": "xpeng.jpg",
+  "Figma": "figma.jpg",
   "Rocket Lab": "rocketlab.webp",
   "Money Forward": "moneyforward.webp",
   "Axon": "axon.webp",
