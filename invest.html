@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Contemporary Amperex Technology Co. (CATL) — Ziller Funds Management</title>
-  <meta name="description" content="Portfolio holding in focus: how Robin Zeng built CATL into the world's leading battery maker, riding the secular wave of global electrification." />
+  <title>Invest — Ziller Funds Management</title>
+  <meta name="description" content="There are several ways to invest in the Ziller Global Fund — on the ASX (ZILR), directly online via Automic, or through your investment platform." />
   <link rel="icon" type="image/svg+xml" href="assets/ziller-mark.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="styles.css" />
   <script>document.documentElement.classList.add('js');</script>
 </head>
-<body class="page-essay">
+<body class="page-invest">
 
   <header class="site-header">
     <div class="container header-inner">
@@ -49,11 +49,11 @@
         <a href="index.html#fund">Fund</a>
         <a href="approach.html">Approach</a>
         <a href="team.html">Team</a>
-        <a href="insights.html" aria-current="page">Insights</a>
+        <a href="insights.html">Insights</a>
         <a href="index.html#contact">Contact</a>
       </nav>
       <div class="header-cta">
-        <a href="invest.html" class="btn btn-outline">Invest Now</a>
+        <a href="invest.html" class="btn btn-outline" aria-current="page">Invest Now</a>
       </div>
       <button class="menu-toggle" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -61,92 +61,107 @@
     </div>
   </header>
 
-  <main class="essay-page">
-    <article class="essay">
+  <main class="invest-page">
 
-      <!-- Back -->
-      <nav class="essay-back-wrap">
-        <div class="container essay-container">
-          <a href="insights.html" class="essay-back">&larr; Insights</a>
+    <!-- Compact header -->
+    <section class="invest-hero" aria-label="Invest">
+      <div class="container">
+        <p class="invest-eyebrow" data-reveal>Invest with us</p>
+        <h1 class="invest-title" data-reveal>There are several ways to invest in Ziller Global Fund.</h1>
+      </div>
+    </section>
+
+    <!-- Tabbed ways to invest -->
+    <section class="invest-tabs-section" aria-label="Ways to invest">
+      <div class="container">
+        <div class="invest-tabs" role="tablist" aria-label="Ways to invest">
+          <button class="invest-tab is-active" role="tab" id="tab-asx" aria-selected="true" aria-controls="panel-asx" tabindex="0">Invest via the ASX</button>
+          <button class="invest-tab" role="tab" id="tab-online" aria-selected="false" aria-controls="panel-online" tabindex="-1">Invest online</button>
+          <button class="invest-tab" role="tab" id="tab-platform" aria-selected="false" aria-controls="panel-platform" tabindex="-1">Invest via a platform</button>
         </div>
-      </nav>
 
-      <!-- The Portrait -->
-      <figure class="essay-portrait">
-        <img src="assets/essays/catl-hero.png"
-             alt="CATL — Contemporary Amperex Technology manufacturing facility &mdash; pen and ink illustration" />
-      </figure>
+        <div class="invest-panels">
 
-      <!-- Title block -->
-      <header class="essay-header">
-        <div class="container essay-container">
-          <hr class="essay-rule" />
-          <div class="essay-meta">
-            <span>Company in Focus</span>
-            <span class="essay-meta-dot">&middot;</span>
-            <time datetime="2025-10-06">October 2025</time>
-            <span class="essay-meta-dot">&middot;</span>
-            <span>2 min read</span>
+          <!-- ASX -->
+          <div class="invest-panel is-active" role="tabpanel" id="panel-asx" aria-labelledby="tab-asx" tabindex="0">
+            <div class="invest-panel-lead">
+              <p class="invest-panel-ticker invest-panel-ticker--code">ASX: ZILR</p>
+              <h2 class="invest-panel-title">Ziller Global Fund Active ETF</h2>
+              <p class="invest-panel-desc">Buy and sell units on the ASX, just like any listed share — through your existing broker.</p>
+            </div>
+            <div class="invest-panel-how">
+              <p class="invest-how-label">How to invest</p>
+              <ol class="invest-steps">
+                <li>Open or log in to your online broker account.</li>
+                <li>Search for the ASX code <strong>ZILR</strong>.</li>
+                <li>Place a buy order during ASX trading hours.</li>
+              </ol>
+            </div>
           </div>
-          <h1 class="essay-title">Contemporary Amperex Technology Co. (CATL)</h1>
-          <hr class="essay-rule" />
-        </div>
-      </header>
 
-      <!-- Body -->
-      <div class="essay-body">
-        <div class="container essay-container">
+          <!-- Online -->
+          <div class="invest-panel" role="tabpanel" id="panel-online" aria-labelledby="tab-online" tabindex="0">
+            <div class="invest-panel-lead">
+              <h2 class="invest-panel-title">Apply online</h2>
+              <p class="invest-panel-desc">Invest directly through our registry provider, Automic. A minimum investment of <strong class="invest-amount">$25,000</strong> applies.</p>
+            </div>
+            <div class="invest-panel-how">
+              <p class="invest-how-label">How to invest</p>
+              <ol class="invest-steps">
+                <li>Complete the online application form.</li>
+                <li>Add your investor details and payment.</li>
+                <li>Units are issued in line with the Fund&rsquo;s application process.</li>
+              </ol>
+              <div class="invest-actions">
+                <a class="btn btn-primary" href="https://apply.automic.com.au/ZILR" target="_blank" rel="noopener">Apply online</a>
+              </div>
+            </div>
+          </div>
 
-          <p>CATL is the global standard-setter for EV and energy-storage battery systems. Headquartered in Ningde, China, the company supplies more than one-third of the global EV and energy-storage battery market and has maintained this leadership for eight consecutive years. Its products power over 17 million vehicles and more than 1,700 grid-scale storage installations worldwide.</p>
+          <!-- Platform -->
+          <div class="invest-panel" role="tabpanel" id="panel-platform" aria-labelledby="tab-platform" tabindex="0">
+            <div class="invest-panel-lead">
+              <h2 class="invest-panel-title">Invest via a platform</h2>
+              <p class="invest-panel-desc">Already use an investment platform? Access the Fund inside your existing account.</p>
+              <ul class="invest-platforms" aria-label="Available platforms">
+                <li><img src="assets/platforms/amp.jpg" alt="AMP" /></li>
+                <li><img src="assets/platforms/bt.jpg" alt="BT" /></li>
+                <li><img src="assets/platforms/colonial.jpg" alt="Colonial First State" /></li>
+                <li><img src="assets/platforms/dash.jpg" alt="Dash" /></li>
+                <li><img src="assets/platforms/hub.jpg" alt="HUB24" /></li>
+                <li><img src="assets/platforms/macquarie.jpg" alt="Macquarie" /></li>
+                <li><img src="assets/platforms/netwealth.jpg" alt="Netwealth" /></li>
+                <li><img src="assets/platforms/praemium.jpg" alt="Praemium" /></li>
+              </ul>
+            </div>
+            <div class="invest-panel-how">
+              <p class="invest-how-label">How to invest</p>
+              <ol class="invest-steps">
+                <li>Log in to your platform account.</li>
+                <li>Search for <strong>ZILR</strong> or the Fund name.</li>
+                <li>Invest as part of your portfolio.</li>
+              </ol>
+              <p class="invest-note">Not on your platform yet? <a href="mailto:invest@zillerfm.com">Get in touch</a>.</p>
+            </div>
+          </div>
 
-          <h2>Secular Growth</h2>
+        </div><!-- /.invest-panels -->
 
-          <p>Global demand for electrification is expanding at a rapid pace. Electric vehicles now represent over 20% of new car sales worldwide, while grid-scale energy storage is becoming a critical component of renewable integration and power reliability. China alone targets approximately 180 GW of storage capacity by 2027&mdash;twice its current level, and more than any other country globally. The combination of policy momentum and improving battery economics presents a favourable environment for growth in both mobility and storage applications.</p>
+        <p class="invest-disclosure">Consider the Fund&rsquo;s Product Disclosure Statement (PDS) and Target Market Determination (TMD) before investing.</p>
+      </div>
+    </section>
 
-          <h2>Founder&rsquo;s Arc</h2>
-
-          <p>CATL was founded in 2011 by Robin Zeng, following his earlier success with ATL, a supplier of lithium batteries for consumer electronics (iPods). Zeng quickly secured BMW as a flagship customer and scaled into the leading EV cell supplier worldwide by 2017. Zeng&rsquo;s innate ability to &lsquo;skate where the puck is going to be, not where it has been&rsquo; has enabled CATL to outpace peers despite intense competition.</p>
-
-          <h2>Innovation at Scale</h2>
-
-          <p>CATL deploys the industry&rsquo;s largest R&amp;D budget by a margin. In addition, we believe CATL has one of the best &lsquo;output per R&amp;D $ spent&rsquo; versus its key competitors.</p>
-
-          <figure class="essay-figure">
-            <img src="assets/essays/catl-rd-spend.png" alt="Chart: CATL research and development spend versus Chinese and Korean peers" loading="lazy" />
-            <figcaption>Source: Chinese peers include BYD Co + EVE Energy + Gotion + CALB. Korean peers include LGES + Samsung SDI + SK Innovation. *Assumed 95% of Samsung SDI&rsquo;s R&amp;D for batteries, 8% for SK Innovation, and 21% for BYD in line with each company&rsquo;s revenue split.</figcaption>
-          </figure>
-
-          <p>The company has consistently translated laboratory innovation into scaled commercial battery deployments. CATL maintains leadership across multiple chemistry systems&mdash;LFP, NCM, M3P, sodium-ion, and condensed/solid-state. Its flagship products, Qilin and Shenxing, represent meaningful advances versus peers in both range and charging speed: Qilin achieved approximately 1,000 km on a single charge with superior volume utilisation, while Shenxing enabled around 520 km of range from a five-minute charge.</p>
-
-          <h2>Manufacturing &amp; Integration</h2>
-
-          <p>CATL&rsquo;s manufacturing base operates at &ldquo;extreme&rdquo; scale and precision. Smart-factory automation allows the production of millions of cells per day with defect rates measured in parts per billion. Vertical integration extends across raw-material procurement, component fabrication, and end-of-life recycling. This fusion of superior manufacturing and vertical integration offers quality consistency, cost stability, and supply security.</p>
-
-          <h2>Powering Profits</h2>
-
-          <p>CATL&rsquo;s gross margins average ~26% versus ~19% for peers, revenue is projected to grow annually at ~23% through 2030 versus ~17% for peers and earnings are expected to grow by nearly 30% pa as energy-storage systems increase in mix and operating leverage improves.</p>
-
-          <p>Trading at 24&times; forward earnings with a PEG ratio of 0.8&times;, CATL offers unmatched exposure to the premiere battery player globally at a compelling valuation.</p>
-
-          <p class="essay-disclaimer">Please note that these are the views of the writer and not necessarily the views of Ziller. This article does not take into account your investment objectives, particular needs, or financial situation.</p>
-
+    <!-- Need help investing -->
+    <section class="fund-section invest-help" aria-label="Need help investing">
+      <div class="container">
+        <div class="invest-help-inner" data-reveal>
+          <h2 class="invest-help-title">Need help investing?</h2>
+          <p class="invest-help-text">For wholesale and institutional enquiries, get in touch.</p>
+          <a class="invest-help-email" href="mailto:invest@zillerfm.com">invest@zillerfm.com</a>
         </div>
       </div>
+    </section>
 
-      <!-- Footer -->
-      <footer class="essay-foot">
-        <div class="container essay-container">
-          <div class="essay-author">
-            <span class="essay-author-label">Written by</span>
-            <span class="essay-author-name">Joseph Ziller</span>
-          </div>
-          <div class="essay-nav">
-            <a href="insights.html" class="btn btn-outline">&larr; Back to Insights</a>
-          </div>
-        </div>
-      </footer>
-
-    </article>
   </main>
 
   <footer class="site-footer">
@@ -215,6 +230,7 @@
       var y = document.getElementById('year');
       if (y) y.textContent = new Date().getFullYear();
 
+      // Mobile menu toggle
       var toggle = document.querySelector('.menu-toggle');
       if (toggle) {
         toggle.addEventListener('click', function () {
@@ -229,6 +245,45 @@
           });
         });
       }
+
+      // Tabs — switch the "ways to invest" panels
+      var tabs = [].slice.call(document.querySelectorAll('.invest-tab'));
+      var panels = [].slice.call(document.querySelectorAll('.invest-panel'));
+      function activate(i) {
+        tabs.forEach(function (t, j) {
+          var on = j === i;
+          t.classList.toggle('is-active', on);
+          t.setAttribute('aria-selected', String(on));
+          t.tabIndex = on ? 0 : -1;
+        });
+        panels.forEach(function (p, j) { p.classList.toggle('is-active', j === i); });
+      }
+      tabs.forEach(function (t, i) {
+        t.addEventListener('click', function () { activate(i); });
+        t.addEventListener('keydown', function (e) {
+          var dir = e.key === 'ArrowRight' ? 1 : (e.key === 'ArrowLeft' ? -1 : 0);
+          if (!dir) return;
+          e.preventDefault();
+          var n = (i + dir + tabs.length) % tabs.length;
+          activate(n);
+          tabs[n].focus();
+        });
+      });
+
+      // Reveal-on-scroll
+      var revealEls = [].slice.call(document.querySelectorAll('[data-reveal]'));
+      function onReveal() {
+        var vh = window.innerHeight || document.documentElement.clientHeight;
+        for (var i = revealEls.length - 1; i >= 0; i--) {
+          if (revealEls[i].getBoundingClientRect().top < vh * 0.92) {
+            revealEls[i].classList.add('is-visible');
+            revealEls.splice(i, 1);
+          }
+        }
+      }
+      onReveal();
+      window.addEventListener('scroll', onReveal, { passive: true });
+      window.addEventListener('resize', onReveal, { passive: true });
     })();
   </script>
 </body>
