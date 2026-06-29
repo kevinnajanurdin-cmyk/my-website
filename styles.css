@@ -1932,7 +1932,7 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
 }
 .fund-iframe-flush {
   margin: 4px -26px -24px;
-  padding: 0 18px;
+  padding: 20px 18px 0;
   background: #fff;
   border-top: 1px solid var(--line);
   border-bottom-left-radius: 3px;
@@ -2064,6 +2064,7 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
 }
 
 /* ─── Collapsible sections (details/summary dropdowns) ─── */
+.fund-accordion { max-width: 800px; }
 .fund-accordion-head {
   display: flex;
   align-items: center;
