@@ -15,12 +15,11 @@
  * Response: { code, date, entry, exit, nav, history:[{date,nav}], error? }
  * Values are 4dp strings with NO leading "$" — the page adds it.
  *
- * SOURCE-CSV COLUMN MAP — ported from the old plugin's loadcsvFile().
- *   >>> VALIDATE against a real feed file before go-live (see _private runbook): <<<
- *   col[1] = fund code   col[2] = effective date
- *   col[11] = NAV         col[12] = exit/redemption   col[13] = entry/application
- * Filenames are assumed to embed a date (the old code read DD.MM.YYYY from the
- * 4th dash-separated chunk); fileDate() also has generic date fallbacks.
+ * SOURCE-CSV COLUMN MAP — confirmed against the live feed 2026-06-29:
+ *   col[1] = "Fund code"      col[2] = "Valuation date" (US M/D/Y, e.g. 12/31/2025)
+ *   col[11] = "NAV per unit"  col[12] = "NAV per unit - bid" (exit/redemption)
+ *   col[13] = "NAV per unit - offer" (entry/application)
+ * Filenames are "Daily-Unit-Price-DD.MM.YYYY.csv" (AU D.M.Y); fileDate() reads that.
  */
 
 const DEFAULTS = {
@@ -138,13 +137,23 @@ function fileDate(href) {
   return NaN;
 }
 
+// The Perennial feed's "Valuation date" column is US M/D/Y (e.g. "12/31/2025").
 function parseRowDate(s) {
   s = String(s == null ? '' : s).trim();
   if (!s) return { ts: NaN, display: '' };
   let ts = NaN, m;
-  if ((m = s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})$/))) ts = Date.parse(m[3] + '-' + pad(m[2]) + '-' + pad(m[1]) + 'T00:00:00Z');
-  else if ((m = s.match(/^(\d{4})[\/.\-](\d{1,2})[\/.\-](\d{1,2})$/))) ts = Date.parse(m[1] + '-' + pad(m[2]) + '-' + pad(m[3]) + 'T00:00:00Z');
-  else { ts = Date.parse(s); if (Number.isNaN(ts)) ts = Date.parse(s.replace(/-/g, ' ')); }
+  if ((m = s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})$/))) {
+    const a = parseInt(m[1], 10), b = parseInt(m[2], 10);
+    let month, day;
+    if (a > 12) { day = a; month = b; }   // unambiguous D/M
+    else { month = a; day = b; }          // M/D (this feed) — also handles day > 12
+    ts = Date.parse(m[3] + '-' + pad(month) + '-' + pad(day) + 'T00:00:00Z');
+  } else if ((m = s.match(/^(\d{4})[\/.\-](\d{1,2})[\/.\-](\d{1,2})$/))) {
+    ts = Date.parse(m[1] + '-' + pad(m[2]) + '-' + pad(m[3]) + 'T00:00:00Z');
+  } else {
+    ts = Date.parse(s);
+    if (Number.isNaN(ts)) ts = Date.parse(s.replace(/-/g, ' '));
+  }
   return { ts: ts, display: Number.isNaN(ts) ? s : displayDate(ts) };
 }
 
