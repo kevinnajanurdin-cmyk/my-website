@@ -2064,7 +2064,6 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
 }
 
 /* ─── Collapsible sections (details/summary dropdowns) ─── */
-.fund-accordion { max-width: 800px; }
 .fund-accordion-head {
   display: flex;
   align-items: center;
@@ -2075,7 +2074,7 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
 }
 .fund-accordion-head::-webkit-details-marker { display: none; }
 .fund-accordion-head .fund-h2 {
-  font-size: clamp(18px, 1.9vw, 22px);
+  font-size: clamp(16px, 1.5vw, 19px);
   letter-spacing: -.005em;
 }
 .fund-accordion-head:focus-visible {
