@@ -87,7 +87,7 @@
         <div class="ins-grid">
           <article class="ins-card" data-category="founder" data-reveal>
             <a class="ins-card-link" href="peter-beck-rocket-lab.html">
-              <div class="ins-card-media ins-card-media--photo" style="background-image:url('assets/essays/Peter_Beck_KNZM_(cropped).jpg')">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('assets/essays/Peter_Beck_KNZM_(cropped).jpg')">
                 <span class="ins-card-kicker"><span class="ins-card-dot"></span>Founder in Focus</span>
                 <div class="ins-card-cap">
                   <h3 class="ins-card-title">Peter Beck, Rocket Lab</h3>
@@ -99,7 +99,7 @@
 
           <article class="ins-card" data-category="thought" data-reveal style="--d:.06s">
             <a class="ins-card-link" href="the-founders-advantage.html">
-              <div class="ins-card-media ins-card-media--photo" style="background-image:url('assets/essays/founders-advantage-hero.jpg'); background-position:center center;">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('assets/essays/founders-advantage-hero.jpg'); --ins-pos:center center;">
                 <span class="ins-card-kicker"><span class="ins-card-dot"></span>Thought Piece</span>
                 <div class="ins-card-cap">
                   <h3 class="ins-card-title">The Founders&rsquo; Advantage</h3>
@@ -111,7 +111,7 @@
 
           <article class="ins-card" data-category="company" data-reveal style="--d:.12s">
             <a class="ins-card-link" href="catl.html">
-              <div class="ins-card-media ins-card-media--photo" style="background-image:url('assets/essays/CATL_Arnstadt_2crop_2020-04.jpg'); background-position:center center;">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('assets/essays/CATL_Arnstadt_2crop_2020-04.jpg'); --ins-pos:center center;">
                 <span class="ins-card-kicker"><span class="ins-card-dot"></span>Company in Focus</span>
                 <div class="ins-card-cap">
                   <h3 class="ins-card-title">Contemporary Amperex Technology Co. (CATL)</h3>
@@ -276,6 +276,23 @@
             }
           });
         });
+      });
+    })();
+  </script>
+
+  <script>
+    // Fade each card photo in once it has loaded. The photo sits on a ::before
+    // layer fed by the --ins-img custom property, so we preload that URL and
+    // flip an is-loaded class when it is ready (or already cached/prefetched).
+    (function () {
+      [].slice.call(document.querySelectorAll('.ins-card-media--photo')).forEach(function (el) {
+        var v = getComputedStyle(el).getPropertyValue('--ins-img');
+        var m = v && v.match(/url\(\s*['"]?(.*?)['"]?\s*\)/);
+        if (!m) { el.classList.add('is-loaded'); return; }
+        var img = new Image();
+        img.onload = img.onerror = function () { el.classList.add('is-loaded'); };
+        img.src = m[1];
+        if (img.complete) el.classList.add('is-loaded');
       });
     })();
   </script>

@@ -298,5 +298,16 @@
       }
     })();
   </script>
+
+  <script>
+    // Fade each cut-out portrait in as it loads (no-JS shows them immediately).
+    (function () {
+      [].slice.call(document.querySelectorAll('.team-photo-img')).forEach(function (img) {
+        if (img.complete && img.naturalWidth) { img.classList.add('is-loaded'); return; }
+        img.addEventListener('load', function () { img.classList.add('is-loaded'); });
+        img.addEventListener('error', function () { img.classList.add('is-loaded'); });
+      });
+    })();
+  </script>
 </body>
 </html>

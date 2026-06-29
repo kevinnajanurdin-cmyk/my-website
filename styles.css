@@ -3014,9 +3014,17 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
 }
 .team-member:hover .team-photo-img,
 .team-member:focus-visible .team-photo-img { transform: scale(1.04); }
+/* Fade the cut-out in on load (JS only; no-JS shows it immediately). Keeps the
+   hover-zoom transform in the same transition list. */
+.js .team-photo-img {
+  opacity: 0;
+  transition: opacity .35s ease, transform .5s cubic-bezier(.2, .7, .2, 1);
+}
+.js .team-photo-img.is-loaded { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
   .team-photo::after,
   .team-photo-img { transition: none; }
+  .js .team-photo-img { opacity: 1; }
 }
 .team-name {
   margin: 20px 0 3px;
@@ -3341,6 +3349,22 @@ body.modal-open { overflow: hidden; }
 .ins-card-media--photo {
   background-color: #232c3b;
 }
+/* The photo lives on a ::before layer (behind the scrim at z1 and the caption
+   at z2) so it can fade in on load without touching the placeholder colour,
+   gradient or text. Fed by the --ins-img / --ins-pos custom properties. */
+.ins-card-media--photo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: var(--ins-img);
+  background-size: cover;
+  background-position: var(--ins-pos, center 20%);
+}
+/* JS on: start transparent, fade in once the photo has loaded.
+   No-JS: the rule above shows it immediately (opacity defaults to 1). */
+.js .ins-card-media--photo::before { opacity: 0; transition: opacity .45s ease; }
+.js .ins-card-media--photo.is-loaded::before { opacity: 1; }
 
 /* type tiles: brand navy, calm negative space */
 .ins-card-media--type {
