@@ -253,12 +253,15 @@
               <div class="fund-data-cell">
                 <p class="fund-data-label">iNAV</p>
                 <!--
-                  Placeholder — old WordPress site used the shortcode:
-                    [inav code="ZILR"]
-                  That depends on the original WordPress plugin/API.
-                  Wire up a live data source when available.
+                  Live iNAV — BRIDGE wiring. Fetches the existing WordPress REST
+                  endpoint, which is CORS-open so the browser can call it cross-origin.
+                  Works only while the old WP site is up.
+                  PATH-B CUTOVER: change INAV_ENDPOINT in the page script below to the
+                  new serverless URL (e.g. /api/inav); the parsing stays identical.
+                  Original WP shortcode: [inav code="ZILR"]
                 -->
-                <p class="fund-data-value fund-placeholder">Data feed required</p>
+                <p class="fund-data-value fund-placeholder" id="inav-value" aria-live="polite">&mdash;</p>
+                <p class="fund-muted-small" id="inav-asof"></p>
               </div>
               <div class="fund-data-cell">
                 <p class="fund-data-label">NAV</p>
@@ -500,6 +503,47 @@
           if (e.key === 'ArrowLeft')  { e.preventDefault(); activate(tabs[(idx - 1 + tabs.length) % tabs.length]); tabs[(idx - 1 + tabs.length) % tabs.length].focus(); }
         });
       });
+    })();
+
+    // iNAV — live BRIDGE to the existing WordPress REST endpoint.
+    // This endpoint reflects the request Origin in Access-Control-Allow-Origin,
+    // so the browser is allowed to call it cross-origin from this site.
+    // PATH-B CUTOVER: when the upstream feed is re-hosted, change INAV_ENDPOINT to
+    // the new serverless URL (e.g. '/api/inav') — the parsing below is unchanged.
+    (function () {
+      var INAV_ENDPOINT = 'https://www.zillerfm.com/wp-json/ice-api/v1/pricing?code=ZILR';
+      var REFRESH_MS = 60000;
+      var valueEl = document.getElementById('inav-value');
+      var asOfEl = document.getElementById('inav-asof');
+      if (!valueEl) return;
+
+      // The endpoint returns pre-rendered HTML in `content`; extract just the
+      // price + "As at" timestamp so they render in this site's own styles.
+      function parseContent(html) {
+        var doc = new DOMParser().parseFromString(html || '', 'text/html');
+        var priceEl = doc.querySelector('.inav_price_container h3');
+        var dateEl = doc.querySelector('.inav_date');
+        var price = priceEl ? priceEl.textContent.trim() : '';
+        if (!/\d/.test(price)) price = ''; // a bare "$" means no data
+        return { price: price, asOf: dateEl ? dateEl.textContent.trim() : '' };
+      }
+
+      function fetchInav() {
+        fetch(INAV_ENDPOINT, { cache: 'no-store' })
+          .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+          .then(function (data) {
+            var parsed = parseContent(data && data.content);
+            if (parsed.price) {
+              valueEl.textContent = parsed.price;
+              valueEl.classList.remove('fund-placeholder');
+            }
+            if (asOfEl) asOfEl.textContent = parsed.asOf;
+          })
+          .catch(function () { /* keep last good value / em dash; never break the page */ });
+      }
+
+      fetchInav();
+      setInterval(fetchInav, REFRESH_MS);
     })();
   </script>
 </body>

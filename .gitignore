@@ -9,3 +9,6 @@ dist/
 
 # macOS
 .DS_Store
+
+# Local Claude Code tooling
+.claude/
