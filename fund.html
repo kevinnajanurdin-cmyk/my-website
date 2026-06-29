@@ -256,11 +256,9 @@
               <div class="fund-data-cell">
                 <p class="fund-data-label">iNAV</p>
                 <!--
-                  Live iNAV — BRIDGE wiring. Fetches the existing WordPress REST
-                  endpoint, which is CORS-open so the browser can call it cross-origin.
-                  Works only while the old WP site is up.
-                  PATH-B CUTOVER: change INAV_ENDPOINT in the page script below to the
-                  new serverless URL (e.g. /api/inav); the parsing stays identical.
+                  Live iNAV. The page script tries the Path-B function /api/inav first,
+                  then falls back to the live WordPress REST endpoint (CORS-open) — so
+                  this works on the current host today and on Cloudflare once deployed.
                   Original WP shortcode: [inav code="ZILR"]
                 -->
                 <p class="fund-data-value fund-placeholder" id="inav-value" aria-live="polite">&mdash;</p>
@@ -268,12 +266,10 @@
               </div>
               <div class="fund-data-cell">
                 <p class="fund-data-label">NAV</p>
-                <!--
-                  Placeholder — old WordPress shortcode:
-                    [unit code="A0ZFGF" nav="true"]
-                  Replace with live API/feed when integrated.
-                -->
-                <p class="fund-data-value fund-placeholder">Data feed required</p>
+                <!-- Live via Path-B /api/nav (nav / col[4]); keeps placeholder until the
+                     Cloudflare function is deployed. WP shortcode: [unit code="A0ZFGF" nav="true"] -->
+                <p class="fund-data-value fund-placeholder" id="nav-value" aria-live="polite">Data feed required</p>
+                <p class="fund-muted-small" id="nav-asof"></p>
               </div>
             </div>
           </div>
@@ -283,21 +279,15 @@
             <div class="fund-data-grid">
               <div class="fund-data-cell">
                 <p class="fund-data-label">AUD Unit Price <span class="fund-data-label-sub">Entry</span></p>
-                <!--
-                  Placeholder — old WordPress shortcode:
-                    [unit code="A0ZFGF"]
-                  Replace with live API/feed when integrated.
-                -->
-                <p class="fund-data-value fund-placeholder">Data feed required</p>
+                <!-- Live via /api/nav (entry / col[13]). WP shortcode: [unit code="A0ZFGF"] -->
+                <p class="fund-data-value fund-placeholder" id="nav-entry" aria-live="polite">Data feed required</p>
+                <p class="fund-muted-small" id="nav-entry-asof"></p>
               </div>
               <div class="fund-data-cell">
                 <p class="fund-data-label">AUD Unit Price <span class="fund-data-label-sub">Exit</span></p>
-                <!--
-                  Placeholder — old WordPress shortcode:
-                    [unit code="A0ZFGF" sell="true"]
-                  Replace with live API/feed when integrated.
-                -->
-                <p class="fund-data-value fund-placeholder">Data feed required</p>
+                <!-- Live via /api/nav (exit / col[12]). WP shortcode: [unit code="A0ZFGF" sell="true"] -->
+                <p class="fund-data-value fund-placeholder" id="nav-exit" aria-live="polite">Data feed required</p>
+                <p class="fund-muted-small" id="nav-exit-asof"></p>
               </div>
             </div>
           </div>
@@ -357,7 +347,7 @@
                   <th scope="col">NAV Price</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="hist-nav-body">
                 <tr><td>26-May-2026</td><td>$4.9763</td></tr>
                 <tr><td>25-May-2026</td><td>$4.9775</td></tr>
                 <tr><td>22-May-2026</td><td>$5.0133</td></tr>
@@ -517,45 +507,104 @@
       });
     })();
 
-    // iNAV — live BRIDGE to the existing WordPress REST endpoint.
-    // This endpoint reflects the request Origin in Access-Control-Allow-Origin,
-    // so the browser is allowed to call it cross-origin from this site.
-    // PATH-B CUTOVER: when the upstream feed is re-hosted, change INAV_ENDPOINT to
-    // the new serverless URL (e.g. '/api/inav') — the parsing below is unchanged.
+    // ── Live fund data ───────────────────────────────────────────────
+    // iNAV + NAV/Entry/Exit + Historical NAV.
+    // Path-B endpoints are same-origin Cloudflare Pages Functions (/api/*).
+    // iNAV additionally falls back to the still-live WordPress endpoint, so this
+    // works on the current host today and "just works" once served from Cloudflare.
     (function () {
-      var INAV_ENDPOINT = 'https://www.zillerfm.com/wp-json/ice-api/v1/pricing?code=ZILR';
       var REFRESH_MS = 60000;
-      var valueEl = document.getElementById('inav-value');
-      var asOfEl = document.getElementById('inav-asof');
-      if (!valueEl) return;
 
-      // The endpoint returns pre-rendered HTML in `content`; extract just the
-      // price + "As at" timestamp so they render in this site's own styles.
-      function parseContent(html) {
-        var doc = new DOMParser().parseFromString(html || '', 'text/html');
-        var priceEl = doc.querySelector('.inav_price_container h3');
-        var dateEl = doc.querySelector('.inav_date');
-        var price = priceEl ? priceEl.textContent.trim() : '';
-        if (!/\d/.test(price)) price = ''; // a bare "$" means no data
-        return { price: price, asOf: dateEl ? dateEl.textContent.trim() : '' };
-      }
+      // --- iNAV (Path-B function first, then WordPress bridge fallback) ---
+      (function () {
+        var ENDPOINTS = [
+          '/api/inav?code=ZILR',
+          'https://www.zillerfm.com/wp-json/ice-api/v1/pricing?code=ZILR'
+        ];
+        var valueEl = document.getElementById('inav-value');
+        var asOfEl = document.getElementById('inav-asof');
+        if (!valueEl) return;
 
-      function fetchInav() {
-        fetch(INAV_ENDPOINT, { cache: 'no-store' })
-          .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
-          .then(function (data) {
-            var parsed = parseContent(data && data.content);
-            if (parsed.price) {
-              valueEl.textContent = parsed.price;
+        // New function returns {price:"4.56", asOf:"As at…"}; the WP endpoint returns
+        // {content:"<html>…$4.56…As at…"}. Normalise both to {price (with $), asOf}.
+        function normalise(data) {
+          if (data && data.price != null && data.price !== '') {
+            return { price: '$' + String(data.price), asOf: data.asOf || '' };
+          }
+          if (data && data.content) {
+            var doc = new DOMParser().parseFromString(data.content, 'text/html');
+            var p = doc.querySelector('.inav_price_container h3');
+            var d = doc.querySelector('.inav_date');
+            var price = p ? p.textContent.trim() : '';
+            if (!/\d/.test(price)) price = '';
+            return { price: price, asOf: d ? d.textContent.trim() : '' };
+          }
+          return { price: '', asOf: '' };
+        }
+
+        function tryFetch(i) {
+          if (i >= ENDPOINTS.length) return;
+          fetch(ENDPOINTS[i], { cache: 'no-store' })
+            .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+            .then(function (data) {
+              var n = normalise(data);
+              if (!n.price) return Promise.reject('empty');
+              valueEl.textContent = n.price;
               valueEl.classList.remove('fund-placeholder');
-            }
-            if (asOfEl) asOfEl.textContent = parsed.asOf;
-          })
-          .catch(function () { /* keep last good value / em dash; never break the page */ });
-      }
+              if (asOfEl) asOfEl.textContent = n.asOf;
+            })
+            .catch(function () { tryFetch(i + 1); }); // fall through to next endpoint
+        }
 
-      fetchInav();
-      setInterval(fetchInav, REFRESH_MS);
+        function refresh() { tryFetch(0); }
+        refresh();
+        setInterval(refresh, REFRESH_MS);
+      })();
+
+      // --- NAV / Entry / Exit / Historical (Path-B /api/nav only; no browser
+      //     fallback because the WP unitprices endpoint is not CORS-open). Degrades
+      //     to the existing placeholders / sample table until /api/nav is deployed. ---
+      (function () {
+        var navEl = document.getElementById('nav-value');
+        var entryEl = document.getElementById('nav-entry');
+        var exitEl = document.getElementById('nav-exit');
+        var histBody = document.getElementById('hist-nav-body');
+        if (!navEl && !entryEl && !exitEl && !histBody) return;
+
+        function setVal(el, val) {
+          if (el && val != null && val !== '') {
+            el.textContent = '$' + String(val);
+            el.classList.remove('fund-placeholder');
+          }
+        }
+        function setDate(id, date) {
+          var el = document.getElementById(id);
+          if (el && date) el.textContent = 'As at ' + date;
+        }
+        function esc(s) {
+          return String(s == null ? '' : s).replace(/[<>&]/g, function (c) {
+            return c === '<' ? '&lt;' : c === '>' ? '&gt;' : '&amp;';
+          });
+        }
+
+        fetch('/api/nav?code=A0ZFGF', { cache: 'no-store' })
+          .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+          .then(function (d) {
+            if (!d || d.error) return;
+            setVal(navEl, d.nav);
+            setVal(entryEl, d.entry);
+            setVal(exitEl, d.exit);
+            setDate('nav-asof', d.date);
+            setDate('nav-entry-asof', d.date);
+            setDate('nav-exit-asof', d.date);
+            if (histBody && d.history && d.history.length) {
+              histBody.innerHTML = d.history.map(function (h) {
+                return '<tr><td>' + esc(h.date) + '</td><td>$' + esc(h.nav) + '</td></tr>';
+              }).join('');
+            }
+          })
+          .catch(function () { /* leave placeholders / sample table in place */ });
+      })();
     })();
   </script>
   <script src="prefetch.js" defer></script>

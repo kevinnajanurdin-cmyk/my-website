@@ -7,6 +7,12 @@ dist/
 # Environment variables
 .env
 
+# Cloudflare local-dev secrets (keep .dev.vars.example, ignore real .dev.vars)
+.dev.vars
+
+# Private, non-published reference docs (WP plugin source, runbook with feed details)
+_private/
+
 # macOS
 .DS_Store
 

@@ -1,0 +1,12 @@
+# Local-dev secrets for `npx wrangler pages dev .`
+# Copy this file to `.dev.vars` (which is gitignored) and fill in REAL values.
+# NEVER commit real credentials. In production these live in the Cloudflare
+# dashboard (Pages -> Settings -> Environment variables), not in any file.
+
+# ICE Data Services (iNAV) — from the old IceApiClient.php (BCS-Perennial account)
+ICE_USERNAME = "<ICE-API-username>"
+ICE_PASSWORD = "<ICE-API-password>"
+
+# Perennial private unit-price CSV feed — the full token directory URL for ZILR
+# (the non-NAV-type directory used by the old plugin), with a trailing slash.
+PERENNIAL_FEED_BASE = "https://perennial.net.au/<token>/"
