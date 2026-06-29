@@ -517,9 +517,15 @@
 
       // --- iNAV (Path-B function first, then WordPress bridge fallback) ---
       (function () {
+        // iNAV is served by WordPress: ICE Data Services only accepts API calls from
+        // allow-listed IPs (the WP server is listed; Cloudflare's egress IPs are not),
+        // so /api/inav can't reach ICE. WordPress stays the iNAV source for now.
+        // FUTURE: when iNAV runs from an allow-listed static-IP proxy, put that URL first.
+        // NOTE: if the new site takes over www.zillerfm.com, repoint this to the host
+        // where WordPress still lives (e.g. https://wp.zillerfm.com/...).
         var ENDPOINTS = [
-          '/api/inav?code=ZILR',
-          'https://www.zillerfm.com/wp-json/ice-api/v1/pricing?code=ZILR'
+          'https://www.zillerfm.com/wp-json/ice-api/v1/pricing?code=ZILR',
+          '/api/inav?code=ZILR'
         ];
         var valueEl = document.getElementById('inav-value');
         var asOfEl = document.getElementById('inav-asof');
