@@ -37,15 +37,11 @@ ALLOW_ORIGIN = "*"
 # (gitignored) — copy .dev.vars.example as a starting point.
 
 # --- Historical NAV accumulator (Option B) -----------------------------------
-# Uncomment BOTH blocks after creating a KV namespace:
-#   npx wrangler kv namespace create NAV_KV
-#   (or dashboard: Storage & databases -> KV -> Create)
-# then paste the namespace id below. The cron seeds the KV CSV once (from the
-# existing WordPress file) and appends a row each day thereafter.
-#
-# [triggers]
-# crons = ["0 8 * * *"]   # daily 08:00 UTC (~6pm Sydney); merge is idempotent, time isn't critical
-#
-# [[kv_namespaces]]
-# binding = "NAV_KV"
-# id = "PASTE_KV_NAMESPACE_ID_HERE"
+# KV namespace "ziller-nav". The daily cron seeds the KV CSV once (from the existing
+# WordPress file) and appends a row each day thereafter; served by /api/nav?format=csv.
+[triggers]
+crons = ["0 8 * * *"]   # daily 08:00 UTC (~6pm Sydney); merge is idempotent, time isn't critical
+
+[[kv_namespaces]]
+binding = "NAV_KV"
+id = "1fccb1eef41e4f14923f983b39d16eea"
