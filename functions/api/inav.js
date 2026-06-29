@@ -28,18 +28,7 @@ export async function onRequestGet(context) {
   const { request, env } = context;
   const cfg = config(env);
   const origin = env.ALLOW_ORIGIN || DEFAULTS.ALLOW_ORIGIN;
-  const url = new URL(request.url);
-  const code = (url.searchParams.get('code') || 'ZILR').trim();
-
-  // TEMP diagnostic: ?debug=1 reveals only the LENGTHS of the stored secrets
-  // (never their values) to catch a mis-paste. Removed once iNAV is confirmed.
-  if (url.searchParams.get('debug') === '1') {
-    return json({
-      ICE_USERNAME_len: (env.ICE_USERNAME || '').length,
-      ICE_PASSWORD_len: (env.ICE_PASSWORD || '').length,
-      ICE_BASE_URL: cfg.ICE_BASE_URL,
-    }, origin, 5);
-  }
+  const code = (new URL(request.url).searchParams.get('code') || 'ZILR').trim();
 
   try {
     if (!env.ICE_USERNAME || !env.ICE_PASSWORD) {
