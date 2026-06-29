@@ -2073,6 +2073,10 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
   list-style: none;
 }
 .fund-accordion-head::-webkit-details-marker { display: none; }
+.fund-accordion-head .fund-h2 {
+  font-size: clamp(18px, 1.9vw, 22px);
+  letter-spacing: -.005em;
+}
 .fund-accordion-head:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 6px;
@@ -2082,8 +2086,8 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
 }
 .fund-accordion-icon {
   flex: none;
-  width: 11px;
-  height: 11px;
+  width: 8px;
+  height: 8px;
   margin-right: 6px;
   border-right: 2px solid var(--ink-mute);
   border-bottom: 2px solid var(--ink-mute);
