@@ -33,4 +33,10 @@ export default {
     // Anything else: serve a static asset (also returns the 404 page for unknown paths).
     return env.ASSETS.fetch(request);
   },
+
+  // Daily NAV-history accumulator (Option B). Fires on the cron in wrangler.toml;
+  // no-op until the NAV_KV namespace is bound.
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(nav.runAccumulator(env));
+  },
 };

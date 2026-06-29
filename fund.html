@@ -358,12 +358,12 @@
               </tbody>
             </table>
           </div>
-          <!-- Full daily NAV history CSV, served by WordPress (kept current by its cron).
-               Same DNS caveat as iNAV: if the new site takes over www.zillerfm.com,
-               repoint this to the host where WordPress still lives. WP shortcode: [downApi] -->
+          <!-- Self-hosted NAV history CSV from /api/nav?format=csv (no WordPress).
+               Serves the accumulated KV history once the daily accumulator is seeded
+               (Option B); until then it generates the recent window from the feed on demand. -->
           <div class="fund-nav-card-foot">
-            <a class="btn btn-outline" href="https://www.zillerfm.com/wp-content/plugins/unitprices/A0ZFGF.csv" download>Historical Net Asset Values</a>
-            <p class="fund-muted-small">Full daily NAV history (CSV).</p>
+            <a class="btn btn-outline" href="/api/nav?format=csv&amp;code=A0ZFGF" download="A0ZFGF-NAV-history.csv">Historical Net Asset Values</a>
+            <p class="fund-muted-small">Daily NAV history (CSV).</p>
           </div>
         </div>
         </details>

@@ -37,9 +37,24 @@ export async function onRequestGet(context) {
   const url = new URL(request.url);
   const code = (url.searchParams.get('code') || 'A0ZFGF').trim();
   const base = (env.PERENNIAL_FEED_BASE || '').trim();
+  const format = (url.searchParams.get('format') || 'json').toLowerCase();
+
+  // Manual accumulator trigger (seed/refresh the KV full-history CSV — Option B).
+  if (url.searchParams.get('accumulate') === '1') {
+    return json({ accumulate: await runAccumulator(env) }, origin, 0);
+  }
 
   try {
     if (!base) throw new Error('PERENNIAL_FEED_BASE not configured.');
+
+    // Historical CSV download: serve the accumulated KV file if present (full history,
+    // Option B), else generate the recent window from the feed on demand (Option A).
+    if (format === 'csv') {
+      let csv = null;
+      if (env.NAV_KV) { try { csv = await env.NAV_KV.get(kvKey(code)); } catch (_) {} }
+      if (!csv) { const built = await buildNav(code, base, cfg); csv = toCsv(code, built.history); }
+      return csvResponse(csv, origin, cfg.NAV_CACHE_SECONDS);
+    }
     const cache = caches.default;
     const key = new Request('https://nav-cache.internal/nav-' + encodeURIComponent(code));
 
@@ -108,7 +123,7 @@ async function buildNav(code, base, cfg) {
   if (!records.length) throw new Error('No rows for ' + code + ' in last ' + cfg.NAV_LOOKBACK_DAYS + ' days.');
 
   const cur = records[0];
-  const history = records.slice(0, cfg.NAV_HISTORY_LIMIT).map(function (r) { return { date: r.date, nav: r.nav }; });
+  const history = records.slice(0, cfg.NAV_HISTORY_LIMIT).map(function (r) { return { date: r.date, entry: r.entry, exit: r.exit, nav: r.nav }; });
   return { code: code, date: cur.date, entry: cur.entry, exit: cur.exit, nav: cur.nav, history: history };
 }
 
@@ -212,4 +227,105 @@ function json(obj, origin, maxAge) {
   headers['Content-Type'] = 'application/json; charset=utf-8';
   headers['Cache-Control'] = 'public, max-age=' + (maxAge || 30);
   return new Response(JSON.stringify(obj), { status: 200, headers: headers });
+}
+
+// --- Historical CSV (Option A) + daily accumulator (Option B) ---
+
+const CSV_HEADER = 'PRODUCT,APPLICATION,REDEMPTION,EFFECTIVE DATE,NAV PRICE';
+
+function kvKey(code) { return 'nav-csv-' + code; }
+
+function productName(code) {
+  const MAP = { A0ZFGF: 'ZILLER GLOBAL FUND' };
+  return MAP[code] || code;
+}
+
+// Build the WP-format CSV from a history array ([{date, entry, exit, nav}], newest first).
+function toCsv(code, history) {
+  const name = productName(code);
+  const body = (history || []).map(function (h) {
+    return [name, h.entry, h.exit, h.date, h.nav].join(',');
+  }).join('\n');
+  return CSV_HEADER + '\n' + body + (body ? '\n' : '');
+}
+
+function csvResponse(csv, origin, maxAge) {
+  const h = cors(origin);
+  h['Content-Type'] = 'text/csv; charset=utf-8';
+  h['Content-Disposition'] = 'attachment; filename="NAV-history.csv"';
+  h['Cache-Control'] = 'public, max-age=' + (maxAge || 300);
+  return new Response(csv, { status: 200, headers: h });
+}
+
+// Parse our display dates ("24-Jun-2026") back to a sortable timestamp.
+function parseDisplayDate(s) {
+  const MON = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11 };
+  const m = String(s == null ? '' : s).trim().match(/^(\d{1,2})-([A-Za-z]{3})-(\d{4})$/);
+  if (!m) return NaN;
+  const mon = MON[m[2].toLowerCase()];
+  if (mon == null) return NaN;
+  return Date.UTC(parseInt(m[3], 10), mon, parseInt(m[1], 10));
+}
+
+function countRows(csv) {
+  return String(csv || '').split(/\r?\n/).filter(function (l) { return l.trim(); }).length - 1;
+}
+
+// Merge recent feed rows into the existing accumulated CSV (dedupe by date, newest first).
+function mergeCsv(code, existingCsv, recentHistory) {
+  const rows = [], seen = {};
+  const lines = String(existingCsv || '').split(/\r?\n/);
+  for (let i = 1; i < lines.length; i++) {
+    if (!lines[i].trim()) continue;
+    const cols = lines[i].split(',');
+    if (cols.length < 5) continue;
+    const d = cols[3].trim();
+    const ts = parseDisplayDate(d);
+    if (Number.isNaN(ts) || seen[d]) continue;
+    seen[d] = true;
+    rows.push({ ts: ts, line: lines[i] });
+  }
+  const name = productName(code);
+  (recentHistory || []).forEach(function (h) {
+    if (!h.date || seen[h.date]) return;
+    const ts = parseDisplayDate(h.date);
+    if (Number.isNaN(ts)) return;
+    seen[h.date] = true;
+    rows.push({ ts: ts, line: [name, h.entry, h.exit, h.date, h.nav].join(',') });
+  });
+  rows.sort(function (a, b) { return b.ts - a.ts; });
+  return CSV_HEADER + '\n' + rows.map(function (r) { return r.line; }).join('\n') + (rows.length ? '\n' : '');
+}
+
+// Daily job: seed the KV CSV once (from the existing WordPress file so all history is
+// preserved), then append new days from the Perennial feed. No-op until NAV_KV is bound.
+export async function runAccumulator(env) {
+  if (!env.NAV_KV) return 'no NAV_KV binding — skipped';
+  const base = (env.PERENNIAL_FEED_BASE || '').trim();
+  if (!base) return 'no PERENNIAL_FEED_BASE — skipped';
+  const cfg = config(env);
+  const code = (env.NAV_CODE || 'A0ZFGF').trim();
+  const key = kvKey(code);
+
+  let existing = null;
+  try { existing = await env.NAV_KV.get(key); } catch (_) {}
+
+  if (!existing) {
+    // One-time seed from the existing WordPress full-history file.
+    try {
+      const r = await fetch('https://www.zillerfm.com/wp-content/plugins/unitprices/' + code + '.csv');
+      if (r.ok) existing = await r.text();
+    } catch (_) {}
+    if (!existing || countRows(existing) < 1) { // fallback: a window from the feed
+      const built = await buildNav(code, base, cfg);
+      existing = toCsv(code, built.history);
+    }
+    await env.NAV_KV.put(key, existing);
+    return 'seeded (' + countRows(existing) + ' rows)';
+  }
+
+  const built = await buildNav(code, base, cfg);
+  const merged = mergeCsv(code, existing, built.history);
+  await env.NAV_KV.put(key, merged);
+  return 'merged (' + countRows(merged) + ' rows)';
 }
