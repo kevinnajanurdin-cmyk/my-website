@@ -2074,7 +2074,7 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
 }
 .fund-accordion-head::-webkit-details-marker { display: none; }
 .fund-accordion-head .fund-h2 {
-  font-size: clamp(16px, 1.5vw, 19px);
+  font-size: clamp(17px, 1.7vw, 21px);
   letter-spacing: -.005em;
 }
 .fund-accordion-head:focus-visible {
