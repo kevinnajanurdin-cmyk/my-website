@@ -12,6 +12,7 @@
  */
 import * as inav from './functions/api/inav.js';
 import * as nav from './functions/api/nav.js';
+import * as mpi from './functions/api/mpi.js';
 
 export default {
   async fetch(request, env, ctx) {
@@ -24,6 +25,9 @@ export default {
     }
     if (pathname === '/api/nav') {
       return request.method === 'OPTIONS' ? nav.onRequestOptions(context) : nav.onRequestGet(context);
+    }
+    if (pathname === '/api/mpi') {
+      return request.method === 'OPTIONS' ? mpi.onRequestOptions(context) : mpi.onRequestGet(context);
     }
 
     // Anything else: serve a static asset (also returns the 404 page for unknown paths).

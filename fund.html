@@ -307,13 +307,11 @@
           <div class="fund-mpi-info">
             <h3 class="fund-h3">Material Portfolio Information</h3>
             <p class="fund-muted">Latest holdings disclosure for the trading day.</p>
-            <!--
-              Placeholder — old WordPress shortcode:
-                [pdf_downloader]
-              Replace with a direct PDF feed or API integration when available.
-            -->
-            <a class="btn btn-outline fund-disabled" href="#" aria-disabled="true" onclick="return false;">Download PDF</a>
-            <p class="fund-muted-small">Live feed pending. Document will be available on integration.</p>
+            <!-- Latest MPI PDF via Path-B /api/mpi (finds the newest in the publishing
+                 dir). Stays disabled until /api/mpi is deployed + MPI_FEED_BASE secret set.
+                 Old WP shortcode: [pdf_downloader] -->
+            <a class="btn btn-outline fund-disabled" id="mpi-link" href="#" aria-disabled="true" onclick="return false;" target="_blank" rel="noopener noreferrer">Download PDF</a>
+            <p class="fund-muted-small" id="mpi-date">Latest disclosure loads automatically.</p>
           </div>
           <div class="fund-mpi-disclosure">
             <p class="fund-mpi-disclosure-label">MPI Tracking Error</p>
@@ -360,14 +358,12 @@
               </tbody>
             </table>
           </div>
-          <!--
-            Placeholder — old WordPress shortcode:
-              [downApi code="A0ZFGF"]
-            Replace with the live download endpoint when integrated.
-          -->
+          <!-- Full daily NAV history CSV, served by WordPress (kept current by its cron).
+               Same DNS caveat as iNAV: if the new site takes over www.zillerfm.com,
+               repoint this to the host where WordPress still lives. WP shortcode: [downApi] -->
           <div class="fund-nav-card-foot">
-            <a class="btn btn-outline fund-disabled" href="#" aria-disabled="true" onclick="return false;">Historical Net Asset Values</a>
-            <p class="fund-muted-small">Live download pending integration.</p>
+            <a class="btn btn-outline" href="https://www.zillerfm.com/wp-content/plugins/unitprices/A0ZFGF.csv" download>Historical Net Asset Values</a>
+            <p class="fund-muted-small">Full daily NAV history (CSV).</p>
           </div>
         </div>
         </details>
@@ -610,6 +606,24 @@
             }
           })
           .catch(function () { /* leave placeholders / sample table in place */ });
+      })();
+
+      // --- Daily MPI PDF (Path-B /api/mpi finds the newest PDF in the publishing dir) ---
+      (function () {
+        var link = document.getElementById('mpi-link');
+        var dateEl = document.getElementById('mpi-date');
+        if (!link) return;
+        fetch('/api/mpi?code=A0ZFGF&json=1', { cache: 'no-store' })
+          .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+          .then(function (d) {
+            if (!d || !d.url) return;
+            link.href = d.url;
+            link.classList.remove('fund-disabled');
+            link.removeAttribute('aria-disabled');
+            link.onclick = null;
+            if (dateEl) dateEl.textContent = d.date ? ('Latest: ' + d.date) : 'Latest holdings disclosure (PDF).';
+          })
+          .catch(function () { /* leave the disabled placeholder */ });
       })();
     })();
   </script>

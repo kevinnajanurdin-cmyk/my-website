@@ -10,3 +10,7 @@ ICE_PASSWORD = "<ICE-API-password>"
 # Perennial private unit-price CSV feed — the full token directory URL for ZILR
 # (the non-NAV-type directory used by the old plugin), with a trailing slash.
 PERENNIAL_FEED_BASE = "https://perennial.net.au/<token>/"
+
+# MPI (Material Portfolio Information) daily-PDF publishing directory on the WP site,
+# with a trailing slash. Directory of files named YYYYMMDD-A0ZFGF_MPI.pdf.
+MPI_FEED_BASE = "https://www.zillerfm.com/<token>/"
