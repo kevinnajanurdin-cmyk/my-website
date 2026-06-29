@@ -28,7 +28,18 @@ export async function onRequestGet(context) {
   const { request, env } = context;
   const cfg = config(env);
   const origin = env.ALLOW_ORIGIN || DEFAULTS.ALLOW_ORIGIN;
-  const code = (new URL(request.url).searchParams.get('code') || 'ZILR').trim();
+  const url = new URL(request.url);
+  const code = (url.searchParams.get('code') || 'ZILR').trim();
+
+  // TEMP diagnostic: ?debug=1 reveals only the LENGTHS of the stored secrets
+  // (never their values) to catch a mis-paste. Removed once iNAV is confirmed.
+  if (url.searchParams.get('debug') === '1') {
+    return json({
+      ICE_USERNAME_len: (env.ICE_USERNAME || '').length,
+      ICE_PASSWORD_len: (env.ICE_PASSWORD || '').length,
+      ICE_BASE_URL: cfg.ICE_BASE_URL,
+    }, origin, 5);
+  }
 
   try {
     if (!env.ICE_USERNAME || !env.ICE_PASSWORD) {
@@ -64,8 +75,12 @@ async function getToken(env, cfg) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username: env.ICE_USERNAME, password: env.ICE_PASSWORD }),
   });
-  const data = await res.json().catch(function () { return {}; });
-  if (!data || !data.token) throw new Error('ICE token request failed (HTTP ' + res.status + ').');
+  const bodyText = await res.text();
+  let data = {};
+  try { data = JSON.parse(bodyText); } catch (_) {}
+  if (!data || !data.token) {
+    throw new Error('ICE token request failed (HTTP ' + res.status + '): ' + bodyText.slice(0, 300));
+  }
 
   try {
     await cache.put(key, new Response(data.token, {
