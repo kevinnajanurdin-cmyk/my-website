@@ -1932,7 +1932,11 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
 }
 .fund-iframe-flush {
   margin: 4px -26px -24px;
+  padding: 0 18px;
+  background: #fff;
   border-top: 1px solid var(--line);
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 .fund-iframe-flush iframe {
   display: block;
@@ -2050,12 +2054,46 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
   border: 1px solid var(--line);
   border-radius: 3px;
   overflow: hidden;
+  padding: 0 16px;
 }
 .fund-iframe-card iframe {
   display: block;
   width: 100%;
   border: 0;
   background: #fff;
+}
+
+/* ─── Collapsible sections (details/summary dropdowns) ─── */
+.fund-accordion-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(20px, 3vw, 40px);
+  cursor: pointer;
+  list-style: none;
+}
+.fund-accordion-head::-webkit-details-marker { display: none; }
+.fund-accordion-head:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 6px;
+}
+.fund-accordion[open] > .fund-accordion-head {
+  margin-bottom: clamp(28px, 4vh, 48px);
+}
+.fund-accordion-icon {
+  flex: none;
+  width: 11px;
+  height: 11px;
+  margin-right: 6px;
+  border-right: 2px solid var(--ink-mute);
+  border-bottom: 2px solid var(--ink-mute);
+  transform: rotate(45deg);
+  transition: transform .25s ease;
+}
+.fund-accordion[open] .fund-accordion-icon { transform: rotate(-135deg); }
+.fund-accordion-head:hover .fund-accordion-icon { border-color: var(--ink); }
+@media (prefers-reduced-motion: reduce) {
+  .fund-accordion-icon { transition: none; }
 }
 
 /* ─── Disabled (placeholder) button ────────────────────── */
