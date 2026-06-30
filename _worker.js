@@ -44,5 +44,6 @@ export default {
   // no-op until the NAV_KV namespace is bound.
   async scheduled(event, env, ctx) {
     ctx.waitUntil(nav.runAccumulator(env));
+    ctx.waitUntil(mpi.runMirror(env));
   },
 };

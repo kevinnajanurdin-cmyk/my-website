@@ -24,6 +24,11 @@ export async function onRequestGet(context) {
   const base = (env.MPI_FEED_BASE || '').trim();
   const wantJson = url.searchParams.get('json') === '1';
 
+  // Manual mirror trigger: copy the latest WordPress PDF into KV (no-colleague path).
+  if (url.searchParams.get('mirror') === '1') {
+    return json({ mirror: await runMirror(env) }, origin, 0);
+  }
+
   try {
     // Prefer the self-hosted PDF in KV (uploaded from source via /api/mpi-upload);
     // fall back to the WordPress publishing dir until the upload pipeline is switched.
@@ -59,6 +64,29 @@ export async function onRequestGet(context) {
 
 export function onRequestOptions(context) {
   return new Response(null, { headers: cors(context.env.ALLOW_ORIGIN || DEFAULTS.ALLOW_ORIGIN) });
+}
+
+// Daily mirror (no-colleague path): copy the newest MPI PDF from the WordPress
+// publishing dir into KV, so /api/mpi serves it from Cloudflare. Refreshes once a day
+// from WP; needs no change on the source side. No-op without KV / MPI_FEED_BASE.
+// (If the source is ever wired to POST directly via /api/mpi-upload, drop this.)
+export async function runMirror(env) {
+  if (!env.NAV_KV) return 'no NAV_KV binding — skipped';
+  const base = (env.MPI_FEED_BASE || '').trim();
+  if (!base) return 'no MPI_FEED_BASE — skipped';
+  const code = (env.MPI_CODE || 'A0ZFGF').trim();
+  const latest = await findLatest(code, base);
+  if (!latest) return 'no MPI PDF found';
+  const r = await fetch(latest.url);
+  if (!r.ok) return 'fetch failed (HTTP ' + r.status + ')';
+  const buf = await r.arrayBuffer();
+  if (!buf || buf.byteLength < 100) return 'empty PDF';
+  const filename = (latest.url.split('?')[0].split('/').pop()) || (code + '_MPI.pdf');
+  await env.NAV_KV.put('mpi-' + code + '-pdf', buf);
+  await env.NAV_KV.put('mpi-' + code + '-meta', JSON.stringify({
+    date: latest.date, filename: filename, uploadedAt: new Date().toISOString(), source: 'mirror',
+  }));
+  return 'mirrored ' + filename + ' (' + buf.byteLength + ' bytes)';
 }
 
 async function findLatest(code, base) {
