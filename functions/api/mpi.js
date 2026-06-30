@@ -25,6 +25,25 @@ export async function onRequestGet(context) {
   const wantJson = url.searchParams.get('json') === '1';
 
   try {
+    // Prefer the self-hosted PDF in KV (uploaded from source via /api/mpi-upload);
+    // fall back to the WordPress publishing dir until the upload pipeline is switched.
+    try {
+      if (env.NAV_KV) {
+        const meta = await env.NAV_KV.get('mpi-' + code + '-meta', 'json');
+        if (meta) {
+          if (wantJson) return json({ code: code, url: '/api/mpi?code=' + encodeURIComponent(code), date: meta.date }, origin, maxAge);
+          const pdf = await env.NAV_KV.get('mpi-' + code + '-pdf', 'arrayBuffer');
+          if (pdf) {
+            const ph = cors(origin);
+            ph['Content-Type'] = 'application/pdf';
+            ph['Content-Disposition'] = 'inline; filename="' + (meta.filename || (code + '_MPI.pdf')) + '"';
+            ph['Cache-Control'] = 'public, max-age=' + maxAge;
+            return new Response(pdf, { status: 200, headers: ph });
+          }
+        }
+      }
+    } catch (_) { /* fall through to the WordPress dir */ }
+
     if (!base) throw new Error('MPI_FEED_BASE not configured.');
     const latest = await findLatest(code, base);
     if (!latest) throw new Error('No MPI PDF found for ' + code + '.');

@@ -13,6 +13,7 @@
 import * as inav from './functions/api/inav.js';
 import * as nav from './functions/api/nav.js';
 import * as mpi from './functions/api/mpi.js';
+import * as mpiUpload from './functions/api/mpi-upload.js';
 
 export default {
   async fetch(request, env, ctx) {
@@ -28,6 +29,11 @@ export default {
     }
     if (pathname === '/api/mpi') {
       return request.method === 'OPTIONS' ? mpi.onRequestOptions(context) : mpi.onRequestGet(context);
+    }
+    if (pathname === '/api/mpi-upload') {
+      if (request.method === 'OPTIONS') return mpiUpload.onRequestOptions(context);
+      if (request.method === 'POST') return mpiUpload.onRequestPost(context);
+      return new Response('Method Not Allowed', { status: 405 });
     }
 
     // Anything else: serve a static asset (also returns the 404 page for unknown paths).
