@@ -215,6 +215,22 @@ $inavClean = @'
       var valueEl = document.getElementById('inav-value');
       var asOfEl  = document.getElementById('inav-asof');
       if (!valueEl) return;
+
+      // Live "As at" clock: ticks every second in Australia/Sydney time
+      // (mirrors the old Unit Price plugin). Price refreshes every 60s below.
+      function tick() {
+        if (!asOfEl) return;
+        var parts = {};
+        new Intl.DateTimeFormat('en-AU', {
+          timeZone: 'Australia/Sydney', hour12: true,
+          year: 'numeric', month: '2-digit', day: '2-digit',
+          hour: '2-digit', minute: '2-digit', second: '2-digit'
+        }).formatToParts(new Date()).forEach(function (x) { parts[x.type] = x.value; });
+        asOfEl.textContent = 'As at ' + parts.hour + ':' + parts.minute + ':' + parts.second +
+          ' ' + String(parts.dayPeriod || '').toUpperCase() +
+          ' ' + parts.day + '/' + parts.month + '/' + parts.year;
+      }
+
       function refresh() {
         fetch('/wp-json/ice-api/v1/pricing?code=ZILR', { cache: 'no-store' })
           .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
@@ -222,17 +238,16 @@ $inavClean = @'
             if (!data || !data.content) return;
             var doc = new DOMParser().parseFromString(data.content, 'text/html');
             var p = doc.querySelector('.inav_price_container h3');
-            var d = doc.querySelector('.inav_date');
             var price = p ? p.textContent.trim() : '';
             if (!/\d/.test(price)) return;
             valueEl.textContent = price;
             valueEl.classList.remove('fund-placeholder');
-            if (asOfEl && d) asOfEl.textContent = d.textContent.trim();
           })
           .catch(function () {});
       }
-      refresh();
-      setInterval(refresh, 60000);
+
+      tick();    setInterval(tick, 1000);
+      refresh(); setInterval(refresh, 60000);
     })();
 '@
 $f = [regex]::Replace($f, '(?s)\(function \(\) \{\s+var REFRESH_MS = 60000;.*?\r?\n    \}\)\(\);', { param($m) $inavClean.Trim() })
