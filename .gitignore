@@ -18,3 +18,10 @@ _private/
 
 # Local Claude Code tooling
 .claude/
+
+# Generated theme package (built to ../ziller-theme.zip; never committed)
+*.zip
+
+# Local build staging (normally the system temp dir; ignore if ever created here)
+theme-build/
+.build/
