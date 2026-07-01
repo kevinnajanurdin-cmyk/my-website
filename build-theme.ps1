@@ -563,7 +563,11 @@ $essayMain = @'
           <a href="/insights/" class="essay-back">&larr; Insights</a>
         </div>
       </nav>
-      <?php if ( has_post_thumbnail() ) : ?>
+      <?php
+      $ziller_hero = function_exists( 'get_field' ) ? get_field( 'hero_image' ) : 0;
+      if ( $ziller_hero ) : ?>
+      <figure class="essay-portrait"><?php echo wp_get_attachment_image( (int) $ziller_hero, 'full', false, array( 'alt' => esc_attr( get_the_title() ) ) ); ?></figure>
+      <?php elseif ( has_post_thumbnail() ) : ?>
       <figure class="essay-portrait"><?php the_post_thumbnail( 'large' ); ?></figure>
       <?php endif; ?>
       <header class="essay-header">
@@ -686,6 +690,34 @@ function ziller_body_class( $classes ) {
 	return $classes;
 }
 add_filter( 'body_class', 'ziller_body_class' );
+
+// Optional per-article "Hero image" (ACF Pro). Lets the article hero differ from
+// the listing-card thumbnail (the featured image); falls back to the featured
+// image when unset. No-op if ACF is not active.
+add_action( 'acf/init', 'ziller_acf_fields' );
+function ziller_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) { return; }
+	acf_add_local_field_group( array(
+		'key'      => 'group_ziller_article',
+		'title'    => 'Article Media',
+		'fields'   => array(
+			array(
+				'key'           => 'field_ziller_hero',
+				'label'         => 'Hero image',
+				'name'          => 'hero_image',
+				'type'          => 'image',
+				'return_format' => 'id',
+				'preview_size'  => 'medium',
+				'instructions'  => 'Optional. Shown large at the top of the article. If empty, the featured image is used. (The Insights listing card always uses the featured image.)',
+			),
+		),
+		'location' => array(
+			array(
+				array( 'param' => 'post_type', 'operator' => '==', 'value' => 'post' ),
+			),
+		),
+	) );
+}
 '@
 [System.IO.File]::WriteAllText((Join-Path $theme "functions.php"), $functions, $utf8)
 
