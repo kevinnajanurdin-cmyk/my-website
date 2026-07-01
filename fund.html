@@ -144,7 +144,6 @@
               <span class="fund-doc-num">01</span>
               <span class="fund-doc-title">Latest monthly report</span>
               <span class="fund-doc-tag">PDF</span>
-              <span class="fund-doc-arrow" aria-hidden="true">↗</span>
             </a>
           </li>
           <li>
@@ -154,7 +153,6 @@
               <span class="fund-doc-num">02</span>
               <span class="fund-doc-title">Fund Flyer</span>
               <span class="fund-doc-tag">PDF</span>
-              <span class="fund-doc-arrow" aria-hidden="true">↗</span>
             </a>
           </li>
           <li>
@@ -164,7 +162,6 @@
               <span class="fund-doc-num">03</span>
               <span class="fund-doc-title">Product Disclosure Statement</span>
               <span class="fund-doc-tag">PDF</span>
-              <span class="fund-doc-arrow" aria-hidden="true">↗</span>
             </a>
           </li>
           <li>
@@ -174,7 +171,6 @@
               <span class="fund-doc-num">04</span>
               <span class="fund-doc-title">Target Market Determination</span>
               <span class="fund-doc-tag">PDF</span>
-              <span class="fund-doc-arrow" aria-hidden="true">↗</span>
             </a>
           </li>
         </ul>
@@ -331,20 +327,27 @@
             <h2 class="fund-h2">Distributions</h2>
             <span class="fund-accordion-icon" aria-hidden="true"></span>
           </summary>
-        <div class="fund-nav-card">
-          <h3 class="fund-h3">Estimated End of Financial Year Distribution</h3>
-          <div class="fund-table-wrap">
-            <table class="fund-table">
-              <tbody>
-                <tr><td>Announcement Date</td><td>25 June 2026</td></tr>
-                <tr><td>Ex Distribution Date</td><td>29 June 2026</td></tr>
-                <tr><td>Record Date</td><td>30 June 2026</td></tr>
-                <tr><td>DRP Election Date</td><td>2PM Tuesday, 30 June 2026</td></tr>
-                <tr><td>Payment Date</td><td>10 July 2026</td></tr>
-                <tr><td>Estimated Distribution</td><td>58.630 cents per unit</td></tr>
-              </tbody>
-            </table>
-          </div>
+        <style>
+          .fund-dist { padding: clamp(18px, 3vw, 32px) 0 4px; max-width: 640px; }
+          .fund-dist-title { font-family: var(--serif); font-weight: 400; font-size: 1.2rem; color: var(--ink); margin: 0 0 1.3rem; }
+          .fund-dist-list { margin: 0; }
+          .fund-dist-row { display: flex; justify-content: space-between; align-items: baseline; gap: 1.5rem; padding: 0.8rem 0; border-bottom: 1px solid var(--line); }
+          .fund-dist-row dt { margin: 0; color: var(--ink-mute); font-size: 0.9rem; }
+          .fund-dist-row dd { margin: 0; color: var(--ink); font-size: 0.98rem; text-align: right; font-variant-numeric: tabular-nums; }
+          .fund-dist-total { border-bottom: 0; padding-top: 1.1rem; }
+          .fund-dist-total dt { color: var(--ink); }
+          .fund-dist-total dd { font-family: var(--serif); font-size: 1.4rem; color: var(--accent-deep); }
+        </style>
+        <div class="fund-dist">
+          <p class="fund-dist-title">Estimated End of Financial Year Distribution</p>
+          <dl class="fund-dist-list">
+            <div class="fund-dist-row"><dt>Announcement Date</dt><dd>25 June 2026</dd></div>
+            <div class="fund-dist-row"><dt>Ex-Distribution Date</dt><dd>29 June 2026</dd></div>
+            <div class="fund-dist-row"><dt>Record Date</dt><dd>30 June 2026</dd></div>
+            <div class="fund-dist-row"><dt>DRP Election Date</dt><dd>2:00 PM, Tuesday 30 June 2026</dd></div>
+            <div class="fund-dist-row"><dt>Payment Date</dt><dd>10 July 2026</dd></div>
+            <div class="fund-dist-row fund-dist-total"><dt>Estimated Distribution</dt><dd>58.630 cents per unit</dd></div>
+          </dl>
         </div>
         </details>
       </div>
