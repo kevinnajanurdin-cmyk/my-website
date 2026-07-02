@@ -842,11 +842,21 @@ if ( ($oldZip -ne $zip) -and (Test-Path $oldZip) ) { Remove-Item $oldZip -Force 
 # Run via cmd so attrib's output can't trip PowerShell's native-stderr handling.
 & cmd /c "attrib -U +P ""$zip"" >nul 2>&1"
 
+# UPLOAD FROM THIS COPY. Even pinned, the Desktop zip stays a OneDrive reparse point --
+# every browser read goes through the sync filter driver, and uploading while OneDrive
+# is re-syncing a freshly rebuilt zip can stream a stale/partial file to WordPress
+# (-> the bogus "missing style.css", while the on-disk zip verifies perfectly).
+# C:\ziller-deploy is plain local disk: no sync driver, no reparse point, no churn.
+$deployDir = 'C:\ziller-deploy'
+if (-not (Test-Path $deployDir)) { New-Item -ItemType Directory -Path $deployDir | Out-Null }
+$deployZip = Join-Path $deployDir 'ziller-theme.zip'
+Copy-Item $zip $deployZip -Force
+
 Write-Host ""
 Write-Host ("BUILD OK  ->  {0}" -f $zip)
 Write-Host ("  size:      {0:N2} MB" -f ((Get-Item $zip).Length / 1MB))
 Write-Host ("  templates: {0} .php files, style.css header present, forward-slash paths verified" -f $phpCount)
 Write-Host ""
 Write-Host "Upload: WP admin > Appearance > Themes > Add New Theme > Upload Theme > Replace current with uploaded."
-Write-Host "The zip is on your Desktop, pinned to stay fully on-device. If it ever shows a OneDrive cloud icon,"
-Write-Host "right-click > Always keep on this device (or just rebuild) before uploading."
+Write-Host ">>> UPLOAD FROM: C:\ziller-deploy\ziller-theme.zip  (plain local copy - outside OneDrive)."
+Write-Host "The Desktop copy is the synced backup; uploading it can stream stale bytes mid-OneDrive-sync."
