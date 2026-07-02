@@ -21,16 +21,13 @@ $utf8 = New-Object System.Text.UTF8Encoding($false)   # no BOM (critical for gen
 $src       = $PSScriptRoot
 $buildRoot = Join-Path ([System.IO.Path]::GetTempPath()) 'ziller-theme-build'
 $theme     = Join-Path $buildRoot 'ziller'
-# Output the zip OUTSIDE OneDrive (into Downloads) so the file you upload is always a
-# complete LOCAL copy. OneDrive Files On-Demand can leave the synced-Desktop copy as a
-# cloud placeholder; uploading a not-yet-hydrated placeholder sends WordPress a
-# truncated archive, which it misreports as "missing style.css" (style.css sorts late
-# in the zip, so it is the first file lost on a partial upload). See STATUS.md.
-$outDir    = Join-Path $env:USERPROFILE 'Downloads'
-if (-not (Test-Path $outDir)) { $outDir = $env:LOCALAPPDATA }
-if (-not (Test-Path $outDir)) { $outDir = Split-Path $src -Parent }
-$zip       = Join-Path $outDir 'ziller-theme.zip'
-$oldZip    = Join-Path (Split-Path $src -Parent) 'ziller-theme.zip'   # legacy OneDrive/Desktop location
+# Output the zip to the OneDrive Desktop (per user preference). OneDrive Files On-Demand
+# can otherwise turn an idle Desktop copy into a cloud PLACEHOLDER, and uploading a
+# not-yet-hydrated placeholder sends WordPress a truncated archive -> bogus "missing
+# style.css". To prevent that, the freshly built zip is PINNED ("always keep on this
+# device") right after it is written (see below), so it stays fully local. See STATUS.md.
+$zip       = Join-Path (Split-Path $src -Parent) 'ziller-theme.zip'
+$oldZip    = Join-Path $env:USERPROFILE 'Downloads\ziller-theme.zip'   # remove the interim Downloads copy
 
 # --- Validate the source before building ------------------------------------
 $required = @('index.html','approach.html','team.html','invest.html','fund.html','insights.html','styles.css','script.js','assets')
@@ -60,11 +57,11 @@ $html = $html.Replace('<script src="prefetch.js" defer></script>', '')
 $html = $html.Replace('<body class="page-home">', '<body <?php body_class(); ?>>')
 
 # Internal links -> WordPress permalink form (these pages get created later)
-$html = $html.Replace('"approach.html"','"/approach/"')
-$html = $html.Replace('"team.html"','"/team/"')
+$html = $html.Replace('"approach.html"','"/investment-philosophy-and-process/"')
+$html = $html.Replace('"team.html"','"/people/"')
 $html = $html.Replace('"insights.html"','"/insights/"')
-$html = $html.Replace('"invest.html"','"/invest/"')
-$html = $html.Replace('"fund.html"','"/funds/"')
+$html = $html.Replace('"invest.html"','"/invest-with-us/"')
+$html = $html.Replace('"fund.html"','"/ziller-global-fund/"')
 $html = $html.Replace('href="#contact"','href="/contact/"')   # Contact nav/footer -> dedicated page
 $html = $html.Replace('"peter-beck-rocket-lab.html"','"/peter-beck-rocket-lab/"')
 $html = $html.Replace('"the-founders-advantage.html"','"/the-founders-advantage/"')
@@ -82,9 +79,9 @@ $html = $html -replace '\s*<meta name="description"[^>]*>', ''
 $homeInsList = @'
 <ul class="insights-list">
 <?php
-        $home_ins  = get_term_by( 'name', 'Insights', 'category' );
+        $home_cat  = get_term_by( 'slug', 'articles', 'category' );   // home teaser = Articles only (not Media / Videos & Webinars)
         $home_args = array( 'post_type' => 'post', 'post_status' => 'publish', 'posts_per_page' => 3, 'ignore_sticky_posts' => true );
-        if ( $home_ins ) { $home_args['cat'] = (int) $home_ins->term_id; }
+        if ( $home_cat ) { $home_args['cat'] = (int) $home_cat->term_id; }
         $home_q = new WP_Query( $home_args );
         if ( $home_q->have_posts() ) : while ( $home_q->have_posts() ) : $home_q->the_post(); ?>
           <li>
@@ -128,6 +125,10 @@ $front  = "<?php get_header(); ?>`r`n" + $main + "`r`n<?php get_footer(); ?>`r`n
 # ── Sub-pages: each is a SELF-CONTAINED page-{slug}.php (own nav/footer/
 #    inline animation script). WP auto-uses page-{slug}.php for a Page whose
 #    slug matches. ──────────────────────────────────────────────────────
+# Old-site slug map: the new design serves on the EXISTING (old) page slugs so the
+# other admins keep their same pages/URLs. Body class stays page-{source} (CSS hook);
+# only the output template filename uses the old WP slug.
+$ziller_wpslug = @{ 'approach' = 'investment-philosophy-and-process'; 'team' = 'people'; 'invest' = 'invest-with-us' }
 foreach ($slug in @('approach','team','invest')) {
 	$p = [System.IO.File]::ReadAllText((Join-Path $src "$slug.html"))
 	$cls = "page-$slug"
@@ -141,11 +142,11 @@ foreach ($slug in @('approach','team','invest')) {
 	# both collapse correctly: "index.html" -> "/", "index.html#fund" -> "/#fund")
 	$p = $p.Replace('index.html#contact', '/contact/')
 	$p = $p.Replace('index.html', '/')
-	$p = $p.Replace('"approach.html"','"/approach/"')
-	$p = $p.Replace('"team.html"','"/team/"')
+	$p = $p.Replace('"approach.html"','"/investment-philosophy-and-process/"')
+	$p = $p.Replace('"team.html"','"/people/"')
 	$p = $p.Replace('"insights.html"','"/insights/"')
-	$p = $p.Replace('"invest.html"','"/invest/"')
-	$p = $p.Replace('"fund.html"','"/funds/"')
+	$p = $p.Replace('"invest.html"','"/invest-with-us/"')
+	$p = $p.Replace('"fund.html"','"/ziller-global-fund/"')
 	$p = $p.Replace('"peter-beck-rocket-lab.html"','"/peter-beck-rocket-lab/"')
 	$p = $p.Replace('"the-founders-advantage.html"','"/the-founders-advantage/"')
 	$p = $p.Replace('"catl.html"','"/catl/"')
@@ -165,10 +166,10 @@ foreach ($slug in @('approach','team','invest')) {
 	$p = $p -replace '\s*<title>.*?</title>', ''
 	$p = $p -replace '\s*<meta name="description"[^>]*>', ''
 
-	[System.IO.File]::WriteAllText((Join-Path $theme "page-$slug.php"), $p, $utf8)
+	[System.IO.File]::WriteAllText((Join-Path $theme "page-$($ziller_wpslug[$slug]).php"), $p, $utf8)
 }
 
-# ── Fund page -> page-funds.php (slug is /funds/, since /fund was taken). Live
+# ── Fund page -> page-ziller-global-fund.php (serves the existing "Fund Information" page; old slug /ziller-global-fund/). Live
 #    figures render SERVER-SIDE into the design's own markup via the existing
 #    plugins: getPrice() (entry/exit, DB), the unitprices CSV (current NAV +
 #    history), PDF_Manager (MPI). iNAV stays client-side on the ice-api REST
@@ -184,11 +185,11 @@ $f = $f.Replace('`assets/', '`' + $T + '/assets/')
 $f = $f.Replace('https://www.zillerfm.com/wp-json/', '/wp-json/')   # iNAV REST -> same-origin
 $f = $f.Replace('index.html#contact', '/contact/')
 $f = $f.Replace('index.html', '/')
-$f = $f.Replace('"approach.html"','"/approach/"')
-$f = $f.Replace('"team.html"','"/team/"')
+$f = $f.Replace('"approach.html"','"/investment-philosophy-and-process/"')
+$f = $f.Replace('"team.html"','"/people/"')
 $f = $f.Replace('"insights.html"','"/insights/"')
-$f = $f.Replace('"invest.html"','"/invest/"')
-$f = $f.Replace('"fund.html"','"/funds/"')
+$f = $f.Replace('"invest.html"','"/invest-with-us/"')
+$f = $f.Replace('"fund.html"','"/ziller-global-fund/"')
 $f = $f.Replace('<link rel="stylesheet" href="styles.css" />', '')
 $f = $f.Replace('<script src="prefetch.js" defer></script>', '')
 $f = $f.Replace('<body class="page-fund">', "<body <?php body_class('page-fund'); ?>>")
@@ -331,7 +332,7 @@ if ( ! $ziller_report ) { $ziller_report = get_template_directory_uri() . '/asse
 '@
 $f = $fundPrelude + $f
 
-[System.IO.File]::WriteAllText((Join-Path $theme "page-funds.php"), $f, $utf8)
+[System.IO.File]::WriteAllText((Join-Path $theme "page-ziller-global-fund.php"), $f, $utf8)
 
 # ── Contact page -> page-contact.php (NEW page in the Ziller design: Pardot
 #    subscribe form + distribution/media directory + Automic registry).
@@ -352,12 +353,19 @@ $contactMain = @'
   @media (max-width: 900px) { .contact-grid { grid-template-columns: 1fr; } }
   .contact-directory h2 { font-family: var(--serif); font-weight: 400; color: var(--ink); font-size: 1.5rem; margin: 2.75rem 0 1.4rem; padding-bottom: .6rem; border-bottom: 1px solid var(--line); }
   .contact-directory h2:first-child { margin-top: 0; }
-  .contact-people { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem 2.2rem; }
+  .contact-people { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem 2.2rem; }
   @media (max-width: 560px) { .contact-people { grid-template-columns: 1fr; } }
+  .contact-person { display: flex; gap: 1rem; align-items: flex-start; }
+  .contact-photo { flex: 0 0 60px; width: 60px; height: 60px; border-radius: 50%; object-fit: cover; background: var(--bg-elev); }
+  .contact-person-body { min-width: 0; }
   .contact-name { font-family: var(--serif); font-size: 1.12rem; color: var(--ink); margin: 0; }
-  .contact-role { color: var(--ink-mute); font-size: .82rem; margin: .15rem 0 .5rem; }
-  .contact-lines a { display: block; font-size: .85rem; line-height: 1.75; color: var(--accent-deep); }
-  .contact-lines a:hover { color: var(--ink); }
+  .contact-role { color: var(--ink-mute); font-size: .82rem; margin: .15rem 0 .45rem; }
+  .contact-phone { margin: 0 0 .55rem; }
+  .contact-phone a { font-size: .85rem; color: var(--accent-deep); }
+  .contact-phone a:hover { color: var(--ink); }
+  .contact-icons { display: flex; align-items: center; gap: .5rem; }
+  .contact-icon { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 50%; color: var(--accent-deep); transition: color .18s ease, border-color .18s ease; }
+  .contact-icon:hover { color: var(--ink); border-color: var(--ink); }
   .contact-registry p { margin: .3rem 0; color: var(--ink-soft); font-size: .92rem; }
   .contact-registry a { color: var(--accent-deep); }
   .contact-subscribe { position: sticky; top: 116px; background: var(--bg-elev); border: 1px solid var(--line); border-radius: 4px; padding: clamp(22px, 3vw, 32px); }
@@ -367,6 +375,10 @@ $contactMain = @'
   @media (max-width: 900px) { .contact-subscribe { position: static; } }
 </style>
 <main class="contact-page">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="ico-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/></symbol>
+    <symbol id="ico-li" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56z"/></symbol>
+  </svg>
   <section class="contact-hero">
     <div class="container">
       <p class="section-eyebrow">Contact</p>
@@ -380,58 +392,128 @@ $contactMain = @'
         <h2>Distribution Team</h2>
         <div class="contact-people">
           <div class="contact-person">
-            <p class="contact-name">Cesar Farfan</p>
-            <p class="contact-role">Head of Distribution</p>
-            <p class="contact-lines"><a href="tel:+61405964960">+61 405 964 960</a><a href="mailto:CFarfan@perennial.net.au">CFarfan@perennial.net.au</a><a href="https://www.linkedin.com/in/cesar-farfan-6ab44044/" target="_blank" rel="noopener">LinkedIn</a></p>
+            <img class="contact-photo" src="assets/team/Cesar-Farfan-400x400px-300x300.png" alt="Cesar Farfan" width="60" height="60" loading="lazy" />
+            <div class="contact-person-body">
+              <p class="contact-name">Cesar Farfan</p>
+              <p class="contact-role">Head of Distribution</p>
+              <p class="contact-phone"><a href="tel:+61405964960">+61 405 964 960</a></p>
+              <div class="contact-icons">
+                <a class="contact-icon" href="mailto:CFarfan@perennial.net.au" aria-label="Email Cesar Farfan" title="Email Cesar Farfan"><svg width="16" height="16" aria-hidden="true"><use href="#ico-mail"></use></svg></a>
+                <a class="contact-icon" href="https://www.linkedin.com/in/cesar-farfan-6ab44044/" target="_blank" rel="noopener" aria-label="Cesar Farfan on LinkedIn" title="Cesar Farfan on LinkedIn"><svg width="16" height="16" aria-hidden="true"><use href="#ico-li"></use></svg></a>
+              </div>
+            </div>
           </div>
           <div class="contact-person">
-            <p class="contact-name">Abdul Elhage</p>
-            <p class="contact-role">Director, Institutional Sales</p>
-            <p class="contact-lines"><a href="tel:+61430604274">+61 430 604 274</a><a href="mailto:aelhage@perennial.net.au">aelhage@perennial.net.au</a><a href="https://www.linkedin.com/in/abdulelhage/" target="_blank" rel="noopener">LinkedIn</a></p>
+            <img class="contact-photo" src="assets/team/Abdul-Elhage-400x400px-300x300.png" alt="Abdul Elhage" width="60" height="60" loading="lazy" />
+            <div class="contact-person-body">
+              <p class="contact-name">Abdul Elhage</p>
+              <p class="contact-role">Director, Institutional Sales</p>
+              <p class="contact-phone"><a href="tel:+61430604274">+61 430 604 274</a></p>
+              <div class="contact-icons">
+                <a class="contact-icon" href="mailto:aelhage@perennial.net.au" aria-label="Email Abdul Elhage" title="Email Abdul Elhage"><svg width="16" height="16" aria-hidden="true"><use href="#ico-mail"></use></svg></a>
+                <a class="contact-icon" href="https://www.linkedin.com/in/abdulelhage/" target="_blank" rel="noopener" aria-label="Abdul Elhage on LinkedIn" title="Abdul Elhage on LinkedIn"><svg width="16" height="16" aria-hidden="true"><use href="#ico-li"></use></svg></a>
+              </div>
+            </div>
           </div>
           <div class="contact-person">
-            <p class="contact-name">Marjon Crandall</p>
-            <p class="contact-role">Head of Researcher &amp; Consultant Relationships</p>
-            <p class="contact-lines"><a href="tel:+61426947407">+61 426 947 407</a><a href="mailto:mCrandall@perennial.net.au">mCrandall@perennial.net.au</a><a href="https://www.linkedin.com/in/marjoncrandall/" target="_blank" rel="noopener">LinkedIn</a></p>
+            <img class="contact-photo" src="assets/team/Marjon-Crandall-400x400px-300x300.png" alt="Marjon Crandall" width="60" height="60" loading="lazy" />
+            <div class="contact-person-body">
+              <p class="contact-name">Marjon Crandall</p>
+              <p class="contact-role">Head of Researcher &amp; Consultant Relationships</p>
+              <p class="contact-phone"><a href="tel:+61426947407">+61 426 947 407</a></p>
+              <div class="contact-icons">
+                <a class="contact-icon" href="mailto:mCrandall@perennial.net.au" aria-label="Email Marjon Crandall" title="Email Marjon Crandall"><svg width="16" height="16" aria-hidden="true"><use href="#ico-mail"></use></svg></a>
+                <a class="contact-icon" href="https://www.linkedin.com/in/marjoncrandall/" target="_blank" rel="noopener" aria-label="Marjon Crandall on LinkedIn" title="Marjon Crandall on LinkedIn"><svg width="16" height="16" aria-hidden="true"><use href="#ico-li"></use></svg></a>
+              </div>
+            </div>
           </div>
           <div class="contact-person">
-            <p class="contact-name">Scott Curtis</p>
-            <p class="contact-role">Director, Private Wealth &amp; Family Office</p>
-            <p class="contact-lines"><a href="tel:+61422993458">+61 422 993 458</a><a href="mailto:scurtis@perennial.net.au">scurtis@perennial.net.au</a><a href="https://www.linkedin.com/in/sacurtis/" target="_blank" rel="noopener">LinkedIn</a></p>
+            <img class="contact-photo" src="assets/team/Scott-Curtis-400x400px.png" alt="Scott Curtis" width="60" height="60" loading="lazy" />
+            <div class="contact-person-body">
+              <p class="contact-name">Scott Curtis</p>
+              <p class="contact-role">Director, Private Wealth &amp; Family Office</p>
+              <p class="contact-phone"><a href="tel:+61422993458">+61 422 993 458</a></p>
+              <div class="contact-icons">
+                <a class="contact-icon" href="mailto:scurtis@perennial.net.au" aria-label="Email Scott Curtis" title="Email Scott Curtis"><svg width="16" height="16" aria-hidden="true"><use href="#ico-mail"></use></svg></a>
+                <a class="contact-icon" href="https://www.linkedin.com/in/sacurtis/" target="_blank" rel="noopener" aria-label="Scott Curtis on LinkedIn" title="Scott Curtis on LinkedIn"><svg width="16" height="16" aria-hidden="true"><use href="#ico-li"></use></svg></a>
+              </div>
+            </div>
           </div>
           <div class="contact-person">
-            <p class="contact-name">Karl Linder</p>
-            <p class="contact-role">Regional Manager, Southern States</p>
-            <p class="contact-lines"><a href="tel:+61418311605">+61 418 311 605</a><a href="mailto:KLinder@perennial.net.au">KLinder@perennial.net.au</a><a href="https://www.linkedin.com/in/karl-linder-693a8629/" target="_blank" rel="noopener">LinkedIn</a></p>
+            <img class="contact-photo" src="assets/team/Karl-Linder-200x200px.png" alt="Karl Linder" width="60" height="60" loading="lazy" />
+            <div class="contact-person-body">
+              <p class="contact-name">Karl Linder</p>
+              <p class="contact-role">Regional Manager, Southern States</p>
+              <p class="contact-phone"><a href="tel:+61418311605">+61 418 311 605</a></p>
+              <div class="contact-icons">
+                <a class="contact-icon" href="mailto:KLinder@perennial.net.au" aria-label="Email Karl Linder" title="Email Karl Linder"><svg width="16" height="16" aria-hidden="true"><use href="#ico-mail"></use></svg></a>
+                <a class="contact-icon" href="https://www.linkedin.com/in/karl-linder-693a8629/" target="_blank" rel="noopener" aria-label="Karl Linder on LinkedIn" title="Karl Linder on LinkedIn"><svg width="16" height="16" aria-hidden="true"><use href="#ico-li"></use></svg></a>
+              </div>
+            </div>
           </div>
           <div class="contact-person">
-            <p class="contact-name">David Whitby</p>
-            <p class="contact-role">Senior Investment Specialist</p>
-            <p class="contact-lines"><a href="tel:+61438790233">+61 438 790 233</a><a href="mailto:DWhitby@perennial.net.au">DWhitby@perennial.net.au</a><a href="https://www.linkedin.com/in/david-whitby-309452b/" target="_blank" rel="noopener">LinkedIn</a></p>
+            <img class="contact-photo" src="assets/team/David-Whitby-400x400px.png" alt="David Whitby" width="60" height="60" loading="lazy" />
+            <div class="contact-person-body">
+              <p class="contact-name">David Whitby</p>
+              <p class="contact-role">Senior Investment Specialist</p>
+              <p class="contact-phone"><a href="tel:+61438790233">+61 438 790 233</a></p>
+              <div class="contact-icons">
+                <a class="contact-icon" href="mailto:DWhitby@perennial.net.au" aria-label="Email David Whitby" title="Email David Whitby"><svg width="16" height="16" aria-hidden="true"><use href="#ico-mail"></use></svg></a>
+                <a class="contact-icon" href="https://www.linkedin.com/in/david-whitby-309452b/" target="_blank" rel="noopener" aria-label="David Whitby on LinkedIn" title="David Whitby on LinkedIn"><svg width="16" height="16" aria-hidden="true"><use href="#ico-li"></use></svg></a>
+              </div>
+            </div>
           </div>
           <div class="contact-person">
-            <p class="contact-name">Sam Harris</p>
-            <p class="contact-role">Investment Specialist (NSW)</p>
-            <p class="contact-lines"><a href="tel:+61487449927">+61 487 449 927</a><a href="mailto:sharris@perennial.net.au">sharris@perennial.net.au</a><a href="https://www.linkedin.com/in/sam-harris-387869165/" target="_blank" rel="noopener">LinkedIn</a></p>
+            <img class="contact-photo" src="assets/team/Sam-Harris-400x400px-zoomed.png" alt="Sam Harris" width="60" height="60" loading="lazy" />
+            <div class="contact-person-body">
+              <p class="contact-name">Sam Harris</p>
+              <p class="contact-role">Investment Specialist (NSW)</p>
+              <p class="contact-phone"><a href="tel:+61487449927">+61 487 449 927</a></p>
+              <div class="contact-icons">
+                <a class="contact-icon" href="mailto:sharris@perennial.net.au" aria-label="Email Sam Harris" title="Email Sam Harris"><svg width="16" height="16" aria-hidden="true"><use href="#ico-mail"></use></svg></a>
+                <a class="contact-icon" href="https://www.linkedin.com/in/sam-harris-387869165/" target="_blank" rel="noopener" aria-label="Sam Harris on LinkedIn" title="Sam Harris on LinkedIn"><svg width="16" height="16" aria-hidden="true"><use href="#ico-li"></use></svg></a>
+              </div>
+            </div>
           </div>
           <div class="contact-person">
-            <p class="contact-name">Vlad Laevsky</p>
-            <p class="contact-role">Investment Specialist (QLD)</p>
-            <p class="contact-lines"><a href="tel:+61423400304">+61 423 400 304</a><a href="mailto:vlaevsky@perennial.net.au">vlaevsky@perennial.net.au</a><a href="https://www.linkedin.com/in/vladlaevsky/" target="_blank" rel="noopener">LinkedIn</a></p>
+            <img class="contact-photo" src="assets/team/Vlad-Laevsky-400x400px.png" alt="Vlad Laevsky" width="60" height="60" loading="lazy" />
+            <div class="contact-person-body">
+              <p class="contact-name">Vlad Laevsky</p>
+              <p class="contact-role">Investment Specialist (QLD)</p>
+              <p class="contact-phone"><a href="tel:+61423400304">+61 423 400 304</a></p>
+              <div class="contact-icons">
+                <a class="contact-icon" href="mailto:vlaevsky@perennial.net.au" aria-label="Email Vlad Laevsky" title="Email Vlad Laevsky"><svg width="16" height="16" aria-hidden="true"><use href="#ico-mail"></use></svg></a>
+                <a class="contact-icon" href="https://www.linkedin.com/in/vladlaevsky/" target="_blank" rel="noopener" aria-label="Vlad Laevsky on LinkedIn" title="Vlad Laevsky on LinkedIn"><svg width="16" height="16" aria-hidden="true"><use href="#ico-li"></use></svg></a>
+              </div>
+            </div>
           </div>
         </div>
 
         <h2>Media &amp; Marketing</h2>
         <div class="contact-people">
           <div class="contact-person">
-            <p class="contact-name">Pyke Gunning</p>
-            <p class="contact-role">Marketing Manager</p>
-            <p class="contact-lines"><a href="tel:+61282742743">+61 2 8274 2743</a><a href="mailto:pGunning@perennial.net.au">pGunning@perennial.net.au</a><a href="https://www.linkedin.com/in/pykegunning/" target="_blank" rel="noopener">LinkedIn</a></p>
+            <img class="contact-photo" src="assets/team/Pyke-Gunning-e1657863878974.png" alt="Pyke Gunning" width="60" height="60" loading="lazy" />
+            <div class="contact-person-body">
+              <p class="contact-name">Pyke Gunning</p>
+              <p class="contact-role">Marketing Manager</p>
+              <p class="contact-phone"><a href="tel:+61282742743">+61 2 8274 2743</a></p>
+              <div class="contact-icons">
+                <a class="contact-icon" href="mailto:pGunning@perennial.net.au" aria-label="Email Pyke Gunning" title="Email Pyke Gunning"><svg width="16" height="16" aria-hidden="true"><use href="#ico-mail"></use></svg></a>
+                <a class="contact-icon" href="https://www.linkedin.com/in/pykegunning/" target="_blank" rel="noopener" aria-label="Pyke Gunning on LinkedIn" title="Pyke Gunning on LinkedIn"><svg width="16" height="16" aria-hidden="true"><use href="#ico-li"></use></svg></a>
+              </div>
+            </div>
           </div>
           <div class="contact-person">
-            <p class="contact-name">Chloe Jakins</p>
-            <p class="contact-role">Events Manager</p>
-            <p class="contact-lines"><a href="tel:+61282742742">+61 2 8274 2742</a><a href="mailto:CJakins@perennial.net.au">CJakins@perennial.net.au</a><a href="https://www.linkedin.com/in/chloe-jakins-ab423825a/" target="_blank" rel="noopener">LinkedIn</a></p>
+            <img class="contact-photo" src="assets/team/Chloe-Jakins-400x400px.png" alt="Chloe Jakins" width="60" height="60" loading="lazy" />
+            <div class="contact-person-body">
+              <p class="contact-name">Chloe Jakins</p>
+              <p class="contact-role">Events Manager</p>
+              <p class="contact-phone"><a href="tel:+61282742742">+61 2 8274 2742</a></p>
+              <div class="contact-icons">
+                <a class="contact-icon" href="mailto:CJakins@perennial.net.au" aria-label="Email Chloe Jakins" title="Email Chloe Jakins"><svg width="16" height="16" aria-hidden="true"><use href="#ico-mail"></use></svg></a>
+                <a class="contact-icon" href="https://www.linkedin.com/in/chloe-jakins-ab423825a/" target="_blank" rel="noopener" aria-label="Chloe Jakins on LinkedIn" title="Chloe Jakins on LinkedIn"><svg width="16" height="16" aria-hidden="true"><use href="#ico-li"></use></svg></a>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -478,11 +560,11 @@ $c = $c.Replace('"assets/', '"' + $T + '/assets/')
 $c = $c.Replace("'assets/", "'" + $T + '/assets/')
 $c = $c.Replace('index.html#contact', '/contact/')
 $c = $c.Replace('index.html', '/')
-$c = $c.Replace('"approach.html"','"/approach/"')
-$c = $c.Replace('"team.html"','"/team/"')
+$c = $c.Replace('"approach.html"','"/investment-philosophy-and-process/"')
+$c = $c.Replace('"team.html"','"/people/"')
 $c = $c.Replace('"insights.html"','"/insights/"')
-$c = $c.Replace('"invest.html"','"/invest/"')
-$c = $c.Replace('"fund.html"','"/funds/"')
+$c = $c.Replace('"invest.html"','"/invest-with-us/"')
+$c = $c.Replace('"fund.html"','"/ziller-global-fund/"')
 $c = $c.Replace(' aria-current="page"','')
 $c = $c.Replace('<link rel="stylesheet" href="styles.css" />', '')
 $c = $c.Replace('<body class="page-approach">', "<body <?php body_class('page-contact'); ?>>")
@@ -543,11 +625,11 @@ $d = $d.Replace('"assets/', '"' + $T + '/assets/')
 $d = $d.Replace("'assets/", "'" + $T + '/assets/')
 $d = $d.Replace('index.html#contact', '/contact/')
 $d = $d.Replace('index.html', '/')
-$d = $d.Replace('"approach.html"','"/approach/"')
-$d = $d.Replace('"team.html"','"/team/"')
+$d = $d.Replace('"approach.html"','"/investment-philosophy-and-process/"')
+$d = $d.Replace('"team.html"','"/people/"')
 $d = $d.Replace('"insights.html"','"/insights/"')
-$d = $d.Replace('"invest.html"','"/invest/"')
-$d = $d.Replace('"fund.html"','"/funds/"')
+$d = $d.Replace('"invest.html"','"/invest-with-us/"')
+$d = $d.Replace('"fund.html"','"/ziller-global-fund/"')
 $d = $d.Replace(' aria-current="page"','')
 $d = $d.Replace('<link rel="stylesheet" href="styles.css" />', '')
 $d = $d.Replace('<body class="page-approach">', "<body <?php body_class('page-disclaimer'); ?>>")
@@ -626,11 +708,11 @@ $ca = $ca.Replace('"assets/', '"' + $T + '/assets/')
 $ca = $ca.Replace("'assets/", "'" + $T + '/assets/')
 $ca = $ca.Replace('index.html#contact', '/contact/')
 $ca = $ca.Replace('index.html', '/')
-$ca = $ca.Replace('"approach.html"','"/approach/"')
-$ca = $ca.Replace('"team.html"','"/team/"')
+$ca = $ca.Replace('"approach.html"','"/investment-philosophy-and-process/"')
+$ca = $ca.Replace('"team.html"','"/people/"')
 $ca = $ca.Replace('"insights.html"','"/insights/"')
-$ca = $ca.Replace('"invest.html"','"/invest/"')
-$ca = $ca.Replace('"fund.html"','"/funds/"')
+$ca = $ca.Replace('"invest.html"','"/invest-with-us/"')
+$ca = $ca.Replace('"fund.html"','"/ziller-global-fund/"')
 $ca = $ca.Replace(' aria-current="page"','')
 $ca = $ca.Replace('<link rel="stylesheet" href="styles.css" />', '')
 $ca = $ca.Replace('<body class="page-approach">', "<body <?php body_class('page-careers'); ?>>")
@@ -640,6 +722,115 @@ $ca = $ca -replace '\s*<title>.*?</title>', ''
 $ca = $ca -replace '\s*<meta name="description"[^>]*>', ''
 
 [System.IO.File]::WriteAllText((Join-Path $theme "page-careers.php"), $ca, $utf8)
+
+# ── Subscribe -> page-subscribe.php: the Pardot signup form (same embed the Contact
+#    page uses), on the existing /subscribe/ page. ──
+$subMain = @'
+<style>
+  .sub-hero { padding: clamp(120px, 16vh, 180px) 0 clamp(8px, 2vh, 20px); }
+  .sub-hero .section-title { margin: .3rem 0 0; }
+  .sub-body { padding: clamp(28px, 5vh, 52px) 0 clamp(64px, 10vh, 120px); }
+  .sub-card { max-width: 560px; background: var(--bg-elev); border: 1px solid var(--line); border-radius: 4px; padding: clamp(22px, 3vw, 36px); }
+  .sub-card > p { color: var(--ink-mute); font-size: 1rem; line-height: 1.6; margin: 0 0 1.2rem; }
+  .sub-card iframe { width: 100%; min-height: 560px; border: 0; display: block; }
+</style>
+<main class="subscribe-page">
+  <section class="sub-hero">
+    <div class="container">
+      <p class="section-eyebrow">Subscribe</p>
+      <h1 class="section-title">The latest from the desk.</h1>
+    </div>
+  </section>
+  <section class="sub-body">
+    <div class="container">
+      <div class="sub-card">
+        <p>Subscribe to get Ziller Funds Management&rsquo;s latest investment news and insights straight to your inbox.</p>
+        <iframe src="https://pages.zillerfm.com/l/210472/2025-10-05/dkcxvf" width="100%" height="600" type="text/html" frameborder="0" allowtransparency="true" title="Subscribe to Ziller insights"></iframe>
+      </div>
+    </div>
+  </section>
+</main>
+'@
+
+$sub = $cHead + "`r`n" + $subMain + "`r`n" + $cFoot + "`r`n" + $contactScript + "`r`n</body>`r`n</html>`r`n"
+$sub = $sub.Replace('"assets/', '"' + $T + '/assets/')
+$sub = $sub.Replace("'assets/", "'" + $T + '/assets/')
+$sub = $sub.Replace('index.html#contact', '/contact/')
+$sub = $sub.Replace('index.html', '/')
+$sub = $sub.Replace('"approach.html"','"/investment-philosophy-and-process/"')
+$sub = $sub.Replace('"team.html"','"/people/"')
+$sub = $sub.Replace('"insights.html"','"/insights/"')
+$sub = $sub.Replace('"invest.html"','"/invest-with-us/"')
+$sub = $sub.Replace('"fund.html"','"/ziller-global-fund/"')
+$sub = $sub.Replace(' aria-current="page"','')
+$sub = $sub.Replace('<link rel="stylesheet" href="styles.css" />', '')
+$sub = $sub.Replace('<body class="page-approach">', "<body <?php body_class('page-subscribe'); ?>>")
+$sub = $sub.Replace('</head>', "<?php wp_head(); ?>`r`n</head>")
+$sub = $sub.Replace('</body>', "<?php wp_footer(); ?>`r`n</body>")
+$sub = $sub -replace '\s*<title>.*?</title>', ''
+$sub = $sub -replace '\s*<meta name="description"[^>]*>', ''
+[System.IO.File]::WriteAllText((Join-Path $theme "page-subscribe.php"), $sub, $utf8)
+
+# ── Quarterly Performance Update -> page-quarterly-performance-update.php: intro +
+#    Vimeo embed (Customizer field, editable each quarter) + short disclaimer that
+#    links to the full /disclaimer/ page. ──
+$quMain = @'
+<style>
+  .qu-hero { padding: clamp(120px, 16vh, 180px) 0 clamp(8px, 2vh, 20px); }
+  .qu-hero .section-title { margin: .3rem 0 0; }
+  .qu-hero-intro { max-width: 60ch; margin: 1.1rem 0 0; color: var(--ink-mute); font-size: 1.05rem; line-height: 1.6; }
+  .qu-body { padding: clamp(28px, 5vh, 52px) 0 clamp(64px, 10vh, 120px); }
+  .qu-video { position: relative; width: 100%; max-width: 900px; aspect-ratio: 16 / 9; background: var(--bg-elev); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+  .qu-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .qu-video-empty { display: flex; align-items: center; justify-content: center; height: 100%; padding: 2rem; text-align: center; color: var(--ink-mute); font-size: .95rem; }
+  .qu-disclaimer { max-width: 76ch; margin: clamp(28px, 4vh, 48px) 0 0; }
+  .qu-disclaimer p { color: var(--ink-soft); font-size: .88rem; line-height: 1.7; margin: 0; }
+  .qu-disclaimer a { color: var(--accent-deep); }
+  .qu-disclaimer a:hover { color: var(--ink); }
+</style>
+<main class="quarterly-page">
+  <section class="qu-hero">
+    <div class="container">
+      <p class="section-eyebrow">Quarterly Update</p>
+      <h1 class="section-title">Quarterly Performance Update</h1>
+      <p class="qu-hero-intro">Chief Investment Officer, Joseph Ziller, provides a portfolio update for the Ziller Global Fund Active ETF.</p>
+    </div>
+  </section>
+  <section class="qu-body">
+    <div class="container">
+      <?php
+      $qu_vid = trim( (string) get_theme_mod( 'ziller_quarterly_vimeo', '' ) );
+      if ( $qu_vid !== '' && preg_match( '/(\d{6,})/', $qu_vid, $qm ) ) : ?>
+      <div class="qu-video"><iframe src="https://player.vimeo.com/video/<?php echo esc_attr( $qm[1] ); ?>" title="Ziller Global Fund Active ETF quarterly update" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+      <?php else : ?>
+      <div class="qu-video"><div class="qu-video-empty">The latest update video will appear here once set in Appearance &rarr; Customize &rarr; &ldquo;Ziller - Quarterly Update&rdquo;.</div></div>
+      <?php endif; ?>
+      <div class="qu-disclaimer">
+        <p><strong>Important information.</strong> This communication is general advice only and does not take account of your objectives, financial situation or needs. Past performance is not a reliable indicator of future performance. Before investing you should consider the Product Disclosure Statement and Target Market Determination (available at <a href="/">www.zillerfm.com</a>) and our full <a href="/disclaimer/">Disclaimer</a>.</p>
+      </div>
+    </div>
+  </section>
+</main>
+'@
+
+$qu = $cHead + "`r`n" + $quMain + "`r`n" + $cFoot + "`r`n" + $contactScript + "`r`n</body>`r`n</html>`r`n"
+$qu = $qu.Replace('"assets/', '"' + $T + '/assets/')
+$qu = $qu.Replace("'assets/", "'" + $T + '/assets/')
+$qu = $qu.Replace('index.html#contact', '/contact/')
+$qu = $qu.Replace('index.html', '/')
+$qu = $qu.Replace('"approach.html"','"/investment-philosophy-and-process/"')
+$qu = $qu.Replace('"team.html"','"/people/"')
+$qu = $qu.Replace('"insights.html"','"/insights/"')
+$qu = $qu.Replace('"invest.html"','"/invest-with-us/"')
+$qu = $qu.Replace('"fund.html"','"/ziller-global-fund/"')
+$qu = $qu.Replace(' aria-current="page"','')
+$qu = $qu.Replace('<link rel="stylesheet" href="styles.css" />', '')
+$qu = $qu.Replace('<body class="page-approach">', "<body <?php body_class('page-quarterly'); ?>>")
+$qu = $qu.Replace('</head>', "<?php wp_head(); ?>`r`n</head>")
+$qu = $qu.Replace('</body>', "<?php wp_footer(); ?>`r`n</body>")
+$qu = $qu -replace '\s*<title>.*?</title>', ''
+$qu = $qu -replace '\s*<meta name="description"[^>]*>', ''
+[System.IO.File]::WriteAllText((Join-Path $theme "page-quarterly-performance-update.php"), $qu, $utf8)
 
 # ── Insights -> page-insights.php: DYNAMIC listing that queries WP Posts and
 #    renders them in the existing card design. Filter tabs come from the post
@@ -651,11 +842,11 @@ $i = $i.Replace("'assets/", "'" + $T + '/assets/')
 $i = $i.Replace('`assets/', '`' + $T + '/assets/')
 $i = $i.Replace('index.html#contact', '/contact/')
 $i = $i.Replace('index.html', '/')
-$i = $i.Replace('"approach.html"','"/approach/"')
-$i = $i.Replace('"team.html"','"/team/"')
+$i = $i.Replace('"approach.html"','"/investment-philosophy-and-process/"')
+$i = $i.Replace('"team.html"','"/people/"')
 $i = $i.Replace('"insights.html"','"/insights/"')
-$i = $i.Replace('"invest.html"','"/invest/"')
-$i = $i.Replace('"fund.html"','"/funds/"')
+$i = $i.Replace('"invest.html"','"/invest-with-us/"')
+$i = $i.Replace('"fund.html"','"/ziller-global-fund/"')
 $i = $i.Replace('<link rel="stylesheet" href="styles.css" />', '')
 $i = $i.Replace('<script src="prefetch.js" defer></script>', '')
 $i = $i.Replace('<body class="page-insights">', "<body <?php body_class('page-insights'); ?>>")
@@ -793,11 +984,11 @@ $s = $s.Replace('"assets/', '"' + $T + '/assets/')
 $s = $s.Replace("'assets/", "'" + $T + '/assets/')
 $s = $s.Replace('index.html#contact', '/contact/')
 $s = $s.Replace('index.html', '/')
-$s = $s.Replace('"approach.html"','"/approach/"')
-$s = $s.Replace('"team.html"','"/team/"')
+$s = $s.Replace('"approach.html"','"/investment-philosophy-and-process/"')
+$s = $s.Replace('"team.html"','"/people/"')
 $s = $s.Replace('"insights.html"','"/insights/"')
-$s = $s.Replace('"invest.html"','"/invest/"')
-$s = $s.Replace('"fund.html"','"/funds/"')
+$s = $s.Replace('"invest.html"','"/invest-with-us/"')
+$s = $s.Replace('"fund.html"','"/ziller-global-fund/"')
 $s = $s.Replace(' aria-current="page"','')
 $s = $s.Replace('<link rel="stylesheet" href="styles.css" />', '')
 $s = $s.Replace('<body class="page-approach">', "<body <?php body_class('single-essay'); ?>>")
@@ -922,6 +1113,24 @@ function ziller_customize_figures( $wp_customize ) {
 			'type'    => 'text',
 		) );
 	}
+
+	// Quarterly Performance Update video (page-quarterly-performance-update.php).
+	// Paste a Vimeo ID or URL each quarter -- no rebuild needed.
+	$wp_customize->add_section( 'ziller_quarterly', array(
+		'title'       => 'Ziller - Quarterly Update',
+		'priority'    => 31,
+		'description' => 'Vimeo video ID or URL for the Quarterly Performance Update page. Update it each quarter.',
+	) );
+	$wp_customize->add_setting( 'ziller_quarterly_vimeo', array(
+		'default'           => '',
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'refresh',
+	) );
+	$wp_customize->add_control( 'ziller_quarterly_vimeo', array(
+		'label'   => 'Vimeo ID or URL',
+		'section' => 'ziller_quarterly',
+		'type'    => 'text',
+	) );
 }
 
 // Keep a figure numeric: strip any %/comma/space, then require optional minus, digits,
@@ -1018,8 +1227,9 @@ $fs.Dispose()
 Add-Type -AssemblyName System.IO.Compression.FileSystem | Out-Null
 $errs = @()
 $expect = @('style.css','functions.php','header.php','footer.php','front-page.php','index.php','single.php',
-            'page-approach.php','page-team.php','page-invest.php','page-funds.php','page-contact.php','page-insights.php',
-            'page-disclaimer.php','page-careers.php')
+            'page-investment-philosophy-and-process.php','page-people.php','page-invest-with-us.php',
+            'page-ziller-global-fund.php','page-contact.php','page-insights.php',
+            'page-disclaimer.php','page-careers.php','page-subscribe.php','page-quarterly-performance-update.php')
 $z = [System.IO.Compression.ZipFile]::OpenRead($zip)
 try {
   $names = @($z.Entries | ForEach-Object { $_.FullName })
@@ -1042,8 +1252,13 @@ if ($errs.Count -gt 0) {
   exit 1
 }
 
-# Delete the stale OneDrive/Desktop copy so the old placeholder can't be uploaded by mistake.
+# Remove the interim Downloads copy so there is a single zip to upload (from the Desktop).
 if ( ($oldZip -ne $zip) -and (Test-Path $oldZip) ) { Remove-Item $oldZip -Force -ErrorAction SilentlyContinue }
+
+# Pin the freshly built zip so OneDrive keeps it fully on this device (never a cloud
+# placeholder). It is fully local right now; this stops OneDrive dehydrating it later.
+# Run via cmd so attrib's output can't trip PowerShell's native-stderr handling.
+& cmd /c "attrib -U +P ""$zip"" >nul 2>&1"
 
 Write-Host ""
 Write-Host ("BUILD OK  ->  {0}" -f $zip)
@@ -1051,4 +1266,5 @@ Write-Host ("  size:      {0:N2} MB" -f ((Get-Item $zip).Length / 1MB))
 Write-Host ("  templates: {0} .php files, style.css header present, forward-slash paths verified" -f $phpCount)
 Write-Host ""
 Write-Host "Upload: WP admin > Appearance > Themes > Add New Theme > Upload Theme > Replace current with uploaded."
-Write-Host "Pick the zip from your Downloads folder - it is a local file, so there is no OneDrive placeholder to wait for."
+Write-Host "The zip is on your Desktop, pinned to stay fully on-device. If it ever shows a OneDrive cloud icon,"
+Write-Host "right-click > Always keep on this device (or just rebuild) before uploading."

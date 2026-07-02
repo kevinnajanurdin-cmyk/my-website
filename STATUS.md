@@ -12,25 +12,33 @@ been tested in **Live Preview** (not activated yet).
   or the transforms in `build-theme.ps1`. Never hand-edit the generated theme.
 - Build: run the **`/build-ziller-theme`** skill, or
   `powershell -NoProfile -ExecutionPolicy Bypass -File build-theme.ps1`.
-  It self-verifies and outputs **`%USERPROFILE%\Downloads\ziller-theme.zip`** (~10.4 MB).
+  It self-verifies and outputs **`Desktop\ziller-theme.zip`** (~12.7 MB), then **pins it**
+  (always keep on this device).
 - Deploy: WP admin → Appearance → Themes → Add New Theme → Upload Theme →
-  **Replace current with uploaded**. Upload the copy **from Downloads**.
+  **Replace current with uploaded**. Upload it **from the Desktop**.
 - Backup: `git commit` + `git push` (remote `origin` = kevinnajanurdin-cmyk/my-website).
 - Packaging gotchas: PHP written **no-BOM**; zip uses **forward-slash** entries
   (PowerShell `Compress-Archive` breaks WP with a bogus "missing style.css"). The zip
-  is written to **Downloads (outside OneDrive) on purpose**: a OneDrive Files-On-Demand
-  cloud placeholder on the synced Desktop uploads as a *truncated* file → the same bogus
-  "missing style.css" (style.css sorts late in the archive, so it's the first file lost).
-  The build deletes any stale Desktop copy. Don't move the output back under OneDrive.
+  sits on the OneDrive Desktop, so the build **pins it** (`attrib +P`) right after writing —
+  otherwise a OneDrive Files-On-Demand *cloud placeholder* uploads as a *truncated* file →
+  the same bogus "missing style.css" (style.css sorts late in the archive). If the zip ever
+  shows a cloud icon, right-click → Always keep on this device (or rebuild) before uploading.
 
 ## Done
-- Pages: home (`front-page.php` + shared `header/footer`), `/approach/`, `/team/`,
-  `/invest/`, `/funds/` (slug "funds" — "fund" was taken), `/contact/` (Pardot
-  subscribe iframe + team directory + Automic registry).
+- Pages: home (`front-page.php` + shared `header/footer`), and the design is served on
+  the **existing OLD page slugs** so the other admins keep their same pages/URLs:
+  Fund Information (`page-ziller-global-fund.php`), Investment Principles and Process
+  (`page-investment-philosophy-and-process.php`), Invest with us (`page-invest-with-us.php`),
+  Team (`page-people.php`), `/contact/` (Pardot form + team directory w/ photos + email/
+  LinkedIn icons + Automic registry), `/insights/`, `/disclaimer/`, `/careers/`,
+  `/subscribe/` (Pardot form), `/quarterly-performance-update/` (Vimeo via Customizer +
+  disclaimer). Nav labels stay Fund/Approach/Team/Invest; all internal links point to the
+  old slugs. **The 4 preview pages I made (Kevin: /funds/ /approach/ /invest/ /team/) +
+  the Potential Bot page are to be deleted — the theme no longer targets them.**
 - **Insights = WP Posts**: `page-insights.php` lists posts in the **"Insights"**
   umbrella category; filter tabs = the real sub-categories (Articles / Media /
   Video & Webinars), "Insights" hidden. `single.php` = essay layout. Home teaser
-  pulls the 3 latest. Content rule: tag each post **Insights + one real category**.
+  pulls the 3 latest **Articles**. Content rule: tag each post **Insights + one real category**.
 - **Fund page** data all server-side from existing plugins: NAV/entry/exit +
   historical + CSV download from `unitprices/A0ZFGF.csv`; MPI via `PDF_Manager`;
   monthly report auto-detected `MMYY_ZILR.pdf`; **iNAV via same-origin ice-api
@@ -72,15 +80,14 @@ been tested in **Live Preview** (not activated yet).
       identity line wired (see Done). **⚠ Compliance sign-off:** the ABN/CAR/AFSL
       footer line and the disclaimer body are copied verbatim from the live site —
       have compliance confirm both before activation.
-   c. **Redirects (301)** for the old Bridge URLs the new theme re-slugs — the old
-      pages are still live and indexed (Google has `/ziller-global-fund/`,
-      `/people/`), so redirect: `/ziller-global-fund/` → `/funds/`,
-      `/people/` → `/team/`, `/invest-with-us/` → `/invest/`,
-      `/investment-philosophy-and-process/` → `/approach/`, `/subscribe/` →
-      `/contact/`. `/careers/` ✅ rebuilt (`page-careers.php`, keeps the same slug —
-      no redirect needed). `/quarterly-performance-update/` deferred (thin Q1 2026
-      Vimeo + boilerplate — redirect to `/insights/` or re-publish as an Insights
-      Video post later). Drop the junk `/potential-bot-page/`.
+   c. **Page mapping ✅ DONE** — the theme serves the design on the **existing OLD page
+      slugs**, so existing URLs are preserved and **no redirects are needed**: Fund
+      Information → `ziller-global-fund`, Investment Principles and Process →
+      `investment-philosophy-and-process`, Invest with us → `invest-with-us`, Team →
+      `people` (Contact/Insights/Disclaimer/Careers/Subscribe/Quarterly already match).
+      At cutover, **delete the 4 preview pages** (Kevin: Funds/Approach/Invest/Team) and
+      the **Potential Bot page** so they don't shadow anything, and set the Quarterly
+      video in Appearance → Customize → "Ziller - Quarterly Update".
    d. **Activate** the Ziller theme, then deactivate Bridge + page builders
       (WPBakery, Revolution Slider, Qode). **Order matters** — builders last.
    e. **Keep active**: `Unit Price display` + `PDF Downloader` plugins (the fund
