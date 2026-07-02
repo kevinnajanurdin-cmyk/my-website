@@ -15,8 +15,9 @@ been tested in **Live Preview** (not activated yet).
   It self-verifies and outputs **`Desktop\ziller-theme.zip`** (~12.7 MB), then **pins it**
   (always keep on this device).
 - Deploy: WP admin → Appearance → Themes → Add New Theme → Upload Theme →
-  **Replace current with uploaded**. **Upload `C:\ziller-deploy\ziller-theme.zip`**
-  (plain local copy the build writes alongside the Desktop one) — NOT the Desktop copy.
+  **Replace current with uploaded**. Upload the Desktop zip; a plain-local twin is
+  also written to **`%USERPROFILE%\Downloads\ziller-theme.zip`** — switch to that copy
+  if the upload ever hits the bogus "missing style.css" (OneDrive mid-sync).
 - Backup: `git commit` + `git push` (remote `origin` = kevinnajanurdin-cmyk/my-website).
 - Packaging gotchas — the **"missing style.css" saga** (recurred even after each "fix"):
   1) Structure: zip needs **forward-slash entries** (never `Compress-Archive`) **+ explicit
@@ -26,10 +27,10 @@ been tested in **Live Preview** (not activated yet).
   dir entries, strict extraction sim finds style.css) — so the bytes get corrupted between
   disk and server. The Desktop copy stays a **OneDrive reparse point** even when pinned;
   uploading while OneDrive re-syncs a freshly rebuilt zip can stream stale/partial bytes.
-  Hence the build now ALSO writes **`C:\ziller-deploy\ziller-theme.zip`** (plain disk, no
-  sync driver) — **always upload that copy**. If it ever fails again: hard-refresh the
-  upload page, re-pick the file fresh, and test transport by uploading the zip to Media
-  Library and comparing its byte size to the on-disk size.
+  Hence the build ALSO writes a twin to **`Downloads\ziller-theme.zip`** (plain disk, no
+  sync driver) as the fallback upload. If a failure recurs: hard-refresh the upload page,
+  re-pick the file fresh (upload the Downloads copy), and test transport by uploading the
+  zip to Media Library and comparing its byte size to the on-disk size.
 
 ## Done
 - Pages: home (`front-page.php` + shared `header/footer`), and the design is served on

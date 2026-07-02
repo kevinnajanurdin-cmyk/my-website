@@ -27,7 +27,6 @@ $theme     = Join-Path $buildRoot 'ziller'
 # style.css". To prevent that, the freshly built zip is PINNED ("always keep on this
 # device") right after it is written (see below), so it stays fully local. See STATUS.md.
 $zip       = Join-Path (Split-Path $src -Parent) 'ziller-theme.zip'
-$oldZip    = Join-Path $env:USERPROFILE 'Downloads\ziller-theme.zip'   # remove the interim Downloads copy
 
 # --- Validate the source before building ------------------------------------
 $required = @('index.html','approach.html','team.html','invest.html','fund.html','insights.html','styles.css','script.js','assets')
@@ -834,21 +833,16 @@ if ($errs.Count -gt 0) {
   exit 1
 }
 
-# Remove the interim Downloads copy so there is a single zip to upload (from the Desktop).
-if ( ($oldZip -ne $zip) -and (Test-Path $oldZip) ) { Remove-Item $oldZip -Force -ErrorAction SilentlyContinue }
-
 # Pin the freshly built zip so OneDrive keeps it fully on this device (never a cloud
 # placeholder). It is fully local right now; this stops OneDrive dehydrating it later.
 # Run via cmd so attrib's output can't trip PowerShell's native-stderr handling.
 & cmd /c "attrib -U +P ""$zip"" >nul 2>&1"
 
-# UPLOAD FROM THIS COPY. Even pinned, the Desktop zip stays a OneDrive reparse point --
-# every browser read goes through the sync filter driver, and uploading while OneDrive
-# is re-syncing a freshly rebuilt zip can stream a stale/partial file to WordPress
-# (-> the bogus "missing style.css", while the on-disk zip verifies perfectly).
-# C:\ziller-deploy is plain local disk: no sync driver, no reparse point, no churn.
-$deployDir = 'C:\ziller-deploy'
-if (-not (Test-Path $deployDir)) { New-Item -ItemType Directory -Path $deployDir | Out-Null }
+# Also drop a copy in Downloads (plain local disk, outside OneDrive -- no sync driver,
+# no reparse point). If a Desktop upload ever hits the bogus "missing style.css" again
+# (stale/partial bytes streamed mid-OneDrive-resync), upload this copy instead.
+$deployDir = Join-Path $env:USERPROFILE 'Downloads'
+if (-not (Test-Path $deployDir)) { $deployDir = $env:LOCALAPPDATA }
 $deployZip = Join-Path $deployDir 'ziller-theme.zip'
 Copy-Item $zip $deployZip -Force
 
@@ -858,5 +852,5 @@ Write-Host ("  size:      {0:N2} MB" -f ((Get-Item $zip).Length / 1MB))
 Write-Host ("  templates: {0} .php files, style.css header present, forward-slash paths verified" -f $phpCount)
 Write-Host ""
 Write-Host "Upload: WP admin > Appearance > Themes > Add New Theme > Upload Theme > Replace current with uploaded."
-Write-Host ">>> UPLOAD FROM: C:\ziller-deploy\ziller-theme.zip  (plain local copy - outside OneDrive)."
-Write-Host "The Desktop copy is the synced backup; uploading it can stream stale bytes mid-OneDrive-sync."
+Write-Host ("A plain local copy is also in {0} - if the Desktop upload ever hits the bogus" -f $deployZip)
+Write-Host '"missing style.css" again (OneDrive mid-sync), upload the Downloads copy instead.'
