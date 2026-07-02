@@ -17,12 +17,14 @@ been tested in **Live Preview** (not activated yet).
 - Deploy: WP admin → Appearance → Themes → Add New Theme → Upload Theme →
   **Replace current with uploaded**. Upload it **from the Desktop**.
 - Backup: `git commit` + `git push` (remote `origin` = kevinnajanurdin-cmyk/my-website).
-- Packaging gotchas: PHP written **no-BOM**; zip uses **forward-slash** entries
-  (PowerShell `Compress-Archive` breaks WP with a bogus "missing style.css"). The zip
-  sits on the OneDrive Desktop, so the build **pins it** (`attrib +P`) right after writing —
-  otherwise a OneDrive Files-On-Demand *cloud placeholder* uploads as a *truncated* file →
-  the same bogus "missing style.css" (style.css sorts late in the archive). If the zip ever
-  shows a cloud icon, right-click → Always keep on this device (or rebuild) before uploading.
+- Packaging gotchas — the **"missing style.css" saga, RESOLVED**: the real cause was the
+  zip having **no directory entries**. A bare .NET `ZipArchive` writes only file entries;
+  some WP unpackers then can't resolve the theme folder and reject with the bogus "missing
+  style.css". The build now writes explicit dir entries (`ziller/`, `ziller/assets/`, …) —
+  that fixed it (upload confirmed working). Also: PHP **no-BOM**, **forward-slash** entries
+  (never `Compress-Archive` — backslashes). **Ruled OUT as causes:** upload size (server
+  allows **512 MB**) and OneDrive placeholders (zip is pinned on the Desktop via `attrib +P`,
+  but that was a red herring).
 
 ## Done
 - Pages: home (`front-page.php` + shared `header/footer`), and the design is served on

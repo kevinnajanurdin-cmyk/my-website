@@ -177,7 +177,10 @@ foreach ($slug in @('approach','team','invest')) {
 $f = [System.IO.File]::ReadAllText((Join-Path $src "fund.html"))
 
 # Latest monthly report -> live auto-detected URL (before the assets/ rewrite runs)
-$f = $f.Replace('href="assets/docs/Ziller-Global-Fund-Active-ETF-May-2026-Report.pdf"', 'href="<?php echo esc_url( $ziller_report ); ?>"')
+$reportHref = @'
+href="<?php echo $ziller_report ? esc_url( $ziller_report ) : '#'; ?>"<?php if ( ! $ziller_report ) : ?> aria-disabled="true" onclick="return false;" style="opacity:.45;pointer-events:none;"<?php endif; ?>
+'@
+$f = $f.Replace('href="assets/docs/Ziller-Global-Fund-Active-ETF-May-2026-Report.pdf"', $reportHref.Trim())
 
 $f = $f.Replace('"assets/', '"' + $T + '/assets/')
 $f = $f.Replace("'assets/", "'" + $T + '/assets/')
@@ -326,7 +329,7 @@ if ( false === $ziller_report ) {
 	}
 	set_transient( 'ziller_monthly_report', $ziller_report, $ziller_report ? 12 * HOUR_IN_SECONDS : HOUR_IN_SECONDS );
 }
-if ( ! $ziller_report ) { $ziller_report = get_template_directory_uri() . '/assets/docs/Ziller-Global-Fund-Active-ETF-May-2026-Report.pdf'; }
+/* No bundled fallback PDF (keeps the theme upload small); the report button below disables itself when no live MMYY_ZILR.pdf is found. */
 ?>
 
 '@
@@ -1202,6 +1205,12 @@ Copy-Item (Join-Path $src "styles.css") (Join-Path $theme "styles.css")
 Copy-Item (Join-Path $src "assets") (Join-Path $theme "assets") -Recurse
 $essayImgDir = Join-Path $theme "assets\essays"
 if (Test-Path $essayImgDir) { Remove-Item $essayImgDir -Recurse -Force }
+# Drop the ~3.9 MB bundled monthly-report PDF: the fund page auto-detects the LIVE
+# MMYY_ZILR.pdf, so this copy is only a fallback and it bloats the upload past the
+# server's size limit -> WordPress then reports the bogus "missing style.css" on the
+# truncated upload. The report button disables itself if no live report is found.
+$reportPdf = Join-Path $theme "assets\docs\Ziller-Global-Fund-Active-ETF-May-2026-Report.pdf"
+if (Test-Path $reportPdf) { Remove-Item $reportPdf -Force }
 
 # ── Zip it — entries MUST use forward slashes. Compress-Archive on PS 5.1
 #    writes backslashes (ziller\style.css), which Linux/WordPress unzip can't
@@ -1212,8 +1221,22 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem | Out-Null
 $base = (Split-Path $theme -Parent).TrimEnd('\') + '\'
 $fs = [System.IO.File]::Open($zip, [System.IO.FileMode]::Create)
 $arch = New-Object System.IO.Compression.ZipArchive($fs, [System.IO.Compression.ZipArchiveMode]::Create)
+# Write explicit DIRECTORY entries before their files. A bare .NET ZipArchive writes
+# only file entries (no folder entries); some WordPress unpackers then can't resolve
+# the theme folder and reject the upload with the bogus "missing style.css". This makes
+# the archive look like a normal zip tool's output (ziller/, ziller/assets/, ...).
+$dirsSeen = @{}
 foreach ($f in Get-ChildItem $theme -Recurse -File) {
 	$rel = $f.FullName.Substring($base.Length).Replace('\','/')
+	$segs = $rel.Split('/')
+	$acc = ''
+	for ($k = 0; $k -lt $segs.Length - 1; $k++) {
+		$acc += $segs[$k] + '/'
+		if (-not $dirsSeen.ContainsKey($acc)) {
+			$dirsSeen[$acc] = $true
+			$arch.CreateEntry($acc) | Out-Null      # directory entry (name ends in '/')
+		}
+	}
 	$entry = $arch.CreateEntry($rel, [System.IO.Compression.CompressionLevel]::Optimal)
 	$in = [System.IO.File]::ReadAllBytes($f.FullName)
 	$out = $entry.Open()
