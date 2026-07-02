@@ -87,6 +87,23 @@ $homeInsList = @'
 '@
 $html = [regex]::Replace($html, '(?s)<ul class="insights-list">.*?</ul>', { param($m) $homeInsList.Trim() })
 
+# Home performance figures -> Customizer-editable (Appearance > Customize >
+# "Ziller - Home Figures"), so month-end updates need no theme rebuild. The current
+# values become the defaults. 24.7 is the animated counter's data-count target;
+# 39.5 / 120.5 are static text in the "odd" stat cards.
+$figReturnPa = @'
+data-count="<?php echo esc_attr( get_theme_mod( 'ziller_return_pa', '24.7' ) ); ?>"
+'@
+$figOutperf = @'
+<span class="odd-figure"><?php echo esc_html( get_theme_mod( 'ziller_outperformance', '39.5' ) ); ?><span class="odd-unit">%</span></span>
+'@
+$figReturnIncep = @'
+<span class="odd-figure"><?php echo esc_html( get_theme_mod( 'ziller_return_incep', '120.5' ) ); ?><span class="odd-unit">%</span></span>
+'@
+$html = $html.Replace('data-count="24.7"', $figReturnPa.Trim())
+$html = $html.Replace('<span class="odd-figure">39.5<span class="odd-unit">%</span></span>', $figOutperf.Trim())
+$html = $html.Replace('<span class="odd-figure">120.5<span class="odd-unit">%</span></span>', $figReturnIncep.Trim())
+
 # ── Split into header / front-page / footer ─────────────────────────────
 $hEnd   = $html.IndexOf('</header>') + '</header>'.Length
 $fStart = $html.IndexOf('<footer class="site-footer">')
@@ -467,6 +484,154 @@ $c = $c -replace '\s*<meta name="description"[^>]*>', ''
 
 [System.IO.File]::WriteAllText((Join-Path $theme "page-contact.php"), $c, $utf8)
 
+# ── Disclaimer -> page-disclaimer.php: static compliance page (iNAV disclaimer +
+#    general disclaimer, verbatim from the live /disclaimer/ WP page). Rendered in
+#    the Ziller editorial layout. WP auto-uses page-disclaimer.php for the existing
+#    Page whose slug is "disclaimer" — its old WPBakery content is ignored, exactly
+#    like the other static page templates. Reuses the approach.html shell (head/
+#    header/footer via $cHead/$cFoot and the shared $contactScript). ──
+$dMain = @'
+<style>
+  .legal-hero { padding: clamp(120px, 16vh, 180px) 0 clamp(6px, 1.5vh, 16px); }
+  .legal-hero .section-title { margin: .3rem 0 0; }
+  .legal-hero-intro { max-width: 60ch; margin: 1.1rem 0 0; color: var(--ink-mute); font-size: 1.02rem; line-height: 1.6; }
+  .legal-body { padding: clamp(28px, 5vh, 52px) 0 clamp(64px, 10vh, 120px); }
+  .legal-prose { max-width: 76ch; }
+  .legal-prose h2 { font-family: var(--serif); font-weight: 400; color: var(--ink); font-size: clamp(1.35rem, 2.4vw, 1.6rem); margin: 2.75rem 0 1.1rem; padding-bottom: .55rem; border-bottom: 1px solid var(--line); }
+  .legal-prose h2:first-child { margin-top: 0; }
+  .legal-prose p { color: var(--ink-soft); font-size: .95rem; line-height: 1.8; margin: 0 0 1.15rem; }
+  .legal-prose p:last-child { margin-bottom: 0; }
+  .legal-prose a { color: var(--accent-deep); }
+  .legal-prose a:hover { color: var(--ink); }
+  .legal-prose strong { color: var(--ink); font-weight: 600; }
+</style>
+<main class="legal-page">
+  <section class="legal-hero">
+    <div class="container">
+      <p class="section-eyebrow">Legal</p>
+      <h1 class="section-title">Disclaimer</h1>
+      <p class="legal-hero-intro">Important information about the indicative NAV (iNAV) shown on this website and the general nature of the information provided here.</p>
+    </div>
+  </section>
+  <section class="legal-body">
+    <div class="container legal-prose">
+      <h2>iNAV disclaimer</h2>
+      <p>The iNAV is calculated on a minute-by-minute basis by a third-party vendor (ICE) and is based on the market prices of the individual holdings included in the relevant index being tracked. The iNAV per unit does not constitute a bid-offer price. It is an indicative estimate only based on delayed indicative market prices obtained from the relevant exchange or market on which the relevant Fund's assets are traded and are subject to change. The actual bid-offer prices for units in the fund are determined by market forces current at the time of any trade via the exchanges.</p>
+      <p>Any iNAV should not be relied upon as being the price at which units may be bought or sold on the ASX or Cboe, and may not reflect the true value of a unit. No assurance can be given that any iNAV will be published continuously, will be up to date or free from error.</p>
+      <p>The ICE information is provided to the users "as is." Neither ICE nor Ziller Funds Management (Ziller) nor any of their affiliates make any express or implied warranties of any kind regarding the iNAV data, including, without limitation, any warranty of merchantability or fitness for a particular purpose or use. Neither ICE nor Daintree nor any of their affiliates guarantee the adequacy, accuracy, timeliness or completeness of the ICE iNAV data and to the extent permitted by law accept no liability to any person for any interruption, inaccuracy, error or omission, regardless of cause, in the iNAV data or for any damages (whether direct or indirect, consequential, punitive or exemplary) resulting from any use or reliance on the data. Prior to the execution of a security trade, you are advised to consult with your broker or other financial representative to verify pricing information.</p>
+      <p>iNAV calculations as shown on <a href="/">www.zillerfm.com</a> (the "data") provided by <a href="https://www.theice.com/market-data/indices" target="_blank" rel="noopener">ICE Data Indices</a>, see <a href="https://www.intercontinentalexchange.com/terms-of-use" target="_blank" rel="noopener">ICE Terms of Use</a>, and is updated during exchange trading hours. Powered by <a href="https://www.factset.com/" target="_blank" rel="noopener">Factset</a>. iNAV is indicative and for reference purposes only. The Fund is not sponsored, endorsed, sold or marketed by ICE Data Indices, LLC, its affiliates ("ICE Data") and ICE Data or its respective third party suppliers MAKE NO EXPRESS OR IMPLIED WARRANTIES, AND HEREBY EXPRESSLY DISCLAIM ALL WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE WITH RESPECT TO THE iNAV, IOPV, FUND OR ANY FUND DATA INCLUDED THEREIN. IN NO EVENT SHALL ICE DATA HAVE ANY LIABILITY FOR ANY SPECIAL, PUNITIVE, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES (INCLUDING LOST PROFITS), EVEN IF NOTIFIED OF THE POSSIBILITY OF SUCH DAMAGES. You acknowledge that the data is provided for information only and should not be relied upon for any purpose.</p>
+      <h2>Disclaimer</h2>
+      <p>This website has been prepared and issued by Perennial Investment Management Limited (ABN 13 108 747 637, AFSL No. 275101) (<strong>PIML</strong>) as Responsible Entity and Ziller Funds Management Pty Limited (ABN 88 688 720 578) (<strong>Ziller</strong>) as the Investment Manager, a Corporate Authorised Representative (CAR 1317129) of Perennial Value Management Limited (ABN 22 090 879 904, AFSL No. 247293) (<strong>PVM</strong>). Ziller, PIML and PVM are part of Perennial Partners Limited (ABN 90 612 829 160, CAR 1293138 of PVM) (<strong>Perennial Partners</strong>).</p>
+      <p>This website is general advice and does not take account of your objectives, financial situation or needs. Before acting on this general advice you should consider the appropriateness of the advice having regard to your objectives, financial situation and needs. You should obtain and consider the Product Disclosure Statement and Target Market Determination relating to any product described in this website before deciding whether to acquire, continue to hold or dispose of that product.</p>
+      <p>This website is based on information obtained from sources believed to be reliable and accurate at time of publication but we do not make any representation or warranty that it is accurate, complete or up to date. We accept no ongoing obligation to correct or update the information or opinions in it. Opinions expressed are subject to change without notice. There are risks involved in investing. The value of investments can and does fluctuate and an individual investment may even become valueless. Past performance is not a reliable indicator of future performance. Any forecasts included in this website are predictive in character and therefore you should not place undue reliance on the forecast information. The forecasts may be affected by incorrect assumptions or by known or unknown risks and uncertainties. The actual results may differ substantially from the forecasts and some facts and opinions may change without notice. Nothing in this website shall be construed as a solicitation to buy or sell any security or product, or to engage in or refrain from engaging in any transaction. To the extent permitted by law, neither Ziller nor any of its related entities accepts any responsibility for errors, omissions or misstatements of any nature, irrespective of how these may arise, nor will it be liable for any loss or damage suffered as a result of any reliance on the information included in this website.</p>
+    </div>
+  </section>
+</main>
+'@
+
+$d = $cHead + "`r`n" + $dMain + "`r`n" + $cFoot + "`r`n" + $contactScript + "`r`n</body>`r`n</html>`r`n"
+$d = $d.Replace('"assets/', '"' + $T + '/assets/')
+$d = $d.Replace("'assets/", "'" + $T + '/assets/')
+$d = $d.Replace('index.html#contact', '/contact/')
+$d = $d.Replace('index.html', '/')
+$d = $d.Replace('"approach.html"','"/approach/"')
+$d = $d.Replace('"team.html"','"/team/"')
+$d = $d.Replace('"insights.html"','"/insights/"')
+$d = $d.Replace('"invest.html"','"/invest/"')
+$d = $d.Replace('"fund.html"','"/funds/"')
+$d = $d.Replace(' aria-current="page"','')
+$d = $d.Replace('<link rel="stylesheet" href="styles.css" />', '')
+$d = $d.Replace('<body class="page-approach">', "<body <?php body_class('page-disclaimer'); ?>>")
+$d = $d.Replace('</head>', "<?php wp_head(); ?>`r`n</head>")
+$d = $d.Replace('</body>', "<?php wp_footer(); ?>`r`n</body>")
+$d = $d -replace '\s*<title>.*?</title>', ''
+$d = $d -replace '\s*<meta name="description"[^>]*>', ''
+
+[System.IO.File]::WriteAllText((Join-Path $theme "page-disclaimer.php"), $d, $utf8)
+
+# ── Careers -> page-careers.php: static recruiting page rebuilt in the Ziller
+#    editorial layout from the live /careers/ content (Investment Analyst +
+#    Investment Intern; two-minute founder-led-stock video pitch, sent via
+#    filemail.com to careers@zillerfm.com, reviewed by the CIO). WP auto-uses this
+#    for the existing "careers" slug. Not linked in the main nav/footer — matches
+#    the live site, where /careers/ is a direct-URL page. ──
+$caMain = @'
+<style>
+  .careers-hero { padding: clamp(120px, 16vh, 180px) 0 clamp(8px, 2vh, 20px); }
+  .careers-hero .section-title { margin: .3rem 0 0; }
+  .careers-hero-intro { max-width: 52ch; margin: 1.1rem 0 0; color: var(--ink-mute); font-size: 1.05rem; line-height: 1.6; }
+  .careers-body { padding: clamp(28px, 5vh, 52px) 0 clamp(64px, 10vh, 120px); }
+  .careers-grid { display: grid; grid-template-columns: 1.45fr 1fr; gap: clamp(36px, 5vw, 76px); align-items: start; }
+  @media (max-width: 900px) { .careers-grid { grid-template-columns: 1fr; } }
+  .careers-roles h2, .careers-apply h2 { font-family: var(--serif); font-weight: 400; color: var(--ink); font-size: 1.5rem; margin: 0 0 1.4rem; }
+  .role { padding: 1.5rem 0; border-top: 1px solid var(--line); }
+  .role:first-of-type { border-top: 0; padding-top: 0; }
+  .role h3 { font-family: var(--serif); font-weight: 400; color: var(--ink); font-size: 1.25rem; margin: 0 0 .5rem; }
+  .role p { color: var(--ink-soft); font-size: .95rem; line-height: 1.7; margin: 0; }
+  .careers-apply { position: sticky; top: 116px; background: var(--bg-elev); border: 1px solid var(--line); border-radius: 4px; padding: clamp(22px, 3vw, 32px); }
+  .careers-apply > p { color: var(--ink-mute); font-size: .92rem; line-height: 1.6; margin: 0 0 1rem; }
+  .careers-apply ol { margin: 0 0 1rem; padding-left: 1.15rem; color: var(--ink-soft); font-size: .92rem; line-height: 1.7; }
+  .careers-apply ol li { margin: 0 0 .5rem; }
+  .careers-apply a { color: var(--accent-deep); }
+  .careers-apply a:hover { color: var(--ink); }
+  .careers-note { color: var(--ink-mute); font-size: .82rem; line-height: 1.6; margin: 0; }
+  @media (max-width: 900px) { .careers-apply { position: static; } }
+</style>
+<main class="careers-page">
+  <section class="careers-hero">
+    <div class="container">
+      <p class="section-eyebrow">Careers</p>
+      <h1 class="section-title">Join the team.</h1>
+      <p class="careers-hero-intro">We hire the way we invest &mdash; for original thinking and conviction, not credentials. Show us how you think about a business.</p>
+    </div>
+  </section>
+  <section class="careers-body">
+    <div class="container careers-grid">
+      <div class="careers-roles">
+        <h2>Open roles</h2>
+        <div class="role">
+          <h3>Investment Analyst</h3>
+          <p>For candidates with 0&ndash;3 years of commercial experience and a natural aptitude for investing.</p>
+        </div>
+        <div class="role">
+          <h3>Investment Intern</h3>
+          <p>For candidates with a natural aptitude for investing.</p>
+        </div>
+      </div>
+      <aside class="careers-apply">
+        <h2>How to apply</h2>
+        <p>We don't want a r&eacute;sum&eacute; first &mdash; we want to see how you think about a company.</p>
+        <ol>
+          <li>Record a <strong>two-minute video</strong> pitching a founder-led stock.</li>
+          <li>Send it via <a href="https://www.filemail.com/" target="_blank" rel="noopener">filemail.com</a> to <a href="mailto:careers@zillerfm.com">careers@zillerfm.com</a>.</li>
+        </ol>
+        <p class="careers-note">Your pitch is reviewed by the Chief Investment Officer. Production quality will not be assessed &mdash; only your thinking. Due to the volume of applications, only successful submissions will receive a response.</p>
+      </aside>
+    </div>
+  </section>
+</main>
+'@
+
+$ca = $cHead + "`r`n" + $caMain + "`r`n" + $cFoot + "`r`n" + $contactScript + "`r`n</body>`r`n</html>`r`n"
+$ca = $ca.Replace('"assets/', '"' + $T + '/assets/')
+$ca = $ca.Replace("'assets/", "'" + $T + '/assets/')
+$ca = $ca.Replace('index.html#contact', '/contact/')
+$ca = $ca.Replace('index.html', '/')
+$ca = $ca.Replace('"approach.html"','"/approach/"')
+$ca = $ca.Replace('"team.html"','"/team/"')
+$ca = $ca.Replace('"insights.html"','"/insights/"')
+$ca = $ca.Replace('"invest.html"','"/invest/"')
+$ca = $ca.Replace('"fund.html"','"/funds/"')
+$ca = $ca.Replace(' aria-current="page"','')
+$ca = $ca.Replace('<link rel="stylesheet" href="styles.css" />', '')
+$ca = $ca.Replace('<body class="page-approach">', "<body <?php body_class('page-careers'); ?>>")
+$ca = $ca.Replace('</head>', "<?php wp_head(); ?>`r`n</head>")
+$ca = $ca.Replace('</body>', "<?php wp_footer(); ?>`r`n</body>")
+$ca = $ca -replace '\s*<title>.*?</title>', ''
+$ca = $ca -replace '\s*<meta name="description"[^>]*>', ''
+
+[System.IO.File]::WriteAllText((Join-Path $theme "page-careers.php"), $ca, $utf8)
+
 # ── Insights -> page-insights.php: DYNAMIC listing that queries WP Posts and
 #    renders them in the existing card design. Filter tabs come from the post
 #    categories. All the page's own scripts (curtain, reveal, filter, photo
@@ -551,6 +716,10 @@ $essayStyle = @'
 <style>
   .essay-body blockquote:not(.essay-inline-quote):not(.essay-epigraph) { font-family: var(--serif); font-style: italic; font-size: clamp(1.25rem, 2.4vw, 1.6rem); line-height: 1.5; color: var(--ink); text-align: center; max-width: 32ch; margin: 2.5rem auto; }
   .essay-body blockquote p { margin: 0; }
+  /* Hide the Reading Time WP plugin's injected "Reading Time: N minutes" span
+     (overrides its inline display:block); the essay header shows a computed
+     "N min read" instead. */
+  .essay-body .rt-reading-time, .essay-body .span-reading-time { display: none !important; }
 </style>
 '@
 
@@ -576,8 +745,10 @@ $essayMain = @'
           <div class="essay-meta">
             <?php $ecat = null; foreach ( get_the_category() as $ecc ) { if ( strcasecmp( $ecc->name, 'Insights' ) === 0 ) { continue; } $ecat = $ecc; break; } if ( $ecat ) : ?><span><?php echo esc_html( $ecat->name ); ?></span><span class="essay-meta-dot">&middot;</span><?php endif; ?>
             <time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date( 'F Y' ) ); ?></time>
+            <?php if ( ! has_category( 'videos-webinars' ) ) : // "N min read" is meaningless on video posts ?>
             <span class="essay-meta-dot">&middot;</span>
-            <span><?php echo (int) max( 1, round( str_word_count( wp_strip_all_tags( get_the_content() ) ) / 200 ) ); ?> min read</span>
+            <span><?php echo (int) max( 1, round( str_word_count( wp_strip_all_tags( strip_shortcodes( get_the_content() ) ) ) / 200 ) ); ?> min read</span>
+            <?php endif; ?>
           </div>
           <h1 class="essay-title"><?php the_title(); ?></h1>
           <?php if ( has_excerpt() ) : ?>
@@ -691,6 +862,67 @@ function ziller_body_class( $classes ) {
 }
 add_filter( 'body_class', 'ziller_body_class' );
 
+// Browser-tab / <title>: render as "Page | Ziller FM" (pipe separator) and give the
+// two lower-cased Pages nicer labels. Uses WordPress core's title-tag hooks. NOTE:
+// if an SEO plugin (Rank Math / Yoast) is active and takes over the document title,
+// set the separator + page titles in that plugin's "Titles & Meta" settings instead.
+add_filter( 'document_title_separator', 'ziller_title_separator' );
+function ziller_title_separator( $sep ) {
+	return '|';
+}
+
+add_filter( 'document_title_parts', 'ziller_title_parts' );
+function ziller_title_parts( $parts ) {
+	if ( is_page() ) {
+		$nice = array(
+			'funds'  => 'Fund',
+			'invest' => 'Invest',
+		);
+		$slug = get_post_field( 'post_name', get_queried_object_id() );
+		if ( isset( $nice[ $slug ] ) ) {
+			$parts['title'] = $nice[ $slug ];
+		}
+	}
+	return $parts;
+}
+
+// Home-page performance figures -- editable at Appearance > Customize > "Ziller -
+// Home Figures", so month-end updates need no theme rebuild/re-upload. front-page.php
+// reads these via get_theme_mod() with the current values as defaults.
+add_action( 'customize_register', 'ziller_customize_figures' );
+function ziller_customize_figures( $wp_customize ) {
+	$wp_customize->add_section( 'ziller_figures', array(
+		'title'       => 'Ziller - Home Figures',
+		'priority'    => 30,
+		'description' => 'Performance figures on the home page. Enter the number only, no % sign (e.g. 24.7).',
+	) );
+	$ziller_fig = array(
+		'ziller_return_pa'      => array( 'Net return p.a. since inception (%)', '24.7' ),
+		'ziller_outperformance' => array( 'Outperformance since inception (%)', '39.5' ),
+		'ziller_return_incep'   => array( 'Total return since inception (%)', '120.5' ),
+	);
+	foreach ( $ziller_fig as $id => $f ) {
+		$wp_customize->add_setting( $id, array(
+			'default'           => $f[1],
+			'sanitize_callback' => 'ziller_sanitize_figure',
+			'transport'         => 'refresh',
+		) );
+		$wp_customize->add_control( $id, array(
+			'label'   => $f[0],
+			'section' => 'ziller_figures',
+			'type'    => 'text',
+		) );
+	}
+}
+
+// Keep a figure numeric: strip any %/comma/space, then require optional minus, digits,
+// optional one decimal group; revert to the field default if invalid so the home page
+// never shows a blank.
+function ziller_sanitize_figure( $value, $setting ) {
+	$value = str_replace( array( '%', ',', ' ' ), '', trim( (string) $value ) );
+	return preg_match( '/^-?\d+(\.\d+)?$/', $value ) ? $value : $setting->default;
+}
+
 // Optional per-article "Hero image" (ACF Pro). Lets the article hero differ from
 // the listing-card thumbnail (the featured image); falls back to the featured
 // image when unset. No-op if ACF is not active.
@@ -777,7 +1009,8 @@ $fs.Dispose()
 Add-Type -AssemblyName System.IO.Compression.FileSystem | Out-Null
 $errs = @()
 $expect = @('style.css','functions.php','header.php','footer.php','front-page.php','index.php','single.php',
-            'page-approach.php','page-team.php','page-invest.php','page-funds.php','page-contact.php','page-insights.php')
+            'page-approach.php','page-team.php','page-invest.php','page-funds.php','page-contact.php','page-insights.php',
+            'page-disclaimer.php','page-careers.php')
 $z = [System.IO.Compression.ZipFile]::OpenRead($zip)
 try {
   $names = @($z.Entries | ForEach-Object { $_.FullName })

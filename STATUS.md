@@ -36,15 +36,50 @@ been tested in **Live Preview** (not activated yet).
   fallback. Card always uses the featured image.
 - No Cloudflare `/api/*` calls remain; live externals are intentional embeds
   (Miraqle, Vimeo, Google Fonts, Pardot, Automic link) + server-side ICE feed.
+- **Compliance/legal**: `/disclaimer/` rebuilt as a static `page-disclaimer.php`
+  (iNAV + general disclaimer, verbatim from the live page; generated inline in
+  `build-theme.ps1` from the approach.html shell, so WP auto-uses it for the
+  existing "disclaimer" slug). Footer **Legal** column rewired to the Privacy
+  Statement PDF + `/disclaimer/` (the dead `#` Privacy/Disclosures/Terms stubs are
+  gone), and the footer copyright line now carries the real ABN/CAR/AFSL chain
+  instead of the `00 000 000 000` placeholder — across all footer-bearing templates.
+- **Editable in WP without a rebuild**: the 3 home-page performance figures (net
+  return p.a. / outperformance / total return since inception) are now WP **Customizer**
+  fields — Appearance > Customize > "Ziller - Home Figures". Update them at month-end
+  there; no theme re-upload. Values persist across future theme uploads (stored in the
+  DB per theme slug). Also: browser-tab titles render as "Page | Ziller FM" (pipe
+  separator + Fund/Invest label fixes), and the essay read-time is de-duplicated
+  (Reading Time WP plugin's in-body line hidden; header "N min read" kept, and dropped
+  entirely on Videos & Webinars posts).
+- **Careers**: `/careers/` rebuilt as `page-careers.php` (Investment Analyst +
+  Investment Intern; two-minute founder-led-stock video pitch via filemail.com →
+  careers@zillerfm.com, reviewed by the CIO). Static template, WP auto-serves it for
+  the "careers" slug. Not linked in the main nav/footer — matches the live site,
+  where /careers/ is a direct-URL page. Role copy is faithful to the live page but
+  lean (the REST fetch only returned a summary); enrich the marketing prose if wanted.
 
 ## Open next steps (priority order)
 1. **Go-live cutover** (the big one):
-   a. Audit live **published** pages (fetch zillerfm.com footer + sitemap) to list
-      the compliance pages (Privacy/Terms/Disclaimer/FSG/AML/Active-ETF, etc.).
-   b. Rebuild those compliance pages under the new theme (they're in WPBakery).
-   c. **Activate** the Ziller theme, then deactivate Bridge + page builders
+   a. ✅ DONE — audited live **published** pages via WP REST
+      (`/wp-json/wp/v2/pages?per_page=100`; sitemap/robots blocked the fetcher).
+      Only ONE compliance *page* exists (`/disclaimer/`); Privacy is a **PDF** (no
+      rebuild). No separate Terms/FSG/TMD/AML/Active-ETF pages.
+   b. ✅ DONE — Disclaimer rebuilt (`page-disclaimer.php`) + footer Legal links and
+      identity line wired (see Done). **⚠ Compliance sign-off:** the ABN/CAR/AFSL
+      footer line and the disclaimer body are copied verbatim from the live site —
+      have compliance confirm both before activation.
+   c. **Redirects (301)** for the old Bridge URLs the new theme re-slugs — the old
+      pages are still live and indexed (Google has `/ziller-global-fund/`,
+      `/people/`), so redirect: `/ziller-global-fund/` → `/funds/`,
+      `/people/` → `/team/`, `/invest-with-us/` → `/invest/`,
+      `/investment-philosophy-and-process/` → `/approach/`, `/subscribe/` →
+      `/contact/`. `/careers/` ✅ rebuilt (`page-careers.php`, keeps the same slug —
+      no redirect needed). `/quarterly-performance-update/` deferred (thin Q1 2026
+      Vimeo + boilerplate — redirect to `/insights/` or re-publish as an Insights
+      Video post later). Drop the junk `/potential-bot-page/`.
+   d. **Activate** the Ziller theme, then deactivate Bridge + page builders
       (WPBakery, Revolution Slider, Qode). **Order matters** — builders last.
-   d. **Keep active**: `Unit Price display` + `PDF Downloader` plugins (the fund
+   e. **Keep active**: `Unit Price display` + `PDF Downloader` plugins (the fund
       data engine). Keep WordPress running as the iNAV proxy (ICE IP allow-list).
 2. **Hero images**: the "Article Media → Hero image" field only shows in the post
    editor once the Ziller theme is active (or via a WPCode snippet now). Then set
