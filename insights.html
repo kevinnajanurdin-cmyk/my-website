@@ -81,8 +81,7 @@
     <section class="ins-archive" aria-label="All essays">
       <div class="container">
         <nav class="ins-tabs" aria-label="Filter essays">
-          <button class="ins-filter is-active" data-filter="all">All</button>
-          <button class="ins-filter" data-filter="founder">Founder in Focus</button>
+          <button class="ins-filter is-active" data-filter="founder">Founder in Focus</button>
           <button class="ins-filter" data-filter="thought">Thought Piece</button>
           <button class="ins-filter" data-filter="company">Company in Focus</button>
         </nav>
@@ -265,20 +264,30 @@
       var filterBtns = [].slice.call(document.querySelectorAll('.ins-filter'));
       var cards = [].slice.call(document.querySelectorAll('.ins-card'));
 
+      function applyFilter(cat) {
+        cards.forEach(function (card) {
+          if (cat === 'all' || card.getAttribute('data-category') === cat) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      }
+
       filterBtns.forEach(function (btn) {
         btn.addEventListener('click', function () {
           var cat = btn.getAttribute('data-filter');
           filterBtns.forEach(function (b) { b.classList.remove('is-active'); });
           btn.classList.add('is-active');
-          cards.forEach(function (card) {
-            if (cat === 'all' || card.getAttribute('data-category') === cat) {
-              card.style.display = '';
-            } else {
-              card.style.display = 'none';
-            }
-          });
+          applyFilter(cat);
         });
       });
+
+      // No "All" tab: filter to the initially-active tab on load so the grid matches,
+      // then re-run the reveal check so any card now scrolled into view isn't left
+      // hidden (filtering reflows the grid after the initial onReveal pass).
+      var insActive = document.querySelector('.ins-filter.is-active') || filterBtns[0];
+      if (insActive) { applyFilter(insActive.getAttribute('data-filter')); onReveal(); }
     })();
   </script>
 

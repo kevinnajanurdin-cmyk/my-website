@@ -12,12 +12,16 @@ been tested in **Live Preview** (not activated yet).
   or the transforms in `build-theme.ps1`. Never hand-edit the generated theme.
 - Build: run the **`/build-ziller-theme`** skill, or
   `powershell -NoProfile -ExecutionPolicy Bypass -File build-theme.ps1`.
-  It self-verifies and outputs `../ziller-theme.zip` (~10.4 MB).
+  It self-verifies and outputs **`%USERPROFILE%\Downloads\ziller-theme.zip`** (~10.4 MB).
 - Deploy: WP admin → Appearance → Themes → Add New Theme → Upload Theme →
-  **Replace current with uploaded** (wait for OneDrive green check first).
+  **Replace current with uploaded**. Upload the copy **from Downloads**.
 - Backup: `git commit` + `git push` (remote `origin` = kevinnajanurdin-cmyk/my-website).
 - Packaging gotchas: PHP written **no-BOM**; zip uses **forward-slash** entries
-  (PowerShell `Compress-Archive` breaks WP with a bogus "missing style.css").
+  (PowerShell `Compress-Archive` breaks WP with a bogus "missing style.css"). The zip
+  is written to **Downloads (outside OneDrive) on purpose**: a OneDrive Files-On-Demand
+  cloud placeholder on the synced Desktop uploads as a *truncated* file → the same bogus
+  "missing style.css" (style.css sorts late in the archive, so it's the first file lost).
+  The build deletes any stale Desktop copy. Don't move the output back under OneDrive.
 
 ## Done
 - Pages: home (`front-page.php` + shared `header/footer`), `/approach/`, `/team/`,

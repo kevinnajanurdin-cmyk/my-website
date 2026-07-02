@@ -21,7 +21,16 @@ $utf8 = New-Object System.Text.UTF8Encoding($false)   # no BOM (critical for gen
 $src       = $PSScriptRoot
 $buildRoot = Join-Path ([System.IO.Path]::GetTempPath()) 'ziller-theme-build'
 $theme     = Join-Path $buildRoot 'ziller'
-$zip       = Join-Path (Split-Path $src -Parent) 'ziller-theme.zip'
+# Output the zip OUTSIDE OneDrive (into Downloads) so the file you upload is always a
+# complete LOCAL copy. OneDrive Files On-Demand can leave the synced-Desktop copy as a
+# cloud placeholder; uploading a not-yet-hydrated placeholder sends WordPress a
+# truncated archive, which it misreports as "missing style.css" (style.css sorts late
+# in the zip, so it is the first file lost on a partial upload). See STATUS.md.
+$outDir    = Join-Path $env:USERPROFILE 'Downloads'
+if (-not (Test-Path $outDir)) { $outDir = $env:LOCALAPPDATA }
+if (-not (Test-Path $outDir)) { $outDir = Split-Path $src -Parent }
+$zip       = Join-Path $outDir 'ziller-theme.zip'
+$oldZip    = Join-Path (Split-Path $src -Parent) 'ziller-theme.zip'   # legacy OneDrive/Desktop location
 
 # --- Validate the source before building ------------------------------------
 $required = @('index.html','approach.html','team.html','invest.html','fund.html','insights.html','styles.css','script.js','assets')
@@ -657,14 +666,14 @@ $i = $i -replace '\s*<meta name="description"[^>]*>', ''
 
 $insTabs = @'
 <nav class="ins-tabs" aria-label="Filter essays">
-          <button class="ins-filter is-active" data-filter="all">All</button>
 <?php
         $ins_umbrella    = get_term_by( 'name', 'Insights', 'category' );
         $ins_umbrella_id = $ins_umbrella ? (int) $ins_umbrella->term_id : 0;
+        $ins_first       = true;
         foreach ( get_categories( array( 'hide_empty' => true, 'exclude' => $ins_umbrella_id ? array( $ins_umbrella_id ) : array() ) ) as $ins_term ) :
 ?>
-          <button class="ins-filter" data-filter="<?php echo esc_attr( $ins_term->slug ); ?>"><?php echo esc_html( $ins_term->name ); ?></button>
-<?php endforeach; ?>
+          <button class="ins-filter<?php echo $ins_first ? ' is-active' : ''; ?>" data-filter="<?php echo esc_attr( $ins_term->slug ); ?>"><?php echo esc_html( $ins_term->name ); ?></button>
+<?php $ins_first = false; endforeach; ?>
         </nav>
 '@
 $i = [regex]::Replace($i, '(?s)<nav class="ins-tabs" aria-label="Filter essays">.*?</nav>', { param($m) $insTabs.Trim() })
@@ -1033,10 +1042,13 @@ if ($errs.Count -gt 0) {
   exit 1
 }
 
+# Delete the stale OneDrive/Desktop copy so the old placeholder can't be uploaded by mistake.
+if ( ($oldZip -ne $zip) -and (Test-Path $oldZip) ) { Remove-Item $oldZip -Force -ErrorAction SilentlyContinue }
+
 Write-Host ""
 Write-Host ("BUILD OK  ->  {0}" -f $zip)
 Write-Host ("  size:      {0:N2} MB" -f ((Get-Item $zip).Length / 1MB))
 Write-Host ("  templates: {0} .php files, style.css header present, forward-slash paths verified" -f $phpCount)
 Write-Host ""
 Write-Host "Upload: WP admin > Appearance > Themes > Add New Theme > Upload Theme > Replace current with uploaded."
-Write-Host "(Wait for the OneDrive green check on the zip before selecting it.)"
+Write-Host "Pick the zip from your Downloads folder - it is a local file, so there is no OneDrive placeholder to wait for."
