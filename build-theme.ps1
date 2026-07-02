@@ -369,6 +369,7 @@ $contactMain = @'
   .contact-icons { display: flex; align-items: center; gap: .5rem; }
   .contact-icon { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 50%; color: var(--accent-deep); transition: color .18s ease, border-color .18s ease; }
   .contact-icon:hover { color: var(--ink); border-color: var(--ink); }
+  @media (max-width: 560px) { .contact-icon { width: 40px; height: 40px; } }
   .contact-registry p { margin: .3rem 0; color: var(--ink-soft); font-size: .92rem; }
   .contact-registry a { color: var(--accent-deep); }
   .contact-accordion { margin-top: 2.75rem; }

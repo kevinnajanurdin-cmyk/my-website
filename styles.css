@@ -1378,6 +1378,10 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
   .footer-bottom { flex-direction: column; }
   .footer-logo { height: 64px; }
   .founder-panel-stats { grid-template-columns: 1fr 1fr; }
+  /* Pillars: 2-up columns get too narrow for the serif headings on phones
+     (overflows at 320px); stack them, and tighten the icon gap to suit. */
+  .pillars-grid { grid-template-columns: 1fr; gap: 36px; }
+  .pillar-icon { margin-bottom: 20px; }
 }
 
 /* ─── REVEAL ANIMATION ─────────────────────────────────── */
@@ -3542,7 +3546,8 @@ body.modal-open { overflow: hidden; }
 @media (max-width: 560px) {
   .ins-grid { grid-template-columns: 1fr; }
   .ins-tabs { gap: 18px; flex-wrap: wrap; }
-  .ins-filter { padding: 0 2px 14px; letter-spacing: .12em; font-size: 11px; }
+  /* Top padding gives the filter tabs a thumb-sized tap target on touch. */
+  .ins-filter { padding: 10px 2px 14px; letter-spacing: .12em; font-size: 11px; }
   .ins-card-media { aspect-ratio: 4 / 3; }
 }
 
