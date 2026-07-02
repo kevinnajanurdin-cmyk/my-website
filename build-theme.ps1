@@ -371,6 +371,15 @@ $contactMain = @'
   .contact-icon:hover { color: var(--ink); border-color: var(--ink); }
   .contact-registry p { margin: .3rem 0; color: var(--ink-soft); font-size: .92rem; }
   .contact-registry a { color: var(--accent-deep); }
+  .contact-accordion { margin-top: 2.75rem; }
+  .contact-accordion > summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 1rem; cursor: pointer; padding-bottom: .6rem; border-bottom: 1px solid var(--line); }
+  .contact-accordion > summary::-webkit-details-marker { display: none; }
+  .contact-accordion > summary h2 { margin: 0; padding: 0; border: 0; }
+  .contact-accordion > summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+  .contact-acc-icon { flex: none; width: 9px; height: 9px; margin-right: 4px; border-right: 2px solid var(--ink-mute); border-bottom: 2px solid var(--ink-mute); transform: rotate(45deg); transition: transform .3s ease; }
+  .contact-accordion[open] .contact-acc-icon { transform: rotate(-135deg); }
+  .contact-accordion > summary:hover .contact-acc-icon { border-color: var(--ink); }
+  .contact-accordion[open] > summary { margin-bottom: 1.4rem; }
   .contact-subscribe { position: sticky; top: 116px; background: var(--bg-elev); border: 1px solid var(--line); border-radius: 4px; padding: clamp(22px, 3vw, 32px); }
   .contact-subscribe h2 { font-family: var(--serif); font-weight: 400; font-size: 1.5rem; color: var(--ink); margin: 0; }
   .contact-subscribe > p { color: var(--ink-mute); font-size: .9rem; margin: .4rem 0 1rem; }
@@ -492,7 +501,8 @@ $contactMain = @'
           </div>
         </div>
 
-        <h2>Media &amp; Marketing</h2>
+        <details class="contact-accordion">
+          <summary><h2>Media &amp; Marketing</h2><span class="contact-acc-icon" aria-hidden="true"></span></summary>
         <div class="contact-people">
           <div class="contact-person">
             <img class="contact-photo" src="assets/team/Pyke-Gunning-e1657863878974.png" alt="Pyke Gunning" width="60" height="60" loading="lazy" />
@@ -519,14 +529,17 @@ $contactMain = @'
             </div>
           </div>
         </div>
+        </details>
 
-        <h2>Client Services &amp; Unit Registry</h2>
+        <details class="contact-accordion">
+          <summary><h2>Client Services &amp; Unit Registry</h2><span class="contact-acc-icon" aria-hidden="true"></span></summary>
         <div class="contact-registry">
           <p><strong>Automic Group</strong></p>
           <p><a href="tel:1300288664">1300 288 664</a> &middot; international <a href="tel:+61296985414">+61 2 9698 5414</a> (outside Australia)</p>
           <p><a href="mailto:ziller@automic.com.au">ziller@automic.com.au</a></p>
           <p>Ziller Unit Registry Services, GPO Box 5193, Sydney NSW 2001</p>
         </div>
+        </details>
       </div>
 
       <aside class="contact-subscribe">
