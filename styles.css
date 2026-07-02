@@ -3804,7 +3804,9 @@ body.modal-open { overflow: hidden; }
 .page-essay .essay-portrait {
   position: sticky;
   top: 92px;            /* sit just below the sticky site header */
-  z-index: 1;
+  z-index: 0;           /* below the fixed back link (z1) — being later in the DOM it
+                           otherwise paints over it and swallows its clicks; the rising
+                           article (z2) still covers both */
   min-height: calc(100vh - 92px);   /* reserve the whole first screen */
   display: flex;
   align-items: center;
