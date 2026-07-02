@@ -37,12 +37,13 @@ been tested in **Live Preview** (not activated yet).
   the **existing OLD page slugs** so the other admins keep their same pages/URLs:
   Fund Information (`page-ziller-global-fund.php`), Investment Principles and Process
   (`page-investment-philosophy-and-process.php`), Invest with us (`page-invest-with-us.php`),
-  Team (`page-people.php`), `/contact/` (Pardot form + team directory w/ photos + email/
-  LinkedIn icons + Automic registry), `/insights/`, `/disclaimer/`, `/careers/`,
-  `/subscribe/` (Pardot form), `/quarterly-performance-update/` (Vimeo via Customizer +
-  disclaimer). Nav labels stay Fund/Approach/Team/Invest; all internal links point to the
-  old slugs. **The 4 preview pages I made (Kevin: /funds/ /approach/ /invest/ /team/) +
-  the Potential Bot page are to be deleted — the theme no longer targets them.**
+  Team (`page-people.php`, incl. the Careers accordion), `/contact/` (Pardot form + team
+  directory w/ photos + email/LinkedIn icons + Automic registry), `/insights/`,
+  `/disclaimer/`, `/subscribe/` (Pardot form), `/quarterly-performance-update/` (Vimeo via
+  Customizer + disclaimer). Nav labels stay Fund/Approach/Team/Invest; all internal links
+  point to the old slugs. **Delete at cutover: the 4 preview pages (Kevin: /funds/
+  /approach/ /invest/ /team/), the Potential Bot page, and the old WP "Careers" page
+  (careers now lives on the Team page — no standalone template).**
 - **Insights = WP Posts**: `page-insights.php` lists posts in the **"Insights"**
   umbrella category; filter tabs = the real sub-categories (Articles / Media /
   Video & Webinars), "Insights" hidden. `single.php` = essay layout. Home teaser
@@ -71,12 +72,12 @@ been tested in **Live Preview** (not activated yet).
   separator + Fund/Invest label fixes), and the essay read-time is de-duplicated
   (Reading Time WP plugin's in-body line hidden; header "N min read" kept, and dropped
   entirely on Videos & Webinars posts).
-- **Careers**: `/careers/` rebuilt as `page-careers.php` (Investment Analyst +
-  Investment Intern; two-minute founder-led-stock video pitch via filemail.com →
-  careers@zillerfm.com, reviewed by the CIO). Static template, WP auto-serves it for
-  the "careers" slug. Not linked in the main nav/footer — matches the live site,
-  where /careers/ is a direct-URL page. Role copy is faithful to the live page but
-  lean (the REST fetch only returned a summary); enrich the marketing prose if wanted.
+- **Careers**: lives as the **dropdown accordion at the bottom of the Team page**
+  (above "Work with us") — Investment Analyst + Investment Intern; two-minute
+  founder-led-stock video pitch via filemail.com → careers@zillerfm.com, reviewed by
+  the CIO. The standalone `/careers/` template was removed at the user's request
+  ("move careers into the Team page"); **trash the old WP "Careers" page at cutover**
+  so /careers/ doesn't fall back to index.php with the stale WPBakery content.
 
 ## Open next steps (priority order)
 1. **Go-live cutover** (the big one):

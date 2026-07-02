@@ -127,8 +127,11 @@ $front  = "<?php get_header(); ?>`r`n" + $main + "`r`n<?php get_footer(); ?>`r`n
 # Old-site slug map: the new design serves on the EXISTING (old) page slugs so the
 # other admins keep their same pages/URLs. Body class stays page-{source} (CSS hook);
 # only the output template filename uses the old WP slug.
-$ziller_wpslug = @{ 'approach' = 'investment-philosophy-and-process'; 'team' = 'people'; 'invest' = 'invest-with-us'; 'contact' = 'contact'; 'disclaimer' = 'disclaimer'; 'careers' = 'careers'; 'subscribe' = 'subscribe' }
-foreach ($slug in @('approach','team','invest','contact','disclaimer','careers','subscribe')) {
+# (careers is NOT a standalone page: it lives as the accordion at the bottom of the
+# Team page. Trash the old WP "Careers" page at cutover so /careers/ doesn't fall
+# back to index.php with the stale WPBakery content.)
+$ziller_wpslug = @{ 'approach' = 'investment-philosophy-and-process'; 'team' = 'people'; 'invest' = 'invest-with-us'; 'contact' = 'contact'; 'disclaimer' = 'disclaimer'; 'subscribe' = 'subscribe' }
+foreach ($slug in @('approach','team','invest','contact','disclaimer','subscribe')) {
 	$p = [System.IO.File]::ReadAllText((Join-Path $src "$slug.html"))
 	$cls = "page-$slug"
 
@@ -814,7 +817,7 @@ $errs = @()
 $expect = @('style.css','functions.php','header.php','footer.php','front-page.php','index.php','single.php',
             'page-investment-philosophy-and-process.php','page-people.php','page-invest-with-us.php',
             'page-ziller-global-fund.php','page-contact.php','page-insights.php',
-            'page-disclaimer.php','page-careers.php','page-subscribe.php','page-quarterly-performance-update.php')
+            'page-disclaimer.php','page-subscribe.php','page-quarterly-performance-update.php')
 $z = [System.IO.Compression.ZipFile]::OpenRead($zip)
 try {
   $names = @($z.Entries | ForEach-Object { $_.FullName })
