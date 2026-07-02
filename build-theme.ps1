@@ -546,7 +546,10 @@ $s = $s.Replace('"invest.html"','"/invest-with-us/"')
 $s = $s.Replace('"fund.html"','"/ziller-global-fund/"')
 $s = $s.Replace(' aria-current="page"','')
 $s = $s.Replace('<link rel="stylesheet" href="styles.css" />', '')
-$s = $s.Replace('<body class="page-approach">', "<body <?php body_class('single-essay'); ?>>")
+# Articles get the full essay treatment (page-essay: sticky hero portrait, content
+# curtain w/ rounded edge + shadow -- all CSS gated on that class). Media and
+# Videos & Webinars posts keep the flat layout.
+$s = $s.Replace('<body class="page-approach">', "<body <?php body_class( has_category( 'articles' ) ? 'single-essay page-essay' : 'single-essay' ); ?>>")
 $s = $s.Replace('</head>', "<?php wp_head(); ?>`r`n</head>")
 $s = $s.Replace('</body>', "<?php wp_footer(); ?>`r`n</body>")
 $s = $s -replace '\s*<title>.*?</title>', ''
