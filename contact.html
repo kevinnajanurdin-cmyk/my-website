@@ -76,8 +76,16 @@
   .contact-directory h2:first-child { margin-top: 0; }
   .contact-people { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem 2.2rem; }
   @media (max-width: 560px) { .contact-people { grid-template-columns: 1fr; } }
-  .contact-person { display: flex; gap: 1rem; align-items: flex-start; }
-  .contact-photo { flex: 0 0 88px; width: 88px; height: 88px; border-radius: 3px; object-fit: cover; object-position: center top; background: var(--bg-elev); }
+  .contact-person { display: flex; gap: 1.1rem; align-items: flex-start; }
+  /* Photo + hover treatment mirrors the Team page: navy diagonal sweeps in and the
+     photo gently zooms. Headshots are opaque (not cutouts), so the diagonal is a
+     translucent navy tint rather than the Team page's solid layer. */
+  .contact-photo-wrap { position: relative; flex: 0 0 104px; width: 104px; height: 104px; border-radius: 3px; overflow: hidden; background: var(--bg-elev); }
+  .contact-photo { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; backface-visibility: hidden; transition: transform .5s cubic-bezier(.2, .7, .2, 1); }
+  .contact-photo-wrap::after { content: ""; position: absolute; inset: 0; background: rgba(57, 83, 108, .32); clip-path: polygon(38% 0, 100% 0, 100% 100%, 0 100%); transform: translateX(101%); transition: transform .55s cubic-bezier(.2, .7, .2, 1); }
+  .contact-person:hover .contact-photo-wrap::after { transform: translateX(0); }
+  .contact-person:hover .contact-photo { transform: scale(1.04); }
+  @media (prefers-reduced-motion: reduce) { .contact-photo, .contact-photo-wrap::after { transition: none; } }
   .contact-person-body { min-width: 0; }
   .contact-name { font-family: var(--serif); font-size: 1.12rem; color: var(--ink); margin: 0; }
   .contact-role { color: var(--ink-mute); font-size: .82rem; margin: .15rem 0 .45rem; }
@@ -123,7 +131,7 @@
         <h2>Distribution Team</h2>
         <div class="contact-people">
           <div class="contact-person">
-            <img class="contact-photo" src="assets/team/Cesar-Farfan-400x400px-300x300.png" alt="Cesar Farfan" width="60" height="60" loading="lazy" />
+            <span class="contact-photo-wrap"><img class="contact-photo" src="assets/team/Cesar-Farfan-400x400px-300x300.png" alt="Cesar Farfan" width="104" height="104" loading="lazy" /></span>
             <div class="contact-person-body">
               <p class="contact-name">Cesar Farfan</p>
               <p class="contact-role">Head of Distribution</p>
@@ -135,7 +143,7 @@
             </div>
           </div>
           <div class="contact-person">
-            <img class="contact-photo" src="assets/team/Abdul-Elhage-400x400px-300x300.png" alt="Abdul Elhage" width="60" height="60" loading="lazy" />
+            <span class="contact-photo-wrap"><img class="contact-photo" src="assets/team/Abdul-Elhage-400x400px-300x300.png" alt="Abdul Elhage" width="104" height="104" loading="lazy" /></span>
             <div class="contact-person-body">
               <p class="contact-name">Abdul Elhage</p>
               <p class="contact-role">Director, Institutional Sales</p>
@@ -147,7 +155,7 @@
             </div>
           </div>
           <div class="contact-person">
-            <img class="contact-photo" src="assets/team/Marjon-Crandall-400x400px-300x300.png" alt="Marjon Crandall" width="60" height="60" loading="lazy" />
+            <span class="contact-photo-wrap"><img class="contact-photo" src="assets/team/Marjon-Crandall-400x400px-300x300.png" alt="Marjon Crandall" width="104" height="104" loading="lazy" /></span>
             <div class="contact-person-body">
               <p class="contact-name">Marjon Crandall</p>
               <p class="contact-role">Head of Researcher &amp; Consultant Relationships</p>
@@ -159,7 +167,7 @@
             </div>
           </div>
           <div class="contact-person">
-            <img class="contact-photo" src="assets/team/Scott-Curtis-400x400px.png" alt="Scott Curtis" width="60" height="60" loading="lazy" />
+            <span class="contact-photo-wrap"><img class="contact-photo" src="assets/team/Scott-Curtis-400x400px.png" alt="Scott Curtis" width="104" height="104" loading="lazy" /></span>
             <div class="contact-person-body">
               <p class="contact-name">Scott Curtis</p>
               <p class="contact-role">Director, Private Wealth &amp; Family Office</p>
@@ -171,7 +179,7 @@
             </div>
           </div>
           <div class="contact-person">
-            <img class="contact-photo" src="assets/team/Karl-Linder-200x200px.png" alt="Karl Linder" width="60" height="60" loading="lazy" />
+            <span class="contact-photo-wrap"><img class="contact-photo" src="assets/team/Karl-Linder-200x200px.png" alt="Karl Linder" width="104" height="104" loading="lazy" /></span>
             <div class="contact-person-body">
               <p class="contact-name">Karl Linder</p>
               <p class="contact-role">Regional Manager, Southern States</p>
@@ -183,7 +191,7 @@
             </div>
           </div>
           <div class="contact-person">
-            <img class="contact-photo" src="assets/team/David-Whitby-400x400px.png" alt="David Whitby" width="60" height="60" loading="lazy" />
+            <span class="contact-photo-wrap"><img class="contact-photo" src="assets/team/David-Whitby-400x400px.png" alt="David Whitby" width="104" height="104" loading="lazy" /></span>
             <div class="contact-person-body">
               <p class="contact-name">David Whitby</p>
               <p class="contact-role">Senior Investment Specialist</p>
@@ -195,7 +203,7 @@
             </div>
           </div>
           <div class="contact-person">
-            <img class="contact-photo" src="assets/team/Sam-Harris-400x400px-zoomed.png" alt="Sam Harris" width="60" height="60" loading="lazy" />
+            <span class="contact-photo-wrap"><img class="contact-photo" src="assets/team/Sam-Harris-400x400px-zoomed.png" alt="Sam Harris" width="104" height="104" loading="lazy" /></span>
             <div class="contact-person-body">
               <p class="contact-name">Sam Harris</p>
               <p class="contact-role">Investment Specialist (NSW)</p>
@@ -207,7 +215,7 @@
             </div>
           </div>
           <div class="contact-person">
-            <img class="contact-photo" src="assets/team/Vlad-Laevsky-400x400px.png" alt="Vlad Laevsky" width="60" height="60" loading="lazy" />
+            <span class="contact-photo-wrap"><img class="contact-photo" src="assets/team/Vlad-Laevsky-400x400px.png" alt="Vlad Laevsky" width="104" height="104" loading="lazy" /></span>
             <div class="contact-person-body">
               <p class="contact-name">Vlad Laevsky</p>
               <p class="contact-role">Investment Specialist (QLD)</p>
@@ -224,7 +232,7 @@
           <summary><h2>Media &amp; Marketing</h2><span class="contact-acc-icon" aria-hidden="true"></span></summary>
         <div class="contact-people">
           <div class="contact-person">
-            <img class="contact-photo" src="assets/team/Pyke-Gunning-e1657863878974.png" alt="Pyke Gunning" width="60" height="60" loading="lazy" />
+            <span class="contact-photo-wrap"><img class="contact-photo" src="assets/team/Pyke-Gunning-e1657863878974.png" alt="Pyke Gunning" width="104" height="104" loading="lazy" /></span>
             <div class="contact-person-body">
               <p class="contact-name">Pyke Gunning</p>
               <p class="contact-role">Marketing Manager</p>
@@ -236,7 +244,7 @@
             </div>
           </div>
           <div class="contact-person">
-            <img class="contact-photo" src="assets/team/Chloe-Jakins-400x400px.png" alt="Chloe Jakins" width="60" height="60" loading="lazy" />
+            <span class="contact-photo-wrap"><img class="contact-photo" src="assets/team/Chloe-Jakins-400x400px.png" alt="Chloe Jakins" width="104" height="104" loading="lazy" /></span>
             <div class="contact-person-body">
               <p class="contact-name">Chloe Jakins</p>
               <p class="contact-role">Events Manager</p>
