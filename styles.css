@@ -3704,9 +3704,14 @@ body.modal-open { overflow: hidden; }
   text-align: center;
 }
 
-/* Disclaimer */
-.essay-disclaimer {
-  margin-top: clamp(36px, 5vh, 52px);
+/* Disclaimer — 3x clearance between the article's last element and the rule.
+   NOTE: the selector needs `.essay-body p`-beating specificity or that rule's
+   margin shorthand (0 0 26px) zeroes this margin-top (that's why the old
+   36-52px clamp never actually applied — the visible gap was just the previous
+   paragraph's 26px bottom margin). */
+.essay-disclaimer,
+.essay-body p.essay-disclaimer {
+  margin-top: clamp(72px, 9vh, 90px);
   padding-top: 24px;
   border-top: 1px solid var(--line);
   font-size: 14px !important;
