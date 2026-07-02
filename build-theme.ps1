@@ -435,7 +435,8 @@ $insGrid = @'
           foreach ( get_the_category() as $ins_cc ) { if ( $ins_umbrella_id && (int) $ins_cc->term_id === $ins_umbrella_id ) { continue; } $ins_cat = $ins_cc; break; }
           $ins_img = get_the_post_thumbnail_url( get_the_ID(), 'large' );
         ?>
-          <article class="ins-card" data-category="<?php echo esc_attr( $ins_cat ? $ins_cat->slug : 'insight' ); ?>" data-reveal>
+          <?php $ins_d = ( $ins_q->current_post % 3 ) * 0.06; // stagger the scroll-reveal like the static page (0/.06s/.12s per row) ?>
+          <article class="ins-card" data-category="<?php echo esc_attr( $ins_cat ? $ins_cat->slug : 'insight' ); ?>" data-reveal<?php if ( $ins_d > 0 ) : ?> style="--d:<?php echo esc_attr( $ins_d ); ?>s"<?php endif; ?>>
             <a class="ins-card-link" href="<?php the_permalink(); ?>">
               <div class="ins-card-media ins-card-media--photo"<?php if ( $ins_img ) echo " style=\"--ins-img:url('" . esc_url( $ins_img ) . "')\""; ?>>
                 <span class="ins-card-kicker"><span class="ins-card-dot"></span><?php echo esc_html( $ins_cat ? $ins_cat->name : 'Insight' ); ?></span>
