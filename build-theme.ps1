@@ -182,6 +182,11 @@ href="<?php echo $ziller_report ? esc_url( $ziller_report ) : '#'; ?>"<?php if (
 '@
 $f = $f.Replace('href="assets/docs/Ziller-Global-Fund-Active-ETF-May-2026-Report.pdf"', $reportHref.Trim())
 
+# Fund-page video -> driven by the SAME Customizer field as the Quarterly Update page
+# (Appearance > Customize > "Ziller - Quarterly Update"), so one paste updates both.
+# Falls back to the current video ID if the field is left empty.
+$f = $f.Replace('player.vimeo.com/video/1181798546?', 'player.vimeo.com/video/<?php echo esc_attr( ziller_vimeo_id( ''1181798546'' ) ); ?>?')
+
 $f = $f.Replace('"assets/', '"' + $T + '/assets/')
 $f = $f.Replace("'assets/", "'" + $T + '/assets/')
 $f = $f.Replace('`assets/', '`' + $T + '/assets/')
@@ -359,7 +364,7 @@ $contactMain = @'
   .contact-people { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem 2.2rem; }
   @media (max-width: 560px) { .contact-people { grid-template-columns: 1fr; } }
   .contact-person { display: flex; gap: 1rem; align-items: flex-start; }
-  .contact-photo { flex: 0 0 64px; width: 64px; height: 64px; border-radius: 3px; object-fit: cover; object-position: center top; background: var(--bg-elev); }
+  .contact-photo { flex: 0 0 88px; width: 88px; height: 88px; border-radius: 3px; object-fit: cover; object-position: center top; background: var(--bg-elev); }
   .contact-person-body { min-width: 0; }
   .contact-name { font-family: var(--serif); font-size: 1.12rem; color: var(--ink); margin: 0; }
   .contact-role { color: var(--ink-mute); font-size: .82rem; margin: .15rem 0 .45rem; }
@@ -1156,6 +1161,13 @@ function ziller_customize_figures( $wp_customize ) {
 function ziller_sanitize_figure( $value, $setting ) {
 	$value = str_replace( array( '%', ',', ' ' ), '', trim( (string) $value ) );
 	return preg_match( '/^-?\d+(\.\d+)?$/', $value ) ? $value : $setting->default;
+}
+
+// Quarterly video ID from the Customizer field (accepts a bare ID or any Vimeo URL);
+// returns $default when unset. Shared by the Fund page and the Quarterly Update page.
+function ziller_vimeo_id( $default = '' ) {
+	$v = trim( (string) get_theme_mod( 'ziller_quarterly_vimeo', '' ) );
+	return ( $v !== '' && preg_match( '/(\d{6,})/', $v, $m ) ) ? $m[1] : $default;
 }
 
 // Optional per-article "Hero image" (ACF Pro). Lets the article hero differ from
