@@ -359,7 +359,7 @@ $contactMain = @'
   .contact-people { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem 2.2rem; }
   @media (max-width: 560px) { .contact-people { grid-template-columns: 1fr; } }
   .contact-person { display: flex; gap: 1rem; align-items: flex-start; }
-  .contact-photo { flex: 0 0 60px; width: 60px; height: 60px; border-radius: 50%; object-fit: cover; background: var(--bg-elev); }
+  .contact-photo { flex: 0 0 64px; width: 64px; height: 64px; border-radius: 3px; object-fit: cover; object-position: center top; background: var(--bg-elev); }
   .contact-person-body { min-width: 0; }
   .contact-name { font-family: var(--serif); font-size: 1.12rem; color: var(--ink); margin: 0; }
   .contact-role { color: var(--ink-mute); font-size: .82rem; margin: .15rem 0 .45rem; }
