@@ -502,7 +502,7 @@ $essayMain = @'
             <time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date( 'F Y' ) ); ?></time>
             <?php if ( ! has_category( 'videos-webinars' ) ) : // "N min read" is meaningless on video posts ?>
             <span class="essay-meta-dot">&middot;</span>
-            <span><?php echo (int) max( 1, round( str_word_count( wp_strip_all_tags( strip_shortcodes( get_the_content() ) ) ) / 200 ) ); ?> min read</span>
+            <span><?php /* Strip only the [bracketed] shortcode tags and KEEP the text between them: strip_shortcodes() removes enclosing shortcodes WITH their inner content, and the old WPBakery posts keep the whole article inside [vc_column_text]...[/vc_column_text] -- it made every post "1 min read". */ echo (int) max( 1, round( str_word_count( wp_strip_all_tags( preg_replace( '/\[[^\]]*\]/', ' ', get_the_content() ) ) ) / 200 ) ); ?> min read</span>
             <?php endif; ?>
           </div>
           <h1 class="essay-title"><?php the_title(); ?></h1>
