@@ -469,18 +469,26 @@
           var d = dots[i];
           var x, y, r = d.r, alpha;
           if (d.survivor) {
-            // hold position until the end, then glide into the landing row
-            alpha = 0.55 + 0.45 * conv;
+            // The chosen 15 are visibly distinct from the START — brighter,
+            // larger, with a soft halo — so the eye tracks them persisting
+            // while the field thins; the story reads throughout the scroll,
+            // not just at the final gather.
+            alpha = 0.9 + 0.1 * conv;
             x = d.x + (rowX0 + d.slot * gap - d.x) * conv;
             y = d.y + (g.rowY - d.y) * conv;
-            r = d.r + (2.6 - d.r) * conv;
+            r = 2.0 + (2.9 - 2.0) * conv;
+            // halo — blooms as the survivors gather into the row
+            ctx.beginPath();
+            ctx.arc(x, y, r * 2.6, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255,255,255,' + (0.10 + 0.15 * conv).toFixed(3) + ')';
+            ctx.fill();
           } else {
             // fade out strictly in place at this dot's own moment within its
             // wave — no movement at all, or the dots read as page scroll
             var win = WINDOWS[d.stage - 1];
             var at = win[0] + d.jitter * (win[1] - win[0] - FADE);
             var t = smooth(clamp01((p - at) / FADE));
-            alpha = 0.50 * (1 - t);
+            alpha = 0.58 * (1 - t);
             if (alpha <= 0.004) continue;
             x = d.x;
             y = d.y;
