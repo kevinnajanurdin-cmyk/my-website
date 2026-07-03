@@ -3593,7 +3593,7 @@ body.modal-open { overflow: hidden; }
 .essay-rule {
   border: none;
   height: 1px;
-  background: #cdc8bf;
+  background: var(--line);   /* grey hairline (was tan #cdc8bf) */
   margin: 0;
 }
 

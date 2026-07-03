@@ -500,7 +500,26 @@ $essayStyle = @'
 '@
 
 $essayMain = @'
-<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
+<?php if ( have_posts() ) : while ( have_posts() ) : the_post();
+/* Epigraph under the title: the manual excerpt when set; otherwise, for Founder
+   in Focus posts, hoist the article's opening quote paragraph out of the body --
+   matches the static essays, where the hero quote sits directly under the title. */
+$ziller_body     = apply_filters( 'the_content', get_the_content() );
+$ziller_epigraph = has_excerpt() ? get_the_excerpt() : '';
+if ( '' === $ziller_epigraph && has_category( 'founder-in-focus' ) && preg_match_all( '/<(p|h[1-6])\b[^>]*>.*?<\/\1>/s', $ziller_body, $ziller_pp ) ) {
+	foreach ( array_slice( $ziller_pp[0], 0, 6 ) as $ziller_p ) {
+		$ziller_txt = trim( wp_strip_all_tags( $ziller_p ) );
+		// skip empties and WPBakery shortcode wrappers ("[vc_row...]" paragraphs)
+		if ( '' === $ziller_txt || '[' === substr( $ziller_txt, 0, 1 ) ) { continue; }
+		if ( strlen( $ziller_txt ) < 600 && preg_match( '/^["\x{2018}\x{2019}\x{201C}\']/u', $ziller_txt ) ) {
+			$ziller_epigraph = $ziller_txt;
+			$ziller_pos = strpos( $ziller_body, $ziller_p );
+			if ( false !== $ziller_pos ) { $ziller_body = substr_replace( $ziller_body, '', $ziller_pos, strlen( $ziller_p ) ); }
+		}
+		break; // the first real paragraph decides
+	}
+}
+?>
   <main class="essay-page">
     <article class="essay">
       <nav class="essay-back-wrap">
@@ -527,15 +546,15 @@ $essayMain = @'
             <?php endif; ?>
           </div>
           <h1 class="essay-title"><?php the_title(); ?></h1>
-          <?php if ( has_excerpt() ) : ?>
-          <blockquote class="essay-epigraph"><p><?php echo esc_html( get_the_excerpt() ); ?></p></blockquote>
+          <?php if ( $ziller_epigraph ) : ?>
+          <blockquote class="essay-epigraph"><p><?php echo esc_html( $ziller_epigraph ); ?></p></blockquote>
           <?php endif; ?>
           <hr class="essay-rule" />
         </div>
       </header>
       <div class="essay-body">
         <div class="container essay-container">
-          <?php the_content(); ?>
+          <?php echo $ziller_body; // the_content filters already applied above (epigraph hoisted out) ?>
           <p class="essay-disclaimer">Please note that these are the views of the writer and not necessarily the views of Ziller. This article does not take into account your investment objectives, particular needs, or financial situation.</p>
         </div>
       </div>
