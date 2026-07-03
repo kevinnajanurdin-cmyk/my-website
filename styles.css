@@ -2965,7 +2965,7 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
   line-height: 1.6;
   color: var(--ink-mute);
 }
-.invest-note-cta { margin-top: 18px; }
+.invest-note-cta { margin-top: 32px; }
 .invest-disclosure {
   margin: clamp(24px, 4vh, 36px) auto 0;
   max-width: 760px;
