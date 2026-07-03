@@ -418,7 +418,7 @@ $insTabs = @'
         $ins_umbrella    = get_term_by( 'name', 'Insights', 'category' );
         $ins_umbrella_id = $ins_umbrella ? (int) $ins_umbrella->term_id : 0;
         $ins_first       = true;
-        foreach ( get_categories( array( 'hide_empty' => true, 'exclude' => $ins_umbrella_id ? array( $ins_umbrella_id ) : array() ) ) as $ins_term ) :
+        foreach ( get_categories( array( 'hide_empty' => true, 'parent' => 0, 'exclude' => $ins_umbrella_id ? array( $ins_umbrella_id ) : array() ) ) as $ins_term ) : // parent=0: sub-categories (Founder in Focus etc.) label the cards, never become tabs
 ?>
           <button class="ins-filter<?php echo $ins_first ? ' is-active' : ''; ?>" data-filter="<?php echo esc_attr( $ins_term->slug ); ?>"><?php echo esc_html( $ins_term->name ); ?></button>
 <?php $ins_first = false; endforeach; ?>
@@ -434,12 +434,26 @@ $insGrid = @'
         if ( $ins_umbrella_id ) { $ins_args['cat'] = $ins_umbrella_id; }
         $ins_q = new WP_Query( $ins_args );
         if ( $ins_q->have_posts() ) : while ( $ins_q->have_posts() ) : $ins_q->the_post();
-          $ins_cat = null;
-          foreach ( get_the_category() as $ins_cc ) { if ( $ins_umbrella_id && (int) $ins_cc->term_id === $ins_umbrella_id ) { continue; } $ins_cat = $ins_cc; break; }
+          // Kicker prefers the SUB-category (Founder in Focus / Thought Piece / ...);
+          // the top-level category (Articles / Media / ...) drives the filter attr.
+          $ins_sub = null; $ins_top = null;
+          foreach ( get_the_category() as $ins_cc ) {
+            if ( $ins_umbrella_id && (int) $ins_cc->term_id === $ins_umbrella_id ) { continue; }
+            if ( $ins_cc->parent && (int) $ins_cc->parent !== $ins_umbrella_id ) { if ( ! $ins_sub ) { $ins_sub = $ins_cc; } }
+            else { if ( ! $ins_top ) { $ins_top = $ins_cc; } }
+          }
+          // tagged only with a sub-category? climb to its top-level ancestor so filtering still works
+          if ( ! $ins_top && $ins_sub ) {
+            $ins_anc = get_ancestors( $ins_sub->term_id, 'category' );
+            $ins_anc = array_values( array_diff( $ins_anc, array( $ins_umbrella_id ) ) );
+            $ins_top = $ins_anc ? get_term( end( $ins_anc ), 'category' ) : $ins_sub;
+          }
+          $ins_cat = $ins_sub ? $ins_sub : $ins_top;   // label
+          $ins_filt = $ins_top ? $ins_top : $ins_cat;  // filter slug
           $ins_img = get_the_post_thumbnail_url( get_the_ID(), 'large' );
         ?>
           <?php $ins_d = ( $ins_q->current_post % 3 ) * 0.06; // stagger the scroll-reveal like the static page (0/.06s/.12s per row) ?>
-          <article class="ins-card" data-category="<?php echo esc_attr( $ins_cat ? $ins_cat->slug : 'insight' ); ?>" data-reveal<?php if ( $ins_d > 0 ) : ?> style="--d:<?php echo esc_attr( $ins_d ); ?>s"<?php endif; ?>>
+          <article class="ins-card" data-category="<?php echo esc_attr( $ins_filt ? $ins_filt->slug : 'insight' ); ?>" data-reveal<?php if ( $ins_d > 0 ) : ?> style="--d:<?php echo esc_attr( $ins_d ); ?>s"<?php endif; ?>>
             <a class="ins-card-link" href="<?php the_permalink(); ?>">
               <div class="ins-card-media ins-card-media--photo"<?php if ( $ins_img ) echo " style=\"--ins-img:url('" . esc_url( $ins_img ) . "')\""; ?>>
                 <span class="ins-card-kicker"><span class="ins-card-dot"></span><?php echo esc_html( $ins_cat ? $ins_cat->name : 'Insight' ); ?></span>
@@ -501,7 +515,7 @@ $essayMain = @'
         <div class="container essay-container">
           <hr class="essay-rule" />
           <div class="essay-meta">
-            <?php $ecat = null; foreach ( get_the_category() as $ecc ) { if ( strcasecmp( $ecc->name, 'Insights' ) === 0 ) { continue; } $ecat = $ecc; break; } if ( $ecat ) : ?><span><?php echo esc_html( $ecat->name ); ?></span><span class="essay-meta-dot">&middot;</span><?php endif; ?>
+            <?php /* prefer the SUB-category (Founder in Focus etc.) over the top-level (Articles) */ $ecat = null; $etop = null; foreach ( get_the_category() as $ecc ) { if ( strcasecmp( $ecc->name, 'Insights' ) === 0 ) { continue; } if ( $ecc->parent ) { if ( ! $ecat ) { $ecat = $ecc; } } elseif ( ! $etop ) { $etop = $ecc; } } if ( ! $ecat ) { $ecat = $etop; } if ( $ecat ) : ?><span><?php echo esc_html( $ecat->name ); ?></span><span class="essay-meta-dot">&middot;</span><?php endif; ?>
             <time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date( 'F Y' ) ); ?></time>
             <?php if ( ! has_category( 'videos-webinars' ) ) : // "N min read" is meaningless on video posts ?>
             <span class="essay-meta-dot">&middot;</span>
