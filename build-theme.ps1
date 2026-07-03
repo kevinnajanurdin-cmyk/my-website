@@ -418,7 +418,11 @@ $insTabs = @'
         $ins_umbrella    = get_term_by( 'name', 'Insights', 'category' );
         $ins_umbrella_id = $ins_umbrella ? (int) $ins_umbrella->term_id : 0;
         $ins_first       = true;
-        foreach ( get_categories( array( 'hide_empty' => true, 'parent' => 0, 'exclude' => $ins_umbrella_id ? array( $ins_umbrella_id ) : array() ) ) as $ins_term ) : // parent=0: sub-categories (Founder in Focus etc.) label the cards, never become tabs
+        foreach ( get_categories( array( 'hide_empty' => true, 'exclude' => $ins_umbrella_id ? array( $ins_umbrella_id ) : array() ) ) as $ins_term ) :
+          // Tabs = the parent categories only: top-level (Articles) or direct children
+          // of the Insights umbrella (Media, Videos & Webinars sit under it in WP).
+          // Deeper sub-categories (Founder in Focus etc.) label cards, never tabs.
+          if ( (int) $ins_term->parent !== 0 && (int) $ins_term->parent !== $ins_umbrella_id ) { continue; }
 ?>
           <button class="ins-filter<?php echo $ins_first ? ' is-active' : ''; ?>" data-filter="<?php echo esc_attr( $ins_term->slug ); ?>"><?php echo esc_html( $ins_term->name ); ?></button>
 <?php $ins_first = false; endforeach; ?>
