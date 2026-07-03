@@ -469,19 +469,14 @@
           var d = dots[i];
           var x, y, r = d.r, alpha;
           if (d.survivor) {
-            // The chosen 15 are visibly distinct from the START — brighter,
-            // larger, with a soft halo — so the eye tracks them persisting
-            // while the field thins; the story reads throughout the scroll,
-            // not just at the final gather.
+            // The chosen 15 are visibly distinct from the START — brighter and
+            // larger, so the eye tracks them persisting while the field thins;
+            // the story reads throughout the scroll, not just at the final
+            // gather. Crisp points only — no halo (a flat disc read as cheap).
             alpha = 0.9 + 0.1 * conv;
             x = d.x + (rowX0 + d.slot * gap - d.x) * conv;
             y = d.y + (g.rowY - d.y) * conv;
             r = 2.0 + (2.9 - 2.0) * conv;
-            // halo — blooms as the survivors gather into the row
-            ctx.beginPath();
-            ctx.arc(x, y, r * 2.6, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(255,255,255,' + (0.10 + 0.15 * conv).toFixed(3) + ')';
-            ctx.fill();
           } else {
             // fade out strictly in place at this dot's own moment within its
             // wave — no movement at all, or the dots read as page scroll
