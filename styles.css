@@ -2521,14 +2521,8 @@ body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); p
   left: 0;
   width: 32px;
   height: 1px;
-  /* Dimmed from .65: at that brightness the tick reads through the card's
-     reveal fade before the text does, and two lone dashes float on the navy. */
-  background: rgba(255,255,255,.4);
+  background: rgba(255,255,255,.65);
 }
-/* Sequence the tick AFTER the card text has landed so it never appears alone.
-   (Scoped to .js so the no-JS fallback still shows it.) */
-.js .discipline-card::before { opacity: 0; transition: opacity .5s ease .5s; }
-.js .discipline-card.is-visible::before { opacity: 1; }
 .discipline-title {
   margin: 0 0 10px;
   font-family: var(--sans);
