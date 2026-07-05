@@ -1149,9 +1149,14 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   .cover-card-fallback { font-size: 64px; }
 }
 @media (max-width: 560px) {
-  .cover-card { width: 160px; height: 224px; margin-left: -80px; margin-top: -112px; }
-  .cover-card-fallback { font-size: 48px; }
+  /* Phones: the lead card carries the section — let it fill ~62% of the viewport
+     (was 160px / 43%, which read as a thumbnail). */
+  .cover-card { width: 232px; height: 315px; margin-left: -116px; margin-top: -158px; }
+  .cover-card-fallback { font-size: 64px; }
   .coverflow-inner { padding-top: 88px; }
+  /* The in-photo name/company tag wraps illegibly at phone card sizes, and the
+     caption right below the carousel already carries it — let the photo breathe. */
+  .cover-card-tag { display: none; }
 }
 
 /* ─── FOUNDER PANEL (MODAL) ────────────────────────────── */

@@ -323,7 +323,9 @@ if (coverflow && cards.length) {
   let cfPos = 0;            // floating active index (0 … total-1), hover-driven
 
   // Tunables — feel free to adjust
-  const SPREAD_X = 240;     // px between adjacent cards on the arc
+  // Phones get a tighter arc so the (larger) mobile cards still show their
+  // neighbours peeking in at the edges; desktop keeps the original 240.
+  const SPREAD_X = matchMedia("(max-width: 560px)").matches ? 205 : 240;
   const DEPTH_Z = 160;      // px each card pushes back per step
   const ROTATE_Y = 32;      // deg rotation per step
   const FALLOFF = 0.26;     // opacity falloff per step (1 - x*FALLOFF)
