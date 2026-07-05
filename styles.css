@@ -111,7 +111,19 @@ body.over-hero .site-header {
 .primary-nav a { color: inherit; opacity: .82; transition: opacity .25s ease; }
 .primary-nav a:hover { opacity: 1; }
 
-.header-cta { display: flex; align-items: center; gap: 18px; }
+.header-cta { display: flex; align-items: center; gap: 22px; }
+/* Investor Portal — quiet utility link beside the Invest Now button, styled
+   like a nav item so it reads as chrome, not a competing call-to-action. */
+.header-portal {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: .02em;
+  color: inherit;
+  opacity: .82;
+  transition: opacity .25s ease;
+  white-space: nowrap;
+}
+.header-portal:hover { opacity: 1; }
 
 .btn {
   display: inline-block;
@@ -1324,7 +1336,14 @@ body.nav-open .header-cta {
   border-bottom: 1px solid var(--line);
   align-items: flex-start;
 }
-body.nav-open .header-cta { padding-top: 0; border-top: 1px solid var(--line); padding-top: 24px; }
+body.nav-open .header-cta {
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+  /* Sit BELOW the nav panel (24px pad + 5 links x 25px + 4 gaps x 18px + 24px pad
+     + 1px border = 246px): both panels anchor at top:100%, and without this offset
+     the CTA's opaque background covers the first nav links. */
+  top: calc(100% + 246px);
+}
 
 /* ─── RESPONSIVE ───────────────────────────────────────── */
 @media (max-width: 1180px) {
