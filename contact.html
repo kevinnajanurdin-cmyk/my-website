@@ -77,12 +77,11 @@
   .contact-people { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem 2.2rem; }
   @media (max-width: 560px) { .contact-people { grid-template-columns: 1fr; } }
   .contact-person { display: flex; gap: 1.1rem; align-items: flex-start; }
-  /* Soft drop shadow BEHIND each avatar (deepens on hover) + a gentle photo zoom. */
-  .contact-photo-wrap { position: relative; flex: 0 0 117px; width: 117px; height: 117px; border-radius: 3px; overflow: hidden; background: var(--bg-elev); box-shadow: 0 14px 32px -14px rgba(10, 18, 32, .3); transition: box-shadow .4s ease; }
+  /* Flat avatars; a gentle photo zoom on hover. */
+  .contact-photo-wrap { position: relative; flex: 0 0 117px; width: 117px; height: 117px; border-radius: 3px; overflow: hidden; background: var(--bg-elev); }
   .contact-photo { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; backface-visibility: hidden; transition: transform .5s cubic-bezier(.2, .7, .2, 1); }
-  .contact-person:hover .contact-photo-wrap { box-shadow: 0 26px 52px -18px rgba(10, 18, 32, .45); }
   .contact-person:hover .contact-photo { transform: scale(1.04); }
-  @media (prefers-reduced-motion: reduce) { .contact-photo, .contact-photo-wrap { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .contact-photo { transition: none; } }
   .contact-person-body { min-width: 0; }
   .contact-name { font-family: var(--serif); font-size: 1.12rem; color: var(--ink); margin: 0; }
   .contact-role { color: var(--ink-mute); font-size: .82rem; margin: .15rem 0 .45rem; }
