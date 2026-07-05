@@ -3487,8 +3487,7 @@ body.modal-open { overflow: hidden; }
 /* ── Subscribe CTA ─────────────────────────────────────── */
 .ins-subscribe {
   padding: clamp(72px, 10vh, 120px) 0;
-  background: var(--dark);
-  color: var(--on-dark);
+  /* no band of its own — sits on the page's white background */
 }
 .ins-subscribe-inner {
   max-width: 580px;
@@ -3510,12 +3509,12 @@ body.modal-open { overflow: hidden; }
   font-weight: 500;
   font-size: clamp(36px, 5vw, 56px);
   margin: 0 0 14px;
-  color: var(--on-dark);
+  color: var(--ink);
 }
 .ins-subscribe-text {
   font-size: 17px;
   line-height: 1.6;
-  color: var(--on-dark-mute);
+  color: var(--ink-mute);
   margin: 0 0 36px;
 }
 .ins-subscribe-form {
@@ -3529,15 +3528,15 @@ body.modal-open { overflow: hidden; }
   font-family: var(--sans);
   font-size: 15px;
   padding: 12px 18px;
-  border: 1px solid rgba(255,255,255,.18);
+  border: 1px solid var(--line);
   border-radius: 3px;
-  background: rgba(255,255,255,.06);
-  color: var(--on-dark);
+  background: #fff;
+  color: var(--ink);
   outline: none;
   transition: border-color .2s;
 }
-.ins-subscribe-input::placeholder { color: rgba(255,255,255,.35); }
-.ins-subscribe-input:focus { border-color: rgba(255,255,255,.4); }
+.ins-subscribe-input::placeholder { color: var(--ink-mute); }
+.ins-subscribe-input:focus { border-color: var(--accent-deep); }
 
 /* ── Insights page responsive ──────────────────────────── */
 @media (max-width: 900px) {
@@ -3852,8 +3851,7 @@ body.modal-open { overflow: hidden; }
 .fund-section-band,
 .approach-hero,
 .approach-intro,
-.insights-intro,
-.ins-subscribe {
+.insights-intro {
   background: linear-gradient(to top, rgba(7, 10, 20, 0.5) 0%, rgba(7, 10, 20, 0) 120px), var(--dark);
 }
 
