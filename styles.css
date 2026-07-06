@@ -71,24 +71,26 @@ a:hover { color: var(--accent-deep); }
 /* ─── TOPBAR — slim utility strip above the header. In normal flow (not
    sticky), so it scrolls away while .site-header sticks to the top. ── */
 .topbar {
-  background: var(--dark);
-  color: var(--on-dark);
+  /* Discreet paper-grey utility strip — quiet chrome, not a brand moment. */
+  background: var(--bg-elev);
+  color: var(--ink-mute);
+  border-bottom: 1px solid var(--line);
 }
 .topbar-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 40px;
+  height: 34px;
 }
 .topbar-link {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: .06em;
   color: inherit;
-  opacity: .85;
+  opacity: .65;
   transition: opacity .2s ease;
 }
 .topbar-link:hover { opacity: 1; }
