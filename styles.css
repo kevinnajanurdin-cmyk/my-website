@@ -94,13 +94,14 @@ a:hover { color: var(--accent-deep); }
   transition: opacity .2s ease;
 }
 .topbar-link:hover { opacity: 1; }
-/* On over-hero pages the header is navy; make the topbar navy too (borderless)
-   so the strip merges into the header as one block instead of a grey band
-   sitting above navy. Light-header pages keep the discreet paper-grey above. */
+/* On over-hero pages the header is navy. Give the topbar a DEEPER navy than the
+   --dark header (#171f2f) plus a subtle hairline, so it reads as a distinct
+   utility strip — the navy sibling of the grey version, which sits a shade
+   deeper than the light page. Light-header pages keep the paper-grey above. */
 body.over-hero .topbar {
-  background: var(--dark);
+  background: #10182a;
   color: var(--on-dark);
-  border-bottom-color: transparent;
+  border-bottom-color: rgba(255, 255, 255, .1);
 }
 
 /* ─── HEADER ───────────────────────────────────────────── */
