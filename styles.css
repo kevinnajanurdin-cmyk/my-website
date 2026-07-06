@@ -103,6 +103,9 @@ body.over-hero .topbar {
   color: var(--on-dark);
   border-bottom-color: rgba(255, 255, 255, .1);
 }
+/* Topbar on the HOME page only — static home is .page-home, WP front page gets
+   .home from body_class(). (Remove this rule to show it site-wide again.) */
+body:not(.page-home):not(.home) .topbar { display: none; }
 
 /* ─── HEADER ───────────────────────────────────────────── */
 .site-header {
