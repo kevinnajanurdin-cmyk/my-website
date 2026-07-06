@@ -161,6 +161,10 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 .menu-toggle {
   display: none;
   background: none; border: 0; cursor: pointer;
+  /* inherit so the bars (background: currentColor) follow the header colour —
+     ink on light pages, white on over-hero (navy) pages. Buttons don't inherit
+     colour by default, which left the bars UA-black and near-invisible on navy. */
+  color: inherit;
   width: 36px; height: 36px;
   flex-direction: column; justify-content: center; gap: 6px;
   padding: 0;
@@ -1353,16 +1357,31 @@ body.nav-open .header-cta {
   background: var(--bg);
   padding: 24px var(--gutter);
   gap: 18px;
-  border-bottom: 1px solid var(--line);
   align-items: flex-start;
 }
 body.nav-open .header-cta {
-  border-top: 1px solid var(--line);
-  padding-top: 24px;
-  /* Sit BELOW the nav panel (24px pad + 5 links x 25px + 4 gaps x 18px + 24px pad
-     + 1px border = 246px): both panels anchor at top:100%, and without this offset
-     the CTA's opaque background covers the first nav links. */
+  /* Sits below the nav panel (24px pad + 5 links x 25px + 4 gaps x 18px + 24px
+     pad = 245px). margin-top pulls it up ~2px to OVERLAP the nav panel so the
+     (often dark) page behind can't peek through the seam as a thin line — that
+     sliver was the "slit". A single border-top is the links|button divider. */
   top: calc(100% + 246px);
+  margin-top: -2px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+/* On dark-hero (over-hero) pages the header is navy by design; make the open
+   mobile menu match it — navy dropdown panels so the (white) nav links and the
+   white-outline Invest Now button stay legible, instead of the default light
+   panels where white text vanished. Light-header pages keep the light menu. */
+body.nav-open.over-hero .primary-nav,
+body.nav-open.over-hero .header-cta {
+  background: var(--dark);
+}
+body.nav-open.over-hero .header-cta {
+  border-top-color: rgba(255, 255, 255, .14);
+  border-bottom-color: rgba(255, 255, 255, .14);
 }
 
 /* ─── RESPONSIVE ───────────────────────────────────────── */
