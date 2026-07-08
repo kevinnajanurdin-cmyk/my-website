@@ -106,6 +106,11 @@ body.over-hero .topbar {
 /* Topbar on the HOME page only — static home is .page-home, WP front page gets
    .home from body_class(). (Remove this rule to show it site-wide again.) */
 body:not(.page-home):not(.home) .topbar { display: none; }
+/* The topbar (~35px) sits in flow above the sticky 100vh hero, pushing its
+   bottom — the "click a founder" hint — off the screen edge. Trim the pinned
+   hero by the topbar height on home so the composition fits the viewport again. */
+body.page-home .coverflow-pin,
+body.home .coverflow-pin { height: calc(100vh - 35px); }
 
 /* ─── HEADER ───────────────────────────────────────────── */
 .site-header {
@@ -860,23 +865,30 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   padding: 88px 0 32px;
 }
 .footer-top {
+  display: grid;
+  grid-template-columns: 1.2fr 2fr;
+  grid-template-areas:
+    "logo  links"
+    "brand links"
+    "foot  foot";
+  column-gap: 72px;
   margin-bottom: 56px;
 }
 .footer-logo {
+  grid-area: logo;
+  align-self: start;
   height: 88px;
   width: auto;
   max-width: 320px;
   color: var(--on-dark);
   display: block;
-  margin: 0;
+  margin: 0 0 28px;
 }
-.footer-inner {
-  display: grid;
-  grid-template-columns: 1.2fr 2fr;
-  gap: 72px;
-  padding: 0 0 56px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-}
+/* Passthrough wrapper: display:contents lifts its children (brand + links)
+   into .footer-top's grid, so the link columns sit level with the logo on the
+   top row while the tagline tucks beneath the logo. */
+.footer-inner { display: contents; }
+.footer-brand { grid-area: brand; }
 .footer-brand p {
   color: var(--on-dark-mute);
   font-size: 16px;
@@ -887,6 +899,11 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   text-align: left;
 }
 .footer-links {
+  grid-area: links;
+  align-self: start;
+  /* nudge down past the logo SVG's internal top whitespace so the column
+     headings read as level with the "ZILLER" wordmark, not floating above it */
+  margin-top: 14px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 40px;
@@ -908,9 +925,12 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 }
 .footer-links a:hover { color: var(--on-dark); }
 .footer-bottom {
+  grid-area: foot;
   display: flex;
   justify-content: space-between;
+  margin-top: 56px;
   padding-top: 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
   color: var(--on-dark-mute);
   font-size: 13px;
   flex-wrap: wrap;
@@ -963,7 +983,9 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 }
 .coverflow-head {
   text-align: center;
-  margin-top: clamp(28px, 6vh, 72px);
+  /* Comfortable gap below the header. The cards shrink on short viewports (see
+     .cover-card) rather than the headline being crushed up to make room. */
+  margin-top: clamp(24px, 5vh, 64px);
 }
 .coverflow-head .section-title {
   font-size: clamp(28px, 3.5vw, 48px);
@@ -982,9 +1004,9 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
      gated on the `cards-ready` class JS adds once the cards are built, so an
      empty stage never flashes. */
   opacity: 0;
-  /* Nudge the carousel down a tiny bit (matches the +10px on name/role,
-     progress, hint so the spacing between them is unchanged). */
-  transform: translateY(10px);
+  /* Small downward nudge; biased so the cards sit a touch closer to the headline
+     (less space above) than to the name/role below — the cards are the focal point. */
+  transform: translateY(19px);
   perspective: 1600px;
   perspective-origin: 50% 50%;
   transform-style: preserve-3d;
@@ -996,10 +1018,17 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 280px;
-  height: 380px;
-  margin-left: -140px;
-  margin-top: -190px;
+  /* Card size scales with viewport HEIGHT on desktop so the tall cards don't
+     crowd the headline/meta on short laptops: full 280px at ~1067px+ tall,
+     easing to 232px on short screens. The mobile tiers below override with
+     fixed sizes. --cw drives width; height + centering margins derive from it
+     (the JS coverflow transform sets y=0, so vertical centring stays margin-based). */
+  --cw: clamp(204px, calc(48vh - 165px), 280px);
+  --ch: calc(var(--cw) * 380 / 280);
+  width: var(--cw);
+  height: var(--ch);
+  margin-left: calc(var(--cw) / -2);
+  margin-top: calc(var(--ch) / -2);
   background: var(--bg-elev);
   border-radius: 3px;
   overflow: hidden;
@@ -1424,8 +1453,14 @@ body.nav-open.over-hero .header-cta {
     margin: 16px auto 0;
   }
   .insights-inner { grid-template-columns: 1fr; gap: 56px; }
-  .footer-inner { grid-template-columns: 1fr; gap: 48px; }
-  .footer-links { grid-template-columns: repeat(3, 1fr); }
+  .footer-top {
+    grid-template-columns: 1fr;
+    grid-template-areas: "logo" "brand" "links" "foot";
+    row-gap: 48px;
+  }
+  .footer-logo { margin-bottom: 0; }
+  .footer-bottom { margin-top: 0; }
+  .footer-links { grid-template-columns: repeat(3, 1fr); margin-top: 0; }
   .founder-panel-inner { width: 100%; }
   .founder-panel-body { padding: 32px 28px 48px; }
   .odds-rail { position: static; margin-bottom: 24px; }

@@ -342,9 +342,9 @@
     // pinned viewport and diffuses upward, its density tapering smoothly
     // to zero at the section top.
     // Dots hold their positions and are culled — fading out in place,
-    // fully stationary — in three waves timed to the funnel row
-    // reveals. The 15 survivors converge into a row above the "15–25 stocks"
-    // caption at the end. Scroll-scrubbed: no free-running animation loop.
+    // fully stationary — in four waves: a pre-filter race (7,000 → 700),
+    // then one per filter. The 15 survivors converge into a row above the
+    // composition at the end. Scroll-scrubbed: no free-running animation loop.
     (function initFunnelDots() {
       var track = document.querySelector('.funnel-scroll-track');
       var pin = document.querySelector('.funnel-pin');
@@ -360,15 +360,25 @@
       var ctx = canvas.getContext('2d');
       var SURVIVORS = 15;
 
-      // Cull waves — spread across the first ~78% of the (long) runway so the
-      // countdown ticks through many values, leaving the final stretch for a
-      // gather sized to the ORIGINAL scroll pace (see conv below).
-      // (Also drives the countdown + filter captions, which stay in sync.)
-      var WINDOWS = [[0.06, 0.32], [0.32, 0.57], [0.57, 0.78]];
+      // Cull waves — four, spread across the first ~78% of the (long) runway,
+      // leaving the final stretch for a gather sized to the ORIGINAL scroll
+      // pace (see conv below). Wave 0 is a pre-filter race: the count sprints
+      // 7,000 → 700 before the first filter enters; waves 1–3 then walk
+      // 700 → 15 across the three filters at a stretched pace.
+      var WINDOWS = [[0.04, 0.20], [0.18, 0.44], [0.44, 0.62], [0.62, 0.78]];
       var FADE = 0.06; // each dot's individual fade length, in progress units
 
-      var TOTAL = 7000;                      // displayed universe size
-      var STAGE_W = [0.58, 0.27, 0.15];      // must match build()'s stage split
+      // Countdown milestones at the wave boundaries; each wave's numeric
+      // weight derives from its gap, so the count lands exactly on these.
+      var COUNTS = [7000, 700, 300, 120, SURVIVORS];
+      var TOTAL = COUNTS[0];                 // displayed universe size
+      var STAGE_W = COUNTS.slice(1).map(function (c, i) {
+        return (COUNTS[i] - c) / (TOTAL - SURVIVORS);
+      });
+      // Caption cues are decoupled from the cull windows so "Strong Founder"
+      // can enter while the race is still closing in on 700 (its cull window
+      // opens a beat later, giving the count a short dwell at 700).
+      var CAPTION_AT = [0.135, 0.44, 0.62];
       var lastCount = "";
 
       var W = 0, H = 0, EXT = 0, dots = [], geom = null;
@@ -413,7 +423,10 @@
             x: Math.random() * W,
             y: sampleY(),
             r: (0.7 + Math.random() * 1.1) * (W < 560 ? 1.35 : 1), // phones: slightly larger dots for legibility
-            stage: roll < 0.58 ? 1 : roll < 0.85 ? 2 : 3, // which wave culls it
+            // Visual split is deliberately gentler than the numeric one —
+            // the pre-filter race drops 90% of the COUNT but only ~40% of
+            // the dots, so each filter wave still has a visible field to cut.
+            stage: roll < 0.40 ? 1 : roll < 0.74 ? 2 : roll < 0.90 ? 3 : 4,
             jitter: Math.random(),                        // moment within the wave
             survivor: false,
             slot: -1,
@@ -501,12 +514,12 @@
           ctx.fill();
         }
 
-        // Countdown — same wave windows as the dot culls, so the number and
-        // the visible constellation always agree. Each wave's contribution
-        // ramps as its dots' fade moments pass (jitter is uniform across the
-        // window, so linear progress through the window ≈ fraction culled).
+        // Countdown — shares the dot-cull windows so the number and the field
+        // thin together, but the numeric weights come from COUNTS (the dot
+        // field uses a gentler split — see build()). Each wave's contribution
+        // ramps linearly across its window, landing on the next milestone.
         var culled = 0;
-        for (var s = 0; s < 3; s++) {
+        for (var s = 0; s < WINDOWS.length; s++) {
           var ww = WINDOWS[s];
           culled += STAGE_W[s] * clamp01((p - ww[0]) / (ww[1] - ww[0] - FADE));
         }
@@ -520,12 +533,12 @@
           lastCount = txt;
         }
 
-        // Stage captions — the three filters appear consecutively as each
-        // wave begins culling. Crossing the wave's start toggles a class; the
-        // fade itself is a time-based CSS transition, so each header eases in
-        // smoothly on its own clock rather than being scrubbed by the scroll.
+        // Stage captions — the three filters appear consecutively on their
+        // CAPTION_AT cues. Crossing a cue toggles a class; the fade itself is
+        // a time-based CSS transition, so each header eases in smoothly on
+        // its own clock rather than being scrubbed by the scroll.
         for (var si = 0; si < stageEls.length; si++) {
-          var on = p >= WINDOWS[si][0];
+          var on = p >= CAPTION_AT[si];
           if (stageEls[si].classList.contains('is-visible') !== on) {
             stageEls[si].classList.toggle('is-visible', on);
           }
