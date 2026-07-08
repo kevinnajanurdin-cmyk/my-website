@@ -3460,6 +3460,15 @@ body.modal-open { overflow: hidden; }
   grid-template-columns: repeat(3, 1fr);
   gap: clamp(16px, 1.6vw, 24px);
 }
+/* Landscape Media / Videos & Webinars go 2-up so the wide thumbnails read large;
+   portrait Articles stay 3-up. Driven by data-filter (set by applyFilter).
+   Desktop only — below 900px the base grid already steps to 2- then 1-column. */
+@media (min-width: 901px) {
+  .ins-grid[data-filter="media"],
+  .ins-grid[data-filter="videos-webinars"] {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 .ins-card[data-reveal] {
   opacity: 0;
   transform: translateY(24px);

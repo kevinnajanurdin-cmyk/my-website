@@ -268,8 +268,12 @@
       // Category filter
       var filterBtns = [].slice.call(document.querySelectorAll('.ins-filter'));
       var cards = [].slice.call(document.querySelectorAll('.ins-card'));
+      var insGrid = document.querySelector('.ins-grid');
 
       function applyFilter(cat) {
+        // Expose the active category on the grid so CSS can switch column count
+        // (landscape Media / Videos & Webinars go 2-up; portrait Articles 3-up).
+        if (insGrid) insGrid.setAttribute('data-filter', cat);
         cards.forEach(function (card) {
           if (cat === 'all' || card.getAttribute('data-category') === cat) {
             card.style.display = '';
