@@ -548,6 +548,10 @@ if ( '' === $ziller_epigraph && has_category( 'founder-in-focus' ) && preg_match
           <div class="essay-meta">
             <?php /* prefer the SUB-category (Founder in Focus etc.) over the top-level (Articles) */ $ecat = null; $etop = null; foreach ( get_the_category() as $ecc ) { if ( strcasecmp( $ecc->name, 'Insights' ) === 0 ) { continue; } if ( $ecc->parent ) { if ( ! $ecat ) { $ecat = $ecc; } } elseif ( ! $etop ) { $etop = $ecc; } } if ( ! $ecat ) { $ecat = $etop; } if ( $ecat ) : ?><span><?php echo esc_html( $ecat->name ); ?></span><span class="essay-meta-dot">&middot;</span><?php endif; ?>
             <time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date( 'F Y' ) ); ?></time>
+            <?php if ( has_category( 'articles' ) ) : // writer byline on Articles only ?>
+            <span class="essay-meta-dot">&middot;</span>
+            <span><?php echo esc_html( get_the_author() ); ?></span>
+            <?php endif; ?>
             <?php if ( ! has_category( 'videos-webinars' ) ) : // "N min read" is meaningless on video posts ?>
             <span class="essay-meta-dot">&middot;</span>
             <span><?php /* Strip only the [bracketed] shortcode tags and KEEP the text between them: strip_shortcodes() removes enclosing shortcodes WITH their inner content, and the old WPBakery posts keep the whole article inside [vc_column_text]...[/vc_column_text] -- it made every post "1 min read". */ echo (int) max( 1, round( str_word_count( wp_strip_all_tags( preg_replace( '/\[[^\]]*\]/', ' ', get_the_content() ) ) ) / 200 ) ); ?> min read</span>
