@@ -533,12 +533,15 @@ if ( '' === $ziller_epigraph && has_category( 'founder-in-focus' ) && preg_match
         </div>
       </nav>
       <?php
-      $ziller_hero = function_exists( 'get_field' ) ? get_field( 'hero_image' ) : 0;
-      if ( $ziller_hero ) : ?>
+      // Hero image only for Articles (the full essay treatment). Media and
+      // Videos & Webinars go straight into the title + body — no portrait.
+      if ( has_category( 'articles' ) ) :
+        $ziller_hero = function_exists( 'get_field' ) ? get_field( 'hero_image' ) : 0;
+        if ( $ziller_hero ) : ?>
       <figure class="essay-portrait"><?php echo wp_get_attachment_image( (int) $ziller_hero, 'full', false, array( 'alt' => esc_attr( get_the_title() ) ) ); ?></figure>
       <?php elseif ( has_post_thumbnail() ) : ?>
       <figure class="essay-portrait"><?php the_post_thumbnail( 'large' ); ?></figure>
-      <?php endif; ?>
+      <?php endif; endif; ?>
       <header class="essay-header">
         <div class="container essay-container">
           <hr class="essay-rule" />
