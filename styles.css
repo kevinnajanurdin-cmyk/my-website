@@ -3487,6 +3487,14 @@ body.modal-open { overflow: hidden; }
   justify-content: flex-end;
   isolation: isolate;
 }
+/* Media and Videos & Webinars thumbnails are landscape, so give those cards a
+   16:9 tile instead of the portrait 4:5 used for Articles — the source images
+   fill it without side-cropping. Each Insights tab shows a single category, so
+   the grid stays uniform within a view. */
+.ins-card[data-category="media"] .ins-card-media,
+.ins-card[data-category="videos-webinars"] .ins-card-media {
+  aspect-ratio: 16 / 9;
+}
 /* legibility scrim */
 .ins-card-media::after {
   content: '';
