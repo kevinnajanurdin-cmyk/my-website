@@ -3922,13 +3922,15 @@ body.modal-open { overflow: hidden; }
    below the header rather than being pushed down by it. */
 .page-essay .essay { position: relative; }
 .page-essay .essay-back-wrap {
-  /* Sticky, not fixed: with the topbar in flow above the header, a fixed
-     top:92px pinned the link UNDER the header at page top. Sticky starts in
-     flow (a proper gap below the header block) and pins at 92px once the
-     topbar has scrolled away — stationary while the hero scrolls, same as before. */
-  position: sticky;
-  top: 92px;            /* just below the sticky site header once scrolled */
-  z-index: 1;           /* on the hero layer; the rising article covers it */
+  /* Fixed (out of flow) so it doesn't push the hero portrait down. The topbar is
+     home-only, so on article pages the header sits at the top and top:92px lands
+     the link just below it. (It was briefly sticky to dodge the topbar; no longer
+     needed here.) The portrait's z-index:0 keeps this link clickable. */
+  position: fixed;
+  top: 92px;
+  left: 0;
+  right: 0;
+  z-index: 1;
 }
 .page-essay .essay-portrait {
   position: sticky;
