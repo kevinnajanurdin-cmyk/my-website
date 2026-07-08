@@ -108,6 +108,12 @@ const founders = [
     role: "Co-founder & CEO", founded: "2004", sector: "Gaming Platforms",
     geo: "United States", accent: "#e2241a",
     thesis: "The platform on which a generation creates, plays and increasingly earns. A 20-year founder still treating it like year one."
+  },
+  {
+    first: "Mikheil", last: "Lomtadze", company: "Kaspi",
+    role: "Co-founder & CEO", founded: "2006", sector: "FinTech",
+    geo: "Kazakhstan", accent: "#f14635",
+    thesis: "Kazakhstan's payments, marketplace and fintech super-app. Lomtadze turned a regional bank into a daily-use consumer platform with rare profitability and deep founder ownership."
   }
 ];
 
@@ -128,6 +134,7 @@ const PORTRAIT_FILES = {
   "Pro Medicus": "sam.jpg",
   "Mercado Libre": "marcos.jpg",
   "Roblox": "baszucki.jpg",
+  "Kaspi": "mikheil.png",
 };
 const portraitUrl = (company) => {
   const f = PORTRAIT_FILES[company];
@@ -151,6 +158,7 @@ const LOGO_FILES = {
   "Pro Medicus": "PME.AX_BIG-541b1641.png",
   "Mercado Libre": "Mercado_Libre_logo_(Spanish_version).svg",
   "Roblox": "roblox.png",
+  "Kaspi": "kaspi-placeholder.svg",   // placeholder wordmark — swap for the real Kaspi logo
 };
 const logoUrl = (company) =>
   `assets/companies/${encodeURIComponent(LOGO_FILES[company] || "").replace(/%2F/g, "/")}`;
@@ -174,6 +182,7 @@ const LOGO_HEIGHTS = {
   "Coinbase":      26,   // wordmark
   "Lumine":        24,   // wide wordmark
   "Fortinet":      20,   // very wide wordmark
+  "Kaspi":         34,   // placeholder wordmark
 };
 
 // Map company → scene/brand photo in assets/scenes/ (null = none yet)
@@ -193,6 +202,7 @@ const SCENE_FILES = {
   "Pro Medicus": "promedicus.jpg",
   "Mercado Libre": "mercadolibre.webp",
   "Roblox": "roblox.jpg",
+  "Kaspi": "kaspi-placeholder.svg",   // placeholder scene — swap for a real Kaspi brand photo
 };
 const sceneUrl = (company) => {
   const f = SCENE_FILES[company];

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Kaspi scene (placeholder)">
+  <defs>
+    <linearGradient id="kaspiBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a1414"/>
+      <stop offset="0.55" stop-color="#171f2f"/>
+      <stop offset="1" stop-color="#0f1626"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#kaspiBg)"/>
+  <circle cx="900" cy="240" r="360" fill="#f14635" opacity="0.10"/>
+  <circle cx="300" cy="620" r="260" fill="#f14635" opacity="0.06"/>
+  <text x="600" y="400" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="120" font-weight="800" letter-spacing="-2" fill="#f14635">Kaspi.kz</text>
+  <text x="600" y="470" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="600" letter-spacing="6" fill="#a8b2c2">KAZAKHSTAN &#183; PLACEHOLDER SCENE</text>
+</svg>
