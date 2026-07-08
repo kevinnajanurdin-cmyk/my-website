@@ -158,7 +158,7 @@ const LOGO_FILES = {
   "Pro Medicus": "PME.AX_BIG-541b1641.png",
   "Mercado Libre": "Mercado_Libre_logo_(Spanish_version).svg",
   "Roblox": "roblox.png",
-  "Kaspi": "kaspi-placeholder.svg",   // placeholder wordmark — swap for the real Kaspi logo
+  "Kaspi": "kaspi.png",
 };
 const logoUrl = (company) =>
   `assets/companies/${encodeURIComponent(LOGO_FILES[company] || "").replace(/%2F/g, "/")}`;
@@ -182,7 +182,7 @@ const LOGO_HEIGHTS = {
   "Coinbase":      26,   // wordmark
   "Lumine":        24,   // wide wordmark
   "Fortinet":      20,   // very wide wordmark
-  "Kaspi":         34,   // placeholder wordmark
+  "Kaspi":         56,   // square badge, fully filled
 };
 
 // Map company → scene/brand photo in assets/scenes/ (null = none yet)
@@ -202,7 +202,7 @@ const SCENE_FILES = {
   "Pro Medicus": "promedicus.jpg",
   "Mercado Libre": "mercadolibre.webp",
   "Roblox": "roblox.jpg",
-  "Kaspi": "kaspi-placeholder.svg",   // placeholder scene — swap for a real Kaspi brand photo
+  "Kaspi": "kaspi.webp",
 };
 const sceneUrl = (company) => {
   const f = SCENE_FILES[company];
