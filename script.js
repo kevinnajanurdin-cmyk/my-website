@@ -111,9 +111,9 @@ const founders = [
   },
   {
     first: "Mikheil", last: "Lomtadze", company: "Kaspi",
-    role: "Co-founder & CEO", founded: "2006", sector: "FinTech",
+    role: "Co-founder & CEO", founded: "2006", sector: "Ecommerce",
     geo: "Kazakhstan", accent: "#f14635",
-    thesis: "Kazakhstan's payments, marketplace and fintech super-app. Lomtadze turned a regional bank into a daily-use consumer platform with rare profitability and deep founder ownership."
+    thesis: "Kazakhstan's dominant e-commerce marketplace and consumer super-app. Lomtadze turned a regional bank into the daily-use platform for shopping and payments, with rare profitability and deep founder ownership."
   }
 ];
 
