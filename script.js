@@ -664,7 +664,12 @@ if (odds.length) {
     ctx.textBaseline = "top";
     ctx.font = "11px 'Formata Light', sans-serif";
     ctx.fillStyle = "rgba(255,255,255,0.28)";
-    for (var yr = 2006; yr <= 2026; yr += 2) {
+    // Tick density adapts to the plot width: every 2 years when each of the
+    // 11 labels gets a comfortable ~46px slot, otherwise every 4 (6 labels,
+    // endpoints preserved) — on phones the biennial labels collide into
+    // "200620082010…".
+    var yrStep = (chartR - chartL) / 11 >= 46 ? 2 : 4;
+    for (var yr = 2006; yr <= 2026; yr += yrStep) {
       var yx = xAt(yr);
       if (yx <= clipX + 2) {
         ctx.fillText(yr, yx, chartB + 10);
