@@ -700,7 +700,7 @@ if (odds.length) {
     ctx.fill();
 
     // ── MSCI line ──
-    ctx.strokeStyle = "rgba(168,178,194,0.5)";
+    ctx.strokeStyle = "rgba(168,178,194,0.68)";
     ctx.lineWidth = 2;
     ctx.lineJoin = "round";
     drawLine(M);
@@ -746,13 +746,13 @@ if (odds.length) {
       // "5x" — number italic serif, "x" upright, muted
       var midSize = W < 500 ? 28 : 40;
       ctx.textBaseline = "bottom";
-      ctx.fillStyle = "rgba(168,178,194,0.55)";
+      ctx.fillStyle = "rgba(168,178,194,0.72)";
       ctx.font = "italic " + midSize + "px 'Riccione Serial', Georgia, serif";
       ctx.fillText("5", endX, mEndY + 2);
       var numW5 = ctx.measureText("5").width;
       var xSize5 = Math.round(midSize * 0.5);
       ctx.font = xSize5 + "px 'Riccione Serial', Georgia, serif";
-      ctx.fillStyle = "rgba(168,178,194,0.4)";
+      ctx.fillStyle = "rgba(168,178,194,0.58)";
       ctx.textBaseline = "middle";
       ctx.fillText("x", endX + numW5 + 1, mEndY + 2 - midSize * 0.36);
       ctx.textBaseline = "bottom";
@@ -760,7 +760,7 @@ if (odds.length) {
       // "All Stocks*"
       ctx.font = "10px 'Formata Light', sans-serif";
       ctx.textBaseline = "top";
-      ctx.fillStyle = "rgba(168,178,194,0.38)";
+      ctx.fillStyle = "rgba(168,178,194,0.54)";
       ctx.fillText("All Stocks", endX, mEndY + 6);
 
       ctx.globalAlpha = 1;
