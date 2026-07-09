@@ -765,6 +765,10 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   transition: color .7s cubic-bezier(.2,.7,.2,1);
 }
 .odd.active .odd-text { color: var(--on-dark); }
+/* Parenthetical asides inside a stat caption — e.g. "(3.3% alpha pa …)*" —
+   sit quieter than the caption itself. Opacity (not a fixed colour) so the
+   note stays proportionally dimmer through the active-state colour change. */
+.odd-text-note { opacity: .55; }
 .odds-footnotes {
   max-width: 1280px;
   margin: clamp(48px, 7vh, 80px) auto 0;
