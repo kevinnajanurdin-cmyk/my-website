@@ -754,7 +754,14 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   top: 50%;
   transform: translateY(-50%);
   margin: 0;
-  max-width: 260px;
+  /* One shared measure for all four rows — no per-caption special cases.
+     Fluid: 330px on wide screens so the shorter captions ("Ziller
+     outperformance since inception^" ~306px, "20-year return of founder-led
+     stocks" ~290px) sit on one line; tightens toward the original 260px on
+     narrower desktops, where a wider caption would run into the large
+     "23.0 vs 4.8 years" figure (verified collision at 1280/1024 with a
+     fixed 330). Captions wrap there instead — same as before. */
+  max-width: clamp(260px, 23vw, 330px);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: .14em;
@@ -768,7 +775,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 /* Parenthetical asides inside a stat caption — e.g. "(3.3% alpha pa …)*" —
    sit quieter than the caption itself. Opacity (not a fixed colour) so the
    note stays proportionally dimmer through the active-state colour change. */
-.odd-text-note { opacity: .55; }
+.odd-text-note { opacity: .55; display: block; }  /* own line — never splits the main clause */
 .odds-footnotes {
   max-width: 1280px;
   margin: clamp(48px, 7vh, 80px) auto 0;
