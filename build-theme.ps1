@@ -622,6 +622,11 @@ Requires PHP: 7.4
 Text Domain: ziller
 */
 '@
+# Stamp a fresh, monotonically increasing version each build. functions.php passes
+# this version to wp_enqueue_style/script as ?ver=..., so a stale styles.css or
+# script.js can never be served from browser/plugin caches after a theme upload
+# (with a fixed version, WP kept emitting the same URL and caches never refreshed).
+$styleHead = $styleHead.Replace('Version: 0.1.0', 'Version: 0.1.' + (Get-Date -Format 'yyyyMMddHHmm'))
 [System.IO.File]::WriteAllText((Join-Path $theme "style.css"), $styleHead, $utf8)
 
 # ── functions.php ───────────────────────────────────────────────────────
@@ -660,9 +665,55 @@ function ziller_assets() {
 			'window.ZILLER_ASSETS=' . wp_json_encode( trailingslashit( $uri ) ) . ';',
 			'before'
 		);
+		wp_add_inline_script(
+			'ziller-main',
+			'window.ZILLER_SCENE_VIDEOS=' . wp_json_encode( (object) ziller_scene_video_map() ) . ';',
+			'before'
+		);
 	}
 }
 add_action( 'wp_enqueue_scripts', 'ziller_assets' );
+
+// Founder-panel scene videos live in the MEDIA LIBRARY, not the theme zip (they
+// would triple its size and break the upload limit). Upload the 24s loops via
+// Media > Add New keeping their filenames (nvidia.mp4, tesla.mp4, ...). This maps
+// each filename to its Media Library URL; attachment titles default to the
+// filename, so matching is by title. Cached for an hour; any new media upload
+// clears the cache, so a freshly uploaded or replaced clip shows immediately.
+function ziller_scene_video_map() {
+	$map = get_transient( 'ziller_scene_videos' );
+	if ( is_array( $map ) ) { return $map; }
+	$files = array(
+		'tesla.mp4', 'nvidia.mp4', 'palantir.mp4', 'coinbase.mp4', 'xpeng.mp4',
+		'figma.mp4', 'rocketlab.mp4', 'axon.mp4', 'lumine.mp4', 'fortinet.mp4',
+		'catl.mp4', 'mercadolibre.mp4', 'roblox.mp4', 'kaspi.mp4',
+	);
+	$map = array();
+	foreach ( $files as $f ) {
+		$q = new WP_Query( array(
+			'post_type'      => 'attachment',
+			'post_status'    => 'inherit',
+			'post_mime_type' => 'video/mp4',
+			'posts_per_page' => 1,
+			'title'          => pathinfo( $f, PATHINFO_FILENAME ),
+			'orderby'        => 'date',
+			'order'          => 'DESC',
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+		) );
+		if ( $q->posts ) {
+			$url = wp_get_attachment_url( $q->posts[0] );
+			if ( $url ) { $map[ $f ] = $url; }
+		}
+	}
+	set_transient( 'ziller_scene_videos', $map, HOUR_IN_SECONDS );
+	return $map;
+}
+add_action( 'add_attachment', 'ziller_scene_video_flush' );
+add_action( 'delete_attachment', 'ziller_scene_video_flush' );
+function ziller_scene_video_flush() {
+	delete_transient( 'ziller_scene_videos' );
+}
 
 // Preserve the design's per-page body classes (CSS targets .page-home etc.).
 function ziller_body_class( $classes ) {
@@ -820,6 +871,14 @@ Copy-Item (Join-Path $src "styles.css") (Join-Path $theme "styles.css")
 Copy-Item (Join-Path $src "assets") (Join-Path $theme "assets") -Recurse
 $essayImgDir = Join-Path $theme "assets\essays"
 if (Test-Path $essayImgDir) { Remove-Item $essayImgDir -Recurse -Force }
+# Drop the founder-panel scene VIDEOS (~45 MB): they are served from the Media
+# Library (see ziller_scene_video_map in functions.php), not the theme. The scene
+# STILLS stay — they are the video posters and the fallback for missing clips.
+Get-ChildItem (Join-Path $theme "assets\scenes") -Filter *.mp4 | Remove-Item -Force
+# Drop the full-res elon.png master (~1.7 MB): the Tesla card ships the optimised
+# elon.webp derived from it; the master lives in the source tree only.
+$elonMaster = Join-Path $theme "assets\founders\elon.png"
+if (Test-Path $elonMaster) { Remove-Item $elonMaster -Force }
 # Drop the ~3.9 MB bundled monthly-report PDF: the fund page auto-detects the LIVE
 # MMYY_ZILR.pdf, so this copy is only a fallback and it bloats the upload past the
 # server's size limit -> WordPress then reports the bogus "missing style.css" on the

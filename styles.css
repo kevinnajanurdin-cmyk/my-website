@@ -1123,6 +1123,14 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   opacity: 1;
   transform: none;
 }
+/* While the founder panel is open, the stage glides behind the dimmed
+   backdrop (panel PREV/NEXT sync). Keep the card tag — and its navy bottom
+   gradient — from fading in mid-glide, where it reads as a stray flash of
+   navy glow; it fades back in once the panel closes. */
+body.panel-open .cover-card.active .cover-card-tag {
+  opacity: 0;
+  transform: translateY(8px);
+}
 .cover-card-tag::before {
   content: "";
   position: absolute;
@@ -1337,7 +1345,11 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 
 .founder-panel-body {
   padding: 36px 48px 40px;
-  flex: 1 0 auto;
+  /* Shrinkable (1 1 auto + min-height 0) so the drawer never overflows: the
+     thesis scrolls internally instead (see below), which keeps the PREV/NEXT
+     row pinned to the drawer bottom — level for every founder. */
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
 }
@@ -1388,6 +1400,11 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   line-height: 1.65;
   color: var(--ink-soft);
   margin: 0 0 36px;
+  /* The one shrinkable row in the drawer: long bios scroll inside this box
+     (floor of ~3 lines) rather than pushing the PREV/NEXT row off-level. */
+  flex: 0 1 auto;
+  min-height: 84px;
+  overflow-y: auto;
 }
 .founder-panel-nav {
   display: flex;
@@ -1410,6 +1427,31 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   transition: color .2s ease;
 }
 .founder-panel-nav button:hover { color: var(--accent-deep); }
+
+/* Mid viewports: a slightly shorter photo is enough for the whole drawer to
+   fit, which lets margin-top:auto pin the PREV/NEXT row level at the bottom. */
+@media (max-height: 960px) {
+  .founder-panel-photo {
+    aspect-ratio: auto;
+    height: calc(min(560px, 100vw) * 0.5);
+  }
+}
+
+/* Short viewports (most laptops with browser chrome): compress the drawer's
+   fixed-height rows so name→stats→thesis→nav all fit above the fold and the
+   PREV/NEXT row stays pinned (and level) at the drawer bottom. */
+@media (max-height: 800px) {
+  .founder-panel-photo {
+    aspect-ratio: auto;
+    height: calc(min(560px, 100vw) * 0.4);
+  }
+  .founder-panel-body { padding: 26px 48px 30px; }
+  .panel-logo-slot { height: 56px; margin-bottom: 14px; }
+  .founder-panel-role { margin-bottom: 20px; }
+  .founder-panel-stats { padding: 18px 0; margin-bottom: 20px; }
+  .founder-panel-thesis { margin-bottom: 24px; min-height: 56px; }
+  .founder-panel-nav { padding-top: 18px; }
+}
 
 body.panel-open { overflow: hidden; }
 
@@ -1471,6 +1513,12 @@ body.nav-open.over-hero .header-cta {
   .odd { padding: 36px 24px; }
   .odd::before, .odd:last-of-type::after { width: 100%; }
   .odd-number { padding-right: 0; }
+  /* Stack each stat: figure on top (full width, so "23.0 vs 4.8 years" stays
+     on one line), caption centred beneath. The base .odd flexbox only centres
+     the figure on desktop (the caption is absolute there), but on mobile the
+     static caption becomes a second flex child and sat cramped BESIDE the
+     figure. */
+  .odd { flex-direction: column; }
   .odd-text {
     position: static;
     transform: none;
@@ -1627,6 +1675,12 @@ body.nav-open.over-hero .header-cta {
 .fund-hero {
   padding: clamp(112px, 16vh, 180px) 0 clamp(64px, 9vh, 112px);
   border-bottom: 1px solid var(--line);
+}
+/* Phones: lift the hero so "Fund Information" sits at the same height as
+   "Invest With Us" (matches .invest-hero's top padding). Desktop keeps the
+   original deeper position above. */
+@media (max-width: 720px) {
+  .fund-hero { padding-top: clamp(56px, 9vh, 104px); }
 }
 .fund-hero-grid {
   display: grid;
@@ -2305,13 +2359,20 @@ body.nav-open.over-hero .header-cta {
 }
 @media (max-width: 640px) {
   .fund-table th, .fund-table td { padding: 14px 18px; font-size: 14px; }
+  /* One centred row per card — number, title, PDF chip on the right — same as
+     desktop. (Previously the chip was reflowed onto its own second row via
+     grid-column:2, which left the cards tall and baggy with the chip floating
+     bottom-right.) The fixed number width aligns every title to the same x —
+     the italic 01/02/03/04 glyphs vary slightly in width. */
   .fund-doc {
-    grid-template-columns: auto 1fr auto;
-    gap: 14px;
-    padding: 22px 22px;
+    grid-template-columns: 30px 1fr auto;
+    gap: 16px;
+    padding: 20px 18px;
+    /* Uniform height (~+30% over the natural ~80px): the two long titles wrap
+       to 2 lines and made those cards 5px taller — a fixed floor evens all
+       four out, content stays vertically centred. */
+    min-height: 104px;
   }
-  .fund-doc-tag { grid-column: 2; justify-self: end; }
-  .fund-doc-arrow { grid-column: 3; }
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -4014,4 +4075,7 @@ body.modal-open { overflow: hidden; }
     linear-gradient(to bottom, rgba(7, 10, 20, 0.5) 0%, rgba(7, 10, 20, 0) 360px),
     linear-gradient(to top,    rgba(7, 10, 20, 0.5) 0%, rgba(7, 10, 20, 0) 120px),
     var(--dark);
+  /* Extra navy breathing room below the Portfolio Discipline cards, before
+     the light "Three principles" CTA section. */
+  padding-bottom: clamp(112px, 17vh, 200px);
 }

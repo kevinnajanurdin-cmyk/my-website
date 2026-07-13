@@ -119,7 +119,7 @@ const founders = [
 
 // Map company → portrait filename in assets/founders/ (null = no portrait)
 const PORTRAIT_FILES = {
-  "Tesla": "elon.jpg",
+  "Tesla": "elon.webp",  // transparent cutout (from elon.png master) — keep alpha, never JPG
   "Nvidia": "jensen.jpg",
   "Palantir": "alex.jpg",
   "Coinbase": "brian.jpg",
@@ -163,26 +163,37 @@ const LOGO_FILES = {
 const logoUrl = (company) =>
   `assets/companies/${encodeURIComponent(LOGO_FILES[company] || "").replace(/%2F/g, "/")}`;
 
-// Per-company render height (px). Tuned individually based on each source
-// file's visible content (some PNGs have heavy transparent whitespace, so they
-// need a larger height than aspect ratio alone would suggest).
+// Per-company override of the panel logo's default CSS filter
+// (grayscale(1) brightness(0) opacity(.7), see .panel-logo). brightness(0)
+// flattens solid-shape logos into blobs — Mercado Libre's oval loses its
+// handshake — so such logos get a luminance-preserving grayscale instead.
+const LOGO_FILTERS = {
+  "Mercado Libre": "grayscale(1) contrast(1.05) opacity(0.85)",
+};
+
+// Per-company render height (px). All logo files are trimmed to their content
+// bounds (no baked-in whitespace — keep it that way when replacing a file), so
+// these heights size the visible mark directly. Values follow an equal-area
+// rule (height ≈ √(3800 / aspect-ratio)) so every logo carries the same
+// optical mass, with small nudges for ink density (dense filled marks read
+// heavier, so they sit slightly below the formula).
 const LOGO_HEIGHTS = {
-  "Tesla":         70,   // T + TESLA stacked, narrow visible footprint
-  "Mercado Libre": 58,   // square, fully filled
-  "Money Forward": 74,   // icon + text, ~30% vertical whitespace
-  "Nvidia":        52,   // compact icon, full fill
-  "XPeng":         54,   // icon + wordmark
-  "Figma":         66,   // F + text, ~50% vertical whitespace
-  "Roblox":        78,   // wide wordmark + heavy whitespace (VFill 0.32)
+  "Tesla":         58,   // T + TESLA stacked (tall, dense mark)
+  "Mercado Libre": 58,   // oval + wordmark stacked (light grey interior)
+  "Money Forward": 50,   // icon + text stacked
+  "Nvidia":        52,   // eye mark + wordmark
+  "XPeng":         52,   // icon + wordmark stacked
+  "Figma":         32,   // logomark + wordmark inline
+  "Roblox":        26,   // wordmark + tilted badge
   "Rocket Lab":    36,   // wordmark
   "Palantir":      30,   // wordmark
   "Axon":          30,   // wordmark
-  "CATL":          28,   // wordmark
+  "CATL":          27,   // wordmark (dense)
   "Pro Medicus":   26,   // wordmark
   "Coinbase":      26,   // wordmark
-  "Lumine":        24,   // wide wordmark
-  "Fortinet":      20,   // very wide wordmark
-  "Kaspi":         56,   // square badge, fully filled
+  "Lumine":        24,   // wide wordmark (dense)
+  "Fortinet":      21,   // very wide wordmark
+  "Kaspi":         50,   // filled disc, stencil cutouts (dense)
 };
 
 // Map company → scene/brand photo in assets/scenes/ (null = none yet)
@@ -207,6 +218,36 @@ const SCENE_FILES = {
 const sceneUrl = (company) => {
   const f = SCENE_FILES[company];
   return f ? `assets/scenes/${f}` : null;
+};
+
+// Map company → 24s ambient loop in assets/scenes/ (poster = the scene still).
+// Companies without a clip yet (Money Forward, Pro Medicus) fall back to the
+// scene still.
+const SCENE_VIDEO_FILES = {
+  "Tesla": "tesla.mp4",
+  "Nvidia": "nvidia.mp4",
+  "Palantir": "palantir.mp4",
+  "Coinbase": "coinbase.mp4",
+  "XPeng": "xpeng.mp4",
+  "Figma": "figma.mp4",
+  "Rocket Lab": "rocketlab.mp4",
+  "Axon": "axon.mp4",
+  "Lumine": "lumine.mp4",
+  "Fortinet": "fortinet.mp4",
+  "CATL": "catl.mp4",
+  "Mercado Libre": "mercadolibre.mp4",
+  "Roblox": "roblox.mp4",
+  "Kaspi": "kaspi.mp4",
+};
+const sceneVideoUrl = (company) => {
+  const f = SCENE_VIDEO_FILES[company];
+  if (!f) return null;
+  // On WordPress the videos live in the Media Library (not the theme — they'd
+  // triple the zip); functions.php injects window.ZILLER_SCENE_VIDEOS mapping
+  // filename → uploaded URL. Statically, the files sit in assets/scenes/.
+  const map = typeof window !== "undefined" && window.ZILLER_SCENE_VIDEOS;
+  if (map) return map[f] || null;
+  return `assets/scenes/${f}`;
 };
 
 // ─── Render founders into Coverflow stage ──────────────
@@ -246,6 +287,7 @@ const panel = document.getElementById("founder-panel");
 const panelEls = {
   photo: document.getElementById("panel-photo"),
   scene: document.getElementById("panel-scene"),
+  video: document.getElementById("panel-video"),
   logo: document.getElementById("panel-logo"),
   name: document.getElementById("panel-name"),
   role: document.getElementById("panel-role"),
@@ -255,11 +297,15 @@ const panelEls = {
   thesis: document.getElementById("panel-thesis"),
 };
 let activeIdx = null;
+// Assigned by the coverflow block below; glides the carousel to an index so
+// the stage behind the panel follows the panel's PREV/NEXT navigation.
+let coverflowGlideTo = null;
 
 function openPanel(i) {
   const f = founders[i];
   if (!f) return;
   activeIdx = i;
+  if (coverflowGlideTo) coverflowGlideTo(i);
   panelEls.name.textContent = `${f.first} ${f.last}`;
   panelEls.role.textContent = f.role;
   panelEls.founded.textContent = f.founded;
@@ -274,10 +320,32 @@ function openPanel(i) {
   // Adjust height per-company so all logos look roughly the same visual size
   // (their source files have very different aspect ratios).
   panelEls.logo.style.height = (LOGO_HEIGHTS[f.company] || 44) + "px";
+  // Filter override for logos the default brightness(0) would flatten.
+  panelEls.logo.style.filter = LOGO_FILTERS[f.company] || "";
 
-  // Photo: use the company scene shot if we have one, else the founder portrait.
+  // Photo: ambient video loop if we have one (scene still as poster), else the
+  // scene still, else the founder portrait. Reduced-motion users get the still.
   const photo = sceneUrl(f.company) || portraitUrl(f.company);
-  if (photo) {
+  const video = matchMedia("(prefers-reduced-motion: reduce)").matches
+    ? null
+    : sceneVideoUrl(f.company);
+  stopPanelVideo();
+  if (video) {
+    if (photo) panelEls.video.poster = photo;
+    panelEls.video.src = video;
+    panelEls.video.hidden = false;
+    panelEls.scene.hidden = true;
+    panelEls.video.muted = true; // re-assert for programmatic src swaps
+    // The autoplay attribute starts playback once data arrives; the explicit
+    // play() covers browsers that ignore autoplay after a programmatic src
+    // swap, and the canplay retry covers play() racing the load.
+    panelEls.video.play().catch(() => {});
+    panelEls.video.addEventListener(
+      "canplay",
+      () => { if (panelEls.video.paused) panelEls.video.play().catch(() => {}); },
+      { once: true }
+    );
+  } else if (photo) {
     panelEls.scene.src = photo;
     panelEls.scene.hidden = false;
   } else {
@@ -289,10 +357,18 @@ function openPanel(i) {
   panel.setAttribute("aria-hidden", "false");
   document.body.classList.add("panel-open");
 }
+function stopPanelVideo() {
+  if (!panelEls.video || panelEls.video.hidden) return;
+  panelEls.video.pause();
+  panelEls.video.removeAttribute("src"); // abort any in-flight download
+  panelEls.video.load();
+  panelEls.video.hidden = true;
+}
 function closePanel() {
   panel.classList.remove("open");
   panel.setAttribute("aria-hidden", "true");
   document.body.classList.remove("panel-open");
+  stopPanelVideo();
   activeIdx = null;
 }
 function navPanel(dir) {
@@ -399,6 +475,27 @@ if (coverflow && cards.length) {
   renderCoverflow();
   window.addEventListener("resize", renderCoverflow, { passive: true });
 
+  // Glide the stage to a founder (panel PREV/NEXT, card click). setInterval
+  // rather than rAF so the glide also runs where rAF is throttled or paused
+  // (background tabs, embedded previews); reduced motion jumps instantly.
+  let glideTimer = null;
+  coverflowGlideTo = (idx) => {
+    const target = Math.max(0, Math.min(total - 1, idx));
+    if (glideTimer) { clearInterval(glideTimer); glideTimer = null; }
+    const from = cfPos;
+    const dist = target - from;
+    if (Math.abs(dist) < 0.001) return;
+    if (prefersReduced) { setPos(target); return; }
+    const t0 = Date.now();
+    const duration = Math.min(900, 320 + Math.abs(dist) * 140);
+    glideTimer = setInterval(() => {
+      const p = Math.min(1, (Date.now() - t0) / duration);
+      cfPos = from + dist * (1 - Math.pow(1 - p, 3)); // easeOutCubic
+      renderCoverflow();
+      if (p >= 1) { clearInterval(glideTimer); glideTimer = null; }
+    }, 16);
+  };
+
   // Play the fan-out entrance once, in step with the stage's CSS fade-in.
   if (!prefersReduced) {
     const ease = (p) => 1 - Math.pow(1 - p, 3); // easeOutCubic
@@ -442,6 +539,7 @@ if (coverflow && cards.length) {
 
     const tick = () => {
       if (pointerX == null || !onScreen()) { hoverRaf = null; return; }
+      if (glideTimer) { hoverRaf = requestAnimationFrame(tick); return; } // glide owns cfPos
       const cx = centerX();
       const dead = cardHalf() + DEAD_PAD;
       const dx = pointerX - cx;
