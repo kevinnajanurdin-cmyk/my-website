@@ -1606,10 +1606,12 @@ body.nav-open.over-hero .header-cta {
 
 /* ─── Shared: section eyebrow + slash mark ─────────────── */
 .fund-section-eyebrow {
+  /* Matches .invest-eyebrow exactly (gap/margin/dash) so the eyebrow + dash
+     motif reads identically on the Fund and Invest heroes. */
   display: inline-flex;
   align-items: center;
-  gap: 14px;
-  margin: 0 0 28px;
+  gap: 16px;
+  margin: 0 0 20px;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: .22em;
@@ -1618,9 +1620,9 @@ body.nav-open.over-hero .header-cta {
 }
 .fund-slash {
   display: inline-block;
-  width: 64px;
+  width: 48px;
   height: 1px;
-  background: var(--ink-mute);
+  background: var(--line);
   flex-shrink: 0;
 }
 
@@ -2759,7 +2761,9 @@ body.nav-open.over-hero .header-cta {
 .approach-intro-eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 20px;
+  /* Same eyebrow+dash geometry as .invest-eyebrow / .fund-section-eyebrow
+     (16px gap, 48px dash) — dark-theme colours, compositional margin kept. */
+  gap: 16px;
   margin: 0 0 clamp(36px, 5vh, 56px);
   font-family: var(--sans);
   font-weight: 600;
@@ -2771,7 +2775,7 @@ body.nav-open.over-hero .header-cta {
 .approach-intro-eyebrow::after {
   content: "";
   display: inline-block;
-  width: 64px;
+  width: 48px;
   height: 1px;
   background: var(--on-dark-mute);
 }
