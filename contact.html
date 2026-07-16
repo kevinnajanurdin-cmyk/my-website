@@ -72,8 +72,11 @@
 
   
 <style>
-  .contact-hero { padding: clamp(110px, 15vh, 170px) 0 clamp(24px, 5vh, 44px); }
-  .contact-hero .section-title { margin: .3rem 0 0; }
+  /* Top padding + eyebrow/title spacing match .invest-hero, so CONTACT sits at
+     the same height and rhythm as INVEST WITH US (and FUND INFORMATION on
+     phones) with the shared eyebrow + dash motif. */
+  .contact-hero { padding: clamp(56px, 9vh, 104px) 0 clamp(24px, 5vh, 44px); }
+  .contact-hero .section-title { margin: 0; }
   .contact-hero-intro { max-width: 46ch; margin: 1.2rem 0 0; color: var(--ink-mute); font-size: 1.05rem; line-height: 1.6; }
   .contact-body { padding: 0 0 clamp(64px, 10vh, 120px); }
   .contact-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: clamp(36px, 5vw, 80px); align-items: start; }
@@ -122,7 +125,10 @@
   </svg>
   <section class="contact-hero">
     <div class="container">
-      <p class="section-eyebrow">Contact</p>
+      <p class="fund-section-eyebrow">
+        <span>Contact</span>
+        <span class="fund-slash" aria-hidden="true"></span>
+      </p>
       <h1 class="section-title">Speak with the team.</h1>
       <p class="contact-hero-intro">For wholesale, institutional and adviser enquiries &mdash; or to receive our monthly insights from the desk.</p>
     </div>
