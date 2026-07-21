@@ -1322,6 +1322,32 @@ body.panel-open .cover-card.active .cover-card-tag {
   display: block;
 }
 .panel-scene[hidden] { display: none; }
+/* YouTube scene embed: the player is fully visible but COVERED by the opaque
+   scene still (z-index above) until it has played long enough for YouTube's
+   startup chrome to auto-hide, then the still fades out (script.js adds
+   .cover-fade). Hiding the player with opacity instead made it self-pause;
+   covering it with the still keeps it genuinely playing underneath.
+   pointer-events off so hover/click can never resummon chrome. */
+.panel-embed {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+.panel-embed iframe {
+  /* top/left/size are set inline by startPanelEmbed (cover + zoom + bias) */
+  position: absolute;
+  border: 0;
+  pointer-events: none;
+}
+img.panel-scene {
+  z-index: 3; /* the still covers the booting embed below it */
+}
+img.panel-scene.cover-fade {
+  transition: opacity .8s ease;
+  opacity: 0;
+}
 .founder-panel-photo-inner,
 .founder-panel-photo-inner span { display: none; }
 
@@ -1332,6 +1358,7 @@ body.panel-open .cover-card.active .cover-card-tag {
   height: 72px;
   display: flex;
   align-items: center;
+  gap: 28px; /* spacing between logos when a founder has two companies */
   margin: 0 0 22px;
 }
 .founder-panel-body .panel-logo {

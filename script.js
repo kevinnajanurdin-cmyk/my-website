@@ -38,10 +38,10 @@ const founders = [
     thesis: "The most regulated, most trusted on-ramp to digital assets. A founder who has earned the right to lead the category through every cycle."
   },
   {
-    first: "Elon", last: "Musk", company: "Tesla",
-    role: "Co-founder & CEO", founded: "2003", sector: "Robotics",
+    first: "Elon", last: "Musk", company: "Tesla", company2: "SpaceX",
+    role: "Co-founder & CEO", founded: "2003 · 2002", sector: "Robotics · Space",
     geo: "United States", accent: "#cc1f2e",
-    thesis: "The most consequential industrial founder of his generation — a vertical integrator who turned electric vehicles, energy storage and autonomy into a single compounding flywheel."
+    thesis: "The most consequential industrial founder of his generation — a vertical integrator who turned electric vehicles, energy storage and autonomy into a single compounding flywheel. With SpaceX, he rewrote the economics of reaching orbit."
   },
   {
     first: "He", last: "Xiaopeng", company: "XPeng",
@@ -159,6 +159,7 @@ const LOGO_FILES = {
   "Mercado Libre": "Mercado_Libre_logo_(Spanish_version).svg",
   "Roblox": "roblox.png",
   "Kaspi": "kaspi.png",
+  "SpaceX": "spacex.svg",
 };
 const logoUrl = (company) =>
   `assets/companies/${encodeURIComponent(LOGO_FILES[company] || "").replace(/%2F/g, "/")}`;
@@ -194,6 +195,7 @@ const LOGO_HEIGHTS = {
   "Lumine":        24,   // wide wordmark (dense)
   "Fortinet":      21,   // very wide wordmark
   "Kaspi":         50,   // filled disc, stencil cutouts (dense)
+  "SpaceX":        21,   // very wide wordmark (aspect ~8.1, same class as Fortinet)
 };
 
 // Map company → scene/brand photo in assets/scenes/ (null = none yet)
@@ -250,6 +252,47 @@ const sceneVideoUrl = (company) => {
   return `assets/scenes/${f}`;
 };
 
+// YouTube scene embeds — copyright-safe alternative to self-hosted clips: the
+// footage streams from YouTube's own player under the rights-holder's upload
+// (they keep views and control embeddability; nothing is re-hosted by us).
+// Styled to match the ambient loops: no controls, muted autoplay loop,
+// oversized + cropped, pointer-events off, and revealed only after YouTube's
+// title overlay has faded. Companies here take priority over SCENE_VIDEO_FILES.
+// `zoom` oversizes the player beyond cover-fit; `biasY` is the share of the
+// vertical overflow cropped at the TOP (0.5 = centred; lower keeps the upper
+// region), `biasX` the share cropped at the LEFT. `start` is whole seconds.
+// The DEFAULT zoom (1.32, centred) crops ~12% off the top and bottom of the
+// player — enough to keep YouTube's title band (top-left), watch-later/share
+// (top-right) and the bottom gradient/watermark permanently out of frame, so
+// the video reads clean from second zero with NO cover delay. Per-video
+// entries push further where the footage itself has burned-in subtitles or
+// letterbox bars (keeping the top crop ≥ ~12% so the title stays hidden).
+const SCENE_YOUTUBE = {
+  "Nvidia":        { id: "1la6fMl7xNA", start: 0, zoom: 1.45, biasY: 0.4 },  // caption chips bottom
+  "Tesla":         { id: "T43sbhCKvBY", start: 14 },
+  "Coinbase":      { id: "Gxr-ViBuHB8", start: 7 },               // skip the typed "update required" intro
+  "Palantir":      { id: "I7siZgE533E", start: 15 },
+  "Lumine":        { id: "oMKR10UfxNQ", zoom: 1.38 },             // letterboxed upload — crop past the bars
+  "Fortinet":      { id: "o0btrmZcmGI" },
+  "Kaspi":         { id: "Gbw18iKpqP8", start: 2, zoom: 1.6, biasY: 0.35, biasX: 0.7 }, // subs bottom, watermark top-left
+  "Roblox":        { id: "VL6rYNmfrjM", start: 5 },               // skip the "1989" title card
+  "Figma":         { id: "IVON-e6gOG8", start: 3 },
+  "CATL":          { id: "Z75mVvU7MPQ", zoom: 1.5, biasY: 0.38 }, // subtitles at the bottom
+  "Axon":          { id: "WbA2M9z7mh8", start: 4 },               // skip the logo-on-black intro
+  "Mercado Libre": { id: "tniyxhRQSW8" },                          // letterbox bars covered by the default crop
+  "Rocket Lab":    { id: "4aJ5NPt5fSM", start: 37 },              // same film as the old cut: pad-at-sunset → liftoff
+  "XPeng":         { id: "0bHjqkX_ZRI", start: 1, zoom: 1.4, biasY: 0.44 }, // spec text at the bottom
+};
+
+// Poster = the video's own FIRST FRAME (assets/scenes/posters/, theme asset).
+// Using the scene still here caused a visible flash: the stills are framed
+// differently from the (cropped/re-cut) videos, so the poster→video swap
+// jumped. A first-frame poster makes that transition pixel-continuous.
+const scenePosterUrl = (company) => {
+  const f = SCENE_VIDEO_FILES[company];
+  return f ? `assets/scenes/posters/${f.replace(/\.mp4$/, ".webp")}` : null;
+};
+
 // ─── Render founders into Coverflow stage ──────────────
 const stage = document.getElementById("coverflow-stage");
 const cards = [];
@@ -259,7 +302,7 @@ if (stage) {
     card.className = "cover-card";
     card.style.setProperty("--accent", f.accent);
     card.dataset.index = i;
-    card.setAttribute("aria-label", `${f.first} ${f.last}, ${f.company}`);
+    card.setAttribute("aria-label", `${f.first} ${f.last}, ${f.company}${f.company2 ? " and " + f.company2 : ""}`);
     const url = portraitUrl(f.company);
     const initials = (f.first[0] + f.last[0]).toUpperCase();
     // Carousel is above the fold: eager-load the first cards (lead gets high
@@ -288,6 +331,7 @@ const panelEls = {
   photo: document.getElementById("panel-photo"),
   scene: document.getElementById("panel-scene"),
   video: document.getElementById("panel-video"),
+  logo2: document.getElementById("panel-logo-2"),
   logo: document.getElementById("panel-logo"),
   name: document.getElementById("panel-name"),
   role: document.getElementById("panel-role"),
@@ -322,16 +366,48 @@ function openPanel(i) {
   panelEls.logo.style.height = (LOGO_HEIGHTS[f.company] || 44) + "px";
   // Filter override for logos the default brightness(0) would flatten.
   panelEls.logo.style.filter = LOGO_FILTERS[f.company] || "";
+  // Optional second company (Elon: Tesla + SpaceX) — same treatment.
+  if (panelEls.logo2) {
+    if (f.company2) {
+      panelEls.logo2.src = logoUrl(f.company2);
+      panelEls.logo2.alt = f.company2;
+      panelEls.logo2.style.height = (LOGO_HEIGHTS[f.company2] || 44) + "px";
+      panelEls.logo2.style.filter = LOGO_FILTERS[f.company2] || "";
+      panelEls.logo2.hidden = false;
+    } else {
+      panelEls.logo2.removeAttribute("src");
+      panelEls.logo2.hidden = true;
+    }
+  }
 
-  // Photo: ambient video loop if we have one (scene still as poster), else the
-  // scene still, else the founder portrait. Reduced-motion users get the still.
+  // Photo: YouTube embed if mapped, else ambient video loop (first-frame
+  // poster), else the scene still, else the founder portrait. Reduced-motion
+  // users always get the still.
   const photo = sceneUrl(f.company) || portraitUrl(f.company);
-  const video = matchMedia("(prefers-reduced-motion: reduce)").matches
-    ? null
-    : sceneVideoUrl(f.company);
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const embed = reduced ? null : SCENE_YOUTUBE[f.company];
+  const video = reduced ? null : sceneVideoUrl(f.company);
   stopPanelVideo();
-  if (video) {
-    if (photo) panelEls.video.poster = photo;
+  if (embed) {
+    // If this founder's player was PRE-WARMED (already mounted and counting
+    // down behind the closed panel), adopt it as-is — its reveal countdown,
+    // or even its finished reveal, carries over so the panel opens with
+    // little or no wait. Otherwise mount fresh, still covering until playback.
+    const adopted = mountedEmbedId === embed.id;
+    if (!adopted) stopPanelEmbed();
+    panelEls.video.hidden = true;
+    if (photo) {
+      panelEls.scene.src = photo;
+      panelEls.scene.hidden = false;
+    } else {
+      panelEls.scene.removeAttribute("src");
+      panelEls.scene.hidden = true;
+    }
+    if (!adopted) startPanelEmbed(embed);
+  } else if (video) {
+    stopPanelEmbed();
+    const poster = scenePosterUrl(f.company) || photo;
+    if (poster) panelEls.video.poster = poster;
     panelEls.video.src = video;
     panelEls.video.hidden = false;
     panelEls.scene.hidden = true;
@@ -346,9 +422,11 @@ function openPanel(i) {
       { once: true }
     );
   } else if (photo) {
+    stopPanelEmbed();
     panelEls.scene.src = photo;
     panelEls.scene.hidden = false;
   } else {
+    stopPanelEmbed();
     panelEls.scene.removeAttribute("src");
     panelEls.scene.hidden = true;
   }
@@ -364,11 +442,156 @@ function stopPanelVideo() {
   panelEls.video.load();
   panelEls.video.hidden = true;
 }
+
+// ── YouTube scene embed (see SCENE_YOUTUBE) ─────────────
+// The ONLY way to hide YouTube's startup chrome (center play/pause/skip
+// controls, title) is to cover the player until that chrome auto-hides —
+// it can't be removed by any parameter, cropped away (it's dead-centre), or
+// killed via the API. So: the player mounts VISIBLE but under the opaque
+// scene still (higher z-index); it plays underneath; once it has played
+// continuously long enough for the chrome to auto-hide, the still fades out
+// onto clean, already-moving footage. PRE-WARM (below) runs that countdown
+// while the visitor browses the carousel, so opening the centred card is
+// usually instant instead of a cold wait. pointer-events stay off so hover
+// or click can never resummon chrome.
+let embedRevealTimer = null;
+let embedNudgeTimers = [];
+let embedHandshake = null;
+let embedMsgHandler = null;
+let mountedEmbedId = null; // id of the player currently mounted in the panel
+const EMBED_REVEAL_MS = 5000; // continuous-play time before the still lifts
+function startPanelEmbed(embed) {
+  const box = document.querySelector(".founder-panel-photo");
+  if (!box) return;
+  let wrap = document.getElementById("panel-embed");
+  if (!wrap) {
+    wrap = document.createElement("div");
+    wrap.id = "panel-embed";
+    wrap.className = "panel-embed";
+    box.appendChild(wrap);
+  }
+  // Cover-fit the 16:9 player into the box; per-video zoom/bias also crops the
+  // VIDEO's own content (letterbox bars, burned-in subtitles).
+  const zoom = embed.zoom || 1.32;
+  const biasY = embed.biasY === undefined ? 0.5 : embed.biasY;
+  const biasX = embed.biasX === undefined ? 0.5 : embed.biasX;
+  const h = Math.max(box.clientHeight, box.clientWidth * 9 / 16) * zoom;
+  const w = h * 16 / 9;
+  const iframe = document.createElement("iframe");
+  iframe.width = Math.round(w);
+  iframe.height = Math.round(h);
+  iframe.style.width = w.toFixed(1) + "px";
+  iframe.style.height = h.toFixed(1) + "px";
+  iframe.style.left = (-(w - box.clientWidth) * biasX).toFixed(1) + "px";
+  iframe.style.top = (-(h - box.clientHeight) * biasY).toFixed(1) + "px";
+  iframe.setAttribute("allow", "autoplay; encrypted-media");
+  iframe.setAttribute("title", "");
+  iframe.setAttribute("aria-hidden", "true"); // decorative ambient footage
+  iframe.tabIndex = -1;
+  iframe.src =
+    `https://www.youtube-nocookie.com/embed/${embed.id}` +
+    `?autoplay=1&mute=1&controls=0&loop=1&playlist=${embed.id}` +
+    `&rel=0&iv_load_policy=3&playsinline=1&disablekb=1&fs=0` +
+    `&enablejsapi=1&origin=${encodeURIComponent(location.origin)}` +
+    (embed.start ? `&start=${embed.start}` : "");
+  wrap.replaceChildren(iframe);
+  mountedEmbedId = embed.id;
+
+  let errored = false;
+  let armed = false;         // reveal timer scheduled
+  let lastState = -1;        // player's latest reported state
+  let resumeAttempts = 0;    // capped auto-resume budget for the pause guard
+  const post = (msg) => {
+    try { iframe.contentWindow.postMessage(JSON.stringify(msg), "*"); } catch {}
+  };
+  embedMsgHandler = (e) => {
+    if (!/youtube/.test(e.origin) || e.source !== iframe.contentWindow) return;
+    try {
+      const d = JSON.parse(e.data);
+      if (d.event === "onError") errored = true;
+      if (!d.info || d.info.playerState === undefined) return;
+      lastState = d.info.playerState;
+      // Reveal only if the player is STILL playing when the timer fires — a
+      // latch on the first playing signal could reveal a player paused in the
+      // meantime (= the big play glyph).
+      if (!armed && !errored && lastState === 1) {
+        armed = true;
+        embedRevealTimer = setTimeout(() => {
+          if (lastState === 1 && !errored) panelEls.scene.classList.add("cover-fade");
+          armed = false;
+        }, EMBED_REVEAL_MS);
+      }
+      // Pause guard: if anything pauses the player (extensions, battery saver,
+      // media suspension) re-cover with the still and command a resume (capped
+      // so a hard-blocked player converges to the clean still, not a fight).
+      // 2 = paused, 5 = cued, -1 = unstarted (0 = ended → loop restart; 3 =
+      // buffering is normal mid-play).
+      if (lastState === 2 || lastState === 5 || lastState === -1) {
+        panelEls.scene.classList.remove("cover-fade");
+        if (!errored && resumeAttempts < 6) {
+          resumeAttempts++;
+          setTimeout(() => { if (lastState !== 1) post({ event: "command", func: "playVideo", args: [] }); }, 250);
+        }
+      }
+    } catch {}
+  };
+  window.addEventListener("message", embedMsgHandler);
+  iframe.addEventListener("load", () => {
+    // Repeat the handshake: a single post can land before the player boots.
+    embedHandshake = setInterval(
+      () => post({ event: "listening", id: "panel", channel: "widget" }), 400);
+  }, { once: true });
+  // Autoplay sometimes stalls (extensions, data-saver): explicitly ask to play
+  // if the player hasn't reported playback yet.
+  embedNudgeTimers = [4000, 8000].map((ms) => setTimeout(() => {
+    if (lastState !== 1 && !errored) post({ event: "command", func: "playVideo", args: [] });
+  }, ms));
+}
+function stopPanelEmbed() {
+  const wrap = document.getElementById("panel-embed");
+  if (!wrap) return;
+  if (embedRevealTimer) { clearTimeout(embedRevealTimer); embedRevealTimer = null; }
+  embedNudgeTimers.forEach(clearTimeout);
+  embedNudgeTimers = [];
+  if (embedHandshake) { clearInterval(embedHandshake); embedHandshake = null; }
+  if (embedMsgHandler) { window.removeEventListener("message", embedMsgHandler); embedMsgHandler = null; }
+  panelEls.scene.classList.remove("cover-fade"); // still covers again next open
+  wrap.replaceChildren(); // destroys the iframe → stops playback/downloads
+  mountedEmbedId = null;
+}
+
+// ── Pre-warm: boot the CENTRED founder's player while the panel is closed ──
+// Runs the reveal countdown ahead of time so opening the panel usually lands
+// straight on clean footage. Debounced against carousel flicking; one
+// background player at most; never mounts while the carousel is offscreen.
+let prewarmTimer = null;
+function schedulePrewarm(idx) {
+  if (prewarmTimer) clearTimeout(prewarmTimer);
+  prewarmTimer = setTimeout(() => {
+    prewarmTimer = null;
+    if (panel && panel.classList.contains("open")) return; // panel owns the embed
+    const cf = document.querySelector(".coverflow");
+    if (cf) {
+      const r = cf.getBoundingClientRect();
+      if (r.bottom <= 0 || r.top >= window.innerHeight) return;
+    }
+    const f = founders[idx];
+    const embed = f && !matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? SCENE_YOUTUBE[f.company]
+      : null;
+    if (!embed) { stopPanelEmbed(); return; }
+    if (mountedEmbedId === embed.id) return;
+    stopPanelEmbed();
+    startPanelEmbed(embed);
+  }, 700);
+}
 function closePanel() {
   panel.classList.remove("open");
   panel.setAttribute("aria-hidden", "true");
   document.body.classList.remove("panel-open");
   stopPanelVideo();
+  // Embed is KEPT mounted (it belongs to the centred founder) so reopening is
+  // instant; torn down when another card centres or the carousel scrolls off.
   activeIdx = null;
 }
 function navPanel(dir) {
@@ -453,10 +676,13 @@ if (coverflow && cards.length) {
     if (activeInt !== lastActiveInt && founders[activeInt]) {
       const f = founders[activeInt];
       if (cfName) cfName.textContent = `${f.first} ${f.last}`;
-      if (cfRole) cfRole.textContent = `${f.role} · ${f.company}`;
+      if (cfRole) cfRole.textContent = `${f.role} · ${f.company}${f.company2 ? " · " + f.company2 : ""}`;
       if (cfIndex) cfIndex.textContent = `${pad2(activeInt + 1)} / ${pad2(total)}`;
       cards.forEach((c, idx) => c.classList.toggle("active", idx === activeInt));
       lastActiveInt = activeInt;
+      // Boot the centred founder's player in the background (debounced) so its
+      // reveal countdown has run before the visitor opens the panel.
+      schedulePrewarm(activeInt);
     }
 
     const progress = total > 1 ? active / (total - 1) : 0;
@@ -474,6 +700,28 @@ if (coverflow && cards.length) {
   // Initial paint
   renderCoverflow();
   window.addEventListener("resize", renderCoverflow, { passive: true });
+
+  // Bandwidth courtesy: tear the background pre-warm player down while the
+  // carousel is offscreen; resume pre-warming when it scrolls back into view.
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          schedulePrewarm(Math.round(Math.max(0, Math.min(total - 1, cfPos))));
+        } else if (!document.body.classList.contains("panel-open")) {
+          // Tear down only when the carousel is GENUINELY offscreen — guard
+          // against an initial-observation race that reports not-intersecting
+          // for a frame while the element is actually in view (which would
+          // wrongly cancel a just-scheduled pre-warm).
+          const r = coverflow.getBoundingClientRect();
+          if (r.bottom <= 0 || r.top >= window.innerHeight) {
+            if (prewarmTimer) { clearTimeout(prewarmTimer); prewarmTimer = null; }
+            stopPanelEmbed();
+          }
+        }
+      });
+    }, { threshold: 0.1 }).observe(coverflow);
+  }
 
   // Glide the stage to a founder (panel PREV/NEXT, card click). setInterval
   // rather than rAF so the glide also runs where rAF is throttled or paused
