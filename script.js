@@ -861,7 +861,7 @@ counterTargets.forEach((el) => counterIO.observe(el));
 
 // ─── Reveal on scroll ──────────────────────────────────
 const reveals = document.querySelectorAll(
-  ".hero-quote, .hero-attribution, .about-headline, .about-stat, .pillar, .advantage-intro, .advantage-card, .advantage-stats-text, .stat-box, .insights-text, .insights-list, .contact-headline, .contact-email, .coverflow-head"
+  ".hero-quote, .hero-attribution, .about-headline, .about-stat, .pillar, .advantage-intro, .advantage-card, .advantage-stats-text, .stat-box, .insights-text, .insight-tile, .contact-headline, .contact-email, .coverflow-head"
 );
 reveals.forEach((el) => el.classList.add("reveal"));
 

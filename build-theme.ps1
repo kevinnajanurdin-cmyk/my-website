@@ -44,8 +44,10 @@ New-Item -ItemType Directory -Force $theme | Out-Null
 $html = [System.IO.File]::ReadAllText((Join-Path $src "index.html"))
 $T = '<?php echo get_template_directory_uri(); ?>'
 
-# Rewrite HTML-referenced asset paths to the theme directory
+# Rewrite HTML-referenced asset paths to the theme directory — both quote styles
+# (inline style="--img:url('assets/…')" uses single quotes, like the sub-pages)
 $html = $html.Replace('"assets/', '"' + $T + '/assets/')
+$html = $html.Replace("'assets/", "'" + $T + '/assets/')
 
 # styles.css is enqueued via functions.php; scripts too
 $html = $html.Replace('<link rel="stylesheet" href="styles.css" />', '')
@@ -75,23 +77,40 @@ $html = $html.Replace('</body>', "<?php wp_footer(); ?>`r`n</body>")
 $html = $html -replace '\s*<title>.*?</title>', ''
 $html = $html -replace '\s*<meta name="description"[^>]*>', ''
 
-# Home Insights teaser: swap the 3 hardcoded rows for the 3 latest Insights posts.
-$homeInsList = @'
-<ul class="insights-list">
+# Home Insights teaser: swap the 3 hardcoded accordion tiles for the 3 latest
+# Articles posts. Mirrors the archive card logic: kicker = the SUB-category
+# (Founder in Focus / Thought Piece / …), image = featured image, first (newest)
+# post gets --lead (the open panel + pulsing dot). The .insights-stack div holds
+# only <a>/<span> children, so the lazy .*?</div> match ends at its own close tag.
+$homeInsStack = @'
+<div class="insights-stack">
 <?php
         $home_cat  = get_term_by( 'slug', 'articles', 'category' );   // home teaser = Articles only (not Media / Videos & Webinars)
         $home_args = array( 'post_type' => 'post', 'post_status' => 'publish', 'posts_per_page' => 3, 'ignore_sticky_posts' => true );
         if ( $home_cat ) { $home_args['cat'] = (int) $home_cat->term_id; }
         $home_q = new WP_Query( $home_args );
-        if ( $home_q->have_posts() ) : while ( $home_q->have_posts() ) : $home_q->the_post(); ?>
-          <li>
-            <span class="insight-date"><?php echo esc_html( get_the_date( 'M Y' ) ); ?></span>
-            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-          </li>
+        if ( $home_q->have_posts() ) : while ( $home_q->have_posts() ) : $home_q->the_post();
+          // Kicker prefers the SUB-category (Founder in Focus / Thought Piece / …)
+          $home_sub = null; $home_top = null;
+          foreach ( get_the_category() as $home_cc ) {
+            if ( $home_cc->parent ) { if ( ! $home_sub ) { $home_sub = $home_cc; } }
+            else { if ( ! $home_top ) { $home_top = $home_cc; } }
+          }
+          $home_kick = $home_sub ? $home_sub : $home_top;
+          $home_img  = get_the_post_thumbnail_url( get_the_ID(), 'large' );
+          $home_lead = ( 0 === $home_q->current_post );
+        ?>
+          <a class="insight-tile<?php echo $home_lead ? ' insight-tile--lead' : ''; ?>" href="<?php the_permalink(); ?>"<?php if ( $home_img ) echo " style=\"--img:url('" . esc_url( $home_img ) . "')\""; ?>>
+            <span class="insight-kicker"><span class="insight-kicker-dot"></span><span class="insight-kicker-label"><?php echo esc_html( $home_kick ? $home_kick->name : 'Insight' ); ?></span></span>
+            <span class="insight-when"><?php echo esc_html( get_the_date( 'M Y' ) ); ?></span>
+            <span class="insight-tile-cap">
+              <span class="insight-title"><?php the_title(); ?></span>
+            </span>
+          </a>
         <?php endwhile; wp_reset_postdata(); endif; ?>
-        </ul>
+        </div>
 '@
-$html = [regex]::Replace($html, '(?s)<ul class="insights-list">.*?</ul>', { param($m) $homeInsList.Trim() })
+$html = [regex]::Replace($html, '(?s)<div class="insights-stack">.*?</div>', { param($m) $homeInsStack.Trim() })
 
 # Home performance figures -> Customizer-editable (Appearance > Customize >
 # "Ziller - Home Figures"), so month-end updates need no theme rebuild. The current

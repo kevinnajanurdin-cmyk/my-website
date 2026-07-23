@@ -812,9 +812,13 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 }
 .insights-inner {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* minmax(0,…) not 1fr: a closed band's single-line (nowrap) title has a wide
+     min-content, and a plain 1fr track can't shrink below that — it would
+     inflate the stack column at rest and snap back on hover (when the title
+     wraps). minmax(0,1fr) keeps both columns exactly equal regardless. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 96px;
-  align-items: start;
+  align-items: center;
 }
 .insights-text .section-title { margin-bottom: 28px; }
 .insights-text > p {
@@ -824,34 +828,222 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   margin: 0 0 40px;
   line-height: 1.6;
 }
-.insights-list {
-  list-style: none;
-  margin: 0; padding: 0;
+
+/* ── The stack — three essays as one interactive column. The in-focus essay
+   opens to show its photograph; the others tuck beneath it as slim bands that
+   lap the sheet above. Hovering (or tabbing to) a band opens it and closes the
+   rest — pure CSS, animated flex-grow. The DATE shows on every band; the tag
+   (dot + label) and title appear only on the in-focus card. ── */
+.insights-stack {
+  --stack-h: min(640px, 76vh);
+  display: flex;
+  flex-direction: column;
+  height: var(--stack-h);
 }
-.insights-list li {
-  display: grid;
-  grid-template-columns: 130px 1fr;
-  gap: 24px;
-  align-items: baseline;
-  padding: 28px 0;
-  border-top: 1px solid var(--line);
+.insight-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex: 1 1 0;
+  /* floor: a closed band still shows its date and a strip of photo */
+  min-height: 128px;
+  overflow: hidden;
+  background-color: #232c3b;
+  isolation: isolate;
 }
-.insights-list li:last-child { border-bottom: 1px solid var(--line); }
-.insight-date {
-  font-size: 12px;
+/* Scoped under .insights-stack so this transition list outranks the generic
+   .reveal one — opacity/transform stay listed for the entrance animation. */
+.insights-stack .insight-tile {
+  transition:
+    flex-grow .65s cubic-bezier(.3, .7, .2, 1),
+    opacity .9s cubic-bezier(.2, .7, .2, 1),
+    transform .9s cubic-bezier(.2, .7, .2, 1);
+}
+/* Upper card sits in FRONT and laps over the one below, casting a soft shadow
+   downward. This lets a card on entrance emerge from beneath the card above
+   (see the top-to-bottom reveal further down). */
+.insight-tile + .insight-tile { margin-top: -14px; }
+.insight-tile:not(:last-child) {
+  box-shadow: 0 12px 28px -8px rgba(15, 20, 31, .45);
+}
+.insight-tile:nth-child(1) { z-index: 3; }
+.insight-tile:nth-child(2) { z-index: 2; }
+.insight-tile:nth-child(3) { z-index: 1; }
+/* the latest essay rests open; hovering the stack hands the spotlight over */
+.insight-tile:first-child { flex-grow: 3.4; }
+.insights-stack:hover .insight-tile,
+.insights-stack:focus-within .insight-tile { flex-grow: 1; }
+.insights-stack .insight-tile:hover,
+.insights-stack .insight-tile:focus-visible { flex-grow: 3.4; }
+/* photo layer — a fixed-size image anchored to the tile top. Its height is set
+   just above the OPEN tile height (not the whole 640px column): tall enough to
+   fill an open panel, but no taller — so the box stays close to landscape and
+   `cover` crops these landscape photos only lightly (you see most of the
+   original picture, not a tight zoom). Fixed height ⇒ no rescale-on-open; the
+   band simply clips more of the same image when closed. */
+.insight-tile::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--stack-h) * 0.66);
+  z-index: 0;
+  background-image: var(--img);
+  background-size: cover;
+  background-position: var(--pos, center);
+}
+/* legibility scrims — bottom ramp for the title, plus a whisper of ink at the
+   top so the date (and the in-focus tag) stay readable on a bright band. */
+.insight-tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(to bottom, rgba(15,20,31,.5) 0%, rgba(15,20,31,0) 32%),
+    linear-gradient(to top, rgba(15,20,31,.88) 0%, rgba(15,20,31,.44) 40%, rgba(15,20,31,.06) 78%, rgba(15,20,31,0) 100%);
+}
+.insight-kicker {
+  position: absolute;
+  top: 16px;
+  left: 18px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: .18em;
+  letter-spacing: .16em;
   text-transform: uppercase;
-  color: var(--ink-mute);
+  color: rgba(255,255,255,.92);
 }
-.insights-list a {
+.insight-kicker-dot {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255,255,255,.14);
+}
+/* Attention pulse — ONLY the latest (lead) essay: two staggered bright rings
+   ping outward from a brighter, glowing dot. Shared keyframe, reused for the
+   latest card on the Insights archive. */
+.insight-tile--lead .insight-kicker-dot {
+  width: 8px;
+  height: 8px;
+  background: #9cc0e0;
+  box-shadow: 0 0 8px 1px rgba(156, 192, 224, .6);
+}
+.insight-tile--lead .insight-kicker-dot::before,
+.insight-tile--lead .insight-kicker-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #9cc0e0;
+  animation: insight-dot-pulse 2s cubic-bezier(.3, 0, .5, 1) infinite;
+}
+.insight-tile--lead .insight-kicker-dot::before { animation-delay: -1s; }
+@keyframes insight-dot-pulse {
+  0%        { transform: scale(1);   opacity: .9; }
+  70%, 100% { transform: scale(3.6); opacity: 0; }
+}
+.insight-when {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  z-index: 2;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.72);
+}
+/* Cards after the first are lapped 14px under the card above, hiding the top
+   of their inset. Push their tag + date down by that 14px so the visible gap
+   above them matches the first card's (16px). */
+.insight-tile:not(:first-child) .insight-kicker,
+.insight-tile:not(:first-child) .insight-when {
+  top: 30px;
+}
+.insight-tile-cap {
+  position: relative;
+  z-index: 2;
+  display: block;
+  padding: clamp(16px, 1.8vw, 22px) 20px;
+}
+.insight-title {
+  display: block;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(22px, 2.4vw, 28px);
-  color: var(--ink);
-  line-height: 1.25;
+  font-size: clamp(22px, 1.9vw, 27px);
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  color: #fff;
 }
-.insights-list a:hover { color: var(--accent-deep); }
+/* Focus hierarchy — a closed band shows exactly ONE quiet line: its title,
+   ghosted and clipped to a single ellipsized line at 75% size, with the small
+   date opposite. The tag (dot + label) belongs to the in-focus card only and
+   fades in as its panel opens; the title blooms to full size and wraps freely.
+   Mirrors the flex-grow open/close conditions. */
+.insight-kicker,
+.insight-when,
+.insight-title {
+  transition: opacity .5s ease, transform .55s cubic-bezier(.2, .7, .2, 1);
+}
+.insight-kicker { opacity: 0; }
+.insight-when { opacity: .6; }
+.insight-title {
+  opacity: .55;
+  transform: scale(.75);
+  transform-origin: left bottom;
+  /* single ghost line when closed; text-overflow is inert once open (wrap) */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.insight-tile:first-child .insight-kicker,
+.insight-tile:first-child .insight-when { opacity: 1; }
+.insight-tile:first-child .insight-title { opacity: 1; transform: scale(1); white-space: normal; }
+.insights-stack:hover .insight-kicker,
+.insights-stack:focus-within .insight-kicker { opacity: 0; }
+.insights-stack:hover .insight-when,
+.insights-stack:focus-within .insight-when { opacity: .6; }
+.insights-stack:hover .insight-title,
+.insights-stack:focus-within .insight-title { opacity: .55; transform: scale(.75); white-space: nowrap; }
+.insights-stack .insight-tile:hover .insight-kicker,
+.insights-stack .insight-tile:hover .insight-when,
+.insights-stack .insight-tile:focus-visible .insight-kicker,
+.insights-stack .insight-tile:focus-visible .insight-when { opacity: 1; }
+.insights-stack .insight-tile:hover .insight-title,
+.insights-stack .insight-tile:focus-visible .insight-title { opacity: 1; transform: scale(1); white-space: normal; }
+
+/* Staggered entrance — reveal hooks assigned in script.js. Cards drop in from
+   ABOVE (translateY negative), so each one appears to emerge from beneath the
+   bottom of the card above it. The stagger runs top→bottom, so the stack
+   unfurls downward. (Overrides the generic .reveal translateY(20px) rise.) */
+.insight-tile.reveal { transform: translateY(-32px); }
+.insight-tile.reveal.in { transform: translateY(0); }
+.insight-tile.reveal:nth-child(2) { transition-delay: .12s; }
+.insight-tile.reveal:nth-child(3) { transition-delay: .24s; }
+@media (prefers-reduced-motion: reduce) {
+  /* panels snap instead of glide; the entrance fade stays */
+  .insights-stack .insight-tile {
+    transition:
+      opacity .9s cubic-bezier(.2, .7, .2, 1),
+      transform .9s cubic-bezier(.2, .7, .2, 1);
+  }
+  /* no ping; labels change brightness only — titles keep one size */
+  .insight-tile--lead .insight-kicker-dot::before,
+  .insight-tile--lead .insight-kicker-dot::after,
+  .ins-card:first-child .ins-card-dot::before,
+  .ins-card:first-child .ins-card-dot::after { animation: none; opacity: 0; }
+  .insight-title,
+  .insights-stack:hover .insight-title,
+  .insights-stack:focus-within .insight-title { transform: none; }
+}
 
 /* ─── CONTACT ──────────────────────────────────────────── */
 .contact {
@@ -1369,6 +1561,10 @@ img.panel-scene.cover-fade {
   filter: grayscale(1) brightness(0) opacity(0.7);
   /* height is set per-company in script.js (LOGO_HEIGHTS) */
 }
+/* Second logo (Tesla + SpaceX) is `hidden` for single-company founders. The
+   display:block above outweighs the UA [hidden] rule, so hide it explicitly —
+   otherwise it keeps a flex slot (and the last logo) on every other card. */
+.founder-panel-body .panel-logo[hidden] { display: none; }
 
 .founder-panel-body {
   padding: 36px 48px 40px;
@@ -1553,7 +1749,24 @@ body.nav-open.over-hero .header-cta {
     max-width: 100%;
     margin: 16px auto 0;
   }
+  /* single column: the image stack drops below the intro text */
   .insights-inner { grid-template-columns: 1fr; gap: 56px; }
+  /* no hover on touch — the accordion becomes plain stacked cards, newest
+     first, with tag + date + title all shown (nothing to hover into focus) */
+  .insights-stack { display: grid; gap: 16px; height: auto; }
+  .insight-tile { min-height: 0; aspect-ratio: 2 / 1; }
+  .insight-tile--lead { aspect-ratio: 3 / 2; }
+  .insight-tile + .insight-tile { margin-top: 0; }
+  .insight-tile:not(:last-child) { box-shadow: none; }
+  /* full-bleed photo again — static cards don't open, so no curtain needed */
+  .insight-tile::before { bottom: 0; height: auto; }
+  .insight-kicker,
+  .insight-when,
+  .insight-title { opacity: 1; transform: none; }
+  .insight-title { white-space: normal; }
+  /* no overlap on mobile, so no lapped-card top compensation */
+  .insight-tile:not(:first-child) .insight-kicker,
+  .insight-tile:not(:first-child) .insight-when { top: 16px; }
   .footer-top {
     grid-template-columns: 1fr;
     grid-template-areas: "logo" "brand" "links" "foot";
@@ -1580,7 +1793,7 @@ body.nav-open.over-hero .header-cta {
   .brand-logo { height: 48px; }
   .page-home .hero-founders { margin-top: -77px; }
   .footer-links { grid-template-columns: 1fr 1fr; }
-  .insights-list li { grid-template-columns: 1fr; gap: 6px; }
+  .insights-stack { gap: 14px; }
   .footer-bottom { flex-direction: column; }
   .footer-logo { height: 64px; }
   .founder-panel-stats { grid-template-columns: 1fr 1fr; }
@@ -3696,12 +3909,32 @@ body.modal-open { overflow: hidden; }
   color: rgba(255,255,255,.92);
 }
 .ins-card-dot {
+  position: relative;
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: var(--accent);
   box-shadow: 0 0 0 3px rgba(255,255,255,.14);
 }
+/* Attention pulse — only the latest essay (the first card in the grid). Two
+   staggered rings + a brighter, glowing core; shares the home page's keyframe.
+   DOM order is newest-first, so :first-child is always the latest article. */
+.ins-card:first-child .ins-card-dot {
+  width: 8px;
+  height: 8px;
+  background: #9cc0e0;
+  box-shadow: 0 0 8px 1px rgba(156, 192, 224, .6);
+}
+.ins-card:first-child .ins-card-dot::before,
+.ins-card:first-child .ins-card-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #9cc0e0;
+  animation: insight-dot-pulse 2s cubic-bezier(.3, 0, .5, 1) infinite;
+}
+.ins-card:first-child .ins-card-dot::before { animation-delay: -1s; }
 
 /* Caption — title + byline, bottom */
 .ins-card-cap {
