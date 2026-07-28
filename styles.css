@@ -752,15 +752,24 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   opacity: .72;
 }
 .odd-figure-compound {
-  font-size: 0.6em;
+  /* Full size, matching the single-value figures (10x / 39.5% / 120.5%).
+     "23.0 vs 4.8 years" is >2x their width at the same size, so on narrower
+     desktops it runs into the caption sitting at the right of the row. Parity
+     holds wherever it fits; the two steps below are the minimum backoff where
+     it doesn't. Below 980px the row stacks (caption drops underneath), so the
+     full width is free again and parity returns. */
+  font-size: 1em;
   font-style: italic;
   letter-spacing: 0;
   line-height: 1;
   display: inline-block;
   vertical-align: middle;
 }
+@media (max-width: 1439px) { .odd-figure-compound { font-size: .85em; } }
+@media (max-width: 1200px) { .odd-figure-compound { font-size: .65em; } }
+@media (max-width:  980px) { .odd-figure-compound { font-size: 1em; } }
+/* units inherit the standard .odd-unit .5em — only the opacity differs */
 .odd-figure-compound .odd-unit {
-  font-size: .62em;
   opacity: .65;
 }
 .odd-text {
