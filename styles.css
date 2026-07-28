@@ -692,7 +692,10 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 .odd {
   position: relative;
   padding: 0 clamp(24px, 4vw, 64px);
-  min-height: clamp(220px, 28vh, 320px);
+  /* Row height tracks the figure size: scaled by the same 20% as .odd-number
+     (was clamp(220px, 28vh, 320px)) so the numerals keep their proportion of
+     the row instead of floating in an over-tall box. */
+  min-height: clamp(176px, 22.4vh, 256px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -723,7 +726,10 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   font-family: var(--serif);
   font-weight: 400;
   font-style: italic;
-  font-size: clamp(72px, 12vw, 168px);
+  /* 20% down from clamp(72px, 12vw, 168px). Everything inside the figure
+     (.odd-unit, .odd-figure-compound) is sized in em, so this one value
+     scales the whole numeral display proportionally. */
+  font-size: clamp(58px, 9.6vw, 134px);
   line-height: .95;
   letter-spacing: -.02em;
   color: rgba(255,255,255,.14);
@@ -1744,7 +1750,7 @@ body.nav-open.over-hero .header-cta {
   .advantage-card { min-height: auto; }
   .odds-rail { position: static; margin-bottom: 24px; }
   .odds-head { margin-top: 0; }
-  .odd { padding: 36px 24px; }
+  .odd { padding: 29px 24px; }   /* vertical scaled with the figure (was 36px) */
   .odd::before, .odd:last-of-type::after { width: 100%; }
   .odd-number { padding-right: 0; }
   /* Stack each stat: figure on top (full width, so "23.0 vs 4.8 years" stays
@@ -3140,20 +3146,25 @@ body.nav-open.over-hero .header-cta {
   background: var(--bg);
 }
 .insights-intro-eyebrow {
+  /* Same eyebrow + dash motif as .approach-intro-eyebrow (and .invest-eyebrow /
+     .fund-section-eyebrow): 16px gap, 48px dash set BESIDE the text, dark-theme
+     colours. This hero is centred, so the inline-flex box centres as one unit. */
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
   font-size: 13px;
   font-weight: 600;
   letter-spacing: var(--track-eyebrow);
   text-transform: uppercase;
-  color: var(--on-dark-mute);
+  color: var(--on-dark);
   margin: 0 0 36px;
 }
 .insights-intro-eyebrow::after {
   content: "";
-  display: block;
-  width: 32px;
+  display: inline-block;
+  width: 48px;
   height: 1px;
-  background: rgba(255,255,255,.25);
-  margin: 20px auto 0;
+  background: var(--on-dark-mute);
 }
 .insights-intro-headline {
   font-family: var(--serif);
