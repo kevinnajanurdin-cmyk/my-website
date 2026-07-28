@@ -137,7 +137,7 @@
       <div class="container">
         <div class="ins-subscribe-inner" data-reveal>
           <h2 class="ins-subscribe-title">Stay informed.</h2>
-          <p class="ins-subscribe-text">Receive our quarterly letters and research directly.</p>
+          <p class="ins-subscribe-text">Receive our latest investment insights straight to your inbox.</p>
           <form class="ins-subscribe-form" onsubmit="return false;">
             <input type="email" class="ins-subscribe-input" placeholder="Your email address" aria-label="Email address" required />
             <button type="submit" class="btn btn-primary">Subscribe</button>
@@ -281,6 +281,16 @@
             card.style.display = 'none';
           }
         });
+        // Move the "newest essay" pulse to the first card still VISIBLE in this
+        // tab. Cards are newest-first, but the structurally-first one is often
+        // filtered out, which would leave the pulse hidden (CSS keys off
+        // .is-latest — see the .ins-card-dot pulse rules).
+        var latest = null;
+        cards.forEach(function (card) {
+          card.classList.remove('is-latest');
+          if (!latest && card.style.display !== 'none') latest = card;
+        });
+        if (latest) latest.classList.add('is-latest');
       }
 
       filterBtns.forEach(function (btn) {

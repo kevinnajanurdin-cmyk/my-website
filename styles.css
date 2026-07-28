@@ -36,6 +36,15 @@
   --serif: "Riccione Serial", "Cormorant Garamond", "Times New Roman", serif;
   --sans: "Formata Light", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
+  /* Uppercase label scale — the site has two small-caps idioms, and they had
+     drifted to nine different tracking values. These two tokens are the whole
+     scale: use --track-eyebrow for a section eyebrow (the label above a section
+     title, always 13px), and --track-label for micro labels (tags, roles,
+     dates, kickers, captions — size varies with context, tracking does not).
+     Dense fund-data labels and table headers stay tighter on purpose. */
+  --track-eyebrow: .14em;
+  --track-label: .10em;
+
   --container: 1240px;
   --gutter: clamp(24px, 5vw, 64px);
 }
@@ -301,7 +310,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 .eyebrow, .section-eyebrow {
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: .26em;
+  letter-spacing: var(--track-eyebrow);
   text-transform: uppercase;
   color: var(--ink-mute);
   margin: 0 0 36px;
@@ -343,7 +352,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   font-size: 15px;
   font-weight: 500;
   color: var(--on-dark-mute);
-  letter-spacing: .12em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
 }
 
@@ -409,7 +418,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   font-size: 13px;
   font-weight: 600;
   color: var(--on-dark-mute);
-  letter-spacing: .18em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   text-align: center;
 }
@@ -623,7 +632,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   gap: 14px;
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: .14em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--on-dark);
   z-index: 3;
@@ -763,7 +772,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   max-width: clamp(250px, 26vw, 385px);
   font-size: 14px;
   font-weight: 600;
-  letter-spacing: .14em;
+  letter-spacing: var(--track-label);
   line-height: 1.55;
   text-transform: uppercase;
   text-align: right;
@@ -915,7 +924,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   gap: 9px;
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: .16em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: rgba(255,255,255,.92);
 }
@@ -957,7 +966,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   z-index: 2;
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: .16em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: rgba(255,255,255,.72);
 }
@@ -1038,8 +1047,10 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   /* no ping; labels change brightness only — titles keep one size */
   .insight-tile--lead .insight-kicker-dot::before,
   .insight-tile--lead .insight-kicker-dot::after,
-  .ins-card:first-child .ins-card-dot::before,
-  .ins-card:first-child .ins-card-dot::after { animation: none; opacity: 0; }
+  .ins-card.is-latest .ins-card-dot::before,
+  .ins-card.is-latest .ins-card-dot::after,
+  html:not(.js) .ins-card:first-child .ins-card-dot::before,
+  html:not(.js) .ins-card:first-child .ins-card-dot::after { animation: none; opacity: 0; }
   .insight-title,
   .insights-stack:hover .insight-title,
   .insights-stack:focus-within .insight-title { transform: none; }
@@ -1129,7 +1140,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 .footer-links h4 {
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: .22em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--accent);
   margin: 0 0 22px;
@@ -1304,7 +1315,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   color: #fff;
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: .14em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   opacity: 0;
   transform: translateY(8px);
@@ -1352,7 +1363,7 @@ body.panel-open .cover-card.active .cover-card-tag {
 .coverflow-active-role {
   margin: 6px 0 0;
   font-size: 12px;
-  letter-spacing: .16em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
 }
@@ -1393,7 +1404,7 @@ body.panel-open .cover-card.active .cover-card-tag {
 .coverflow-hint {
   text-align: center;
   font-size: 11px;
-  letter-spacing: .22em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
   margin: 0;
@@ -1605,7 +1616,7 @@ img.panel-scene.cover-fade {
 .founder-panel-stats dt {
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: .2em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
   margin: 0 0 6px;
@@ -1642,7 +1653,7 @@ img.panel-scene.cover-fade {
   font: inherit;
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: .12em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink);
   cursor: pointer;
@@ -1852,9 +1863,9 @@ body.nav-open.over-hero .header-cta {
   align-items: center;
   gap: 16px;
   margin: 0 0 20px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: .22em;
+  letter-spacing: var(--track-eyebrow);
   text-transform: uppercase;
   color: var(--ink-mute);
 }
@@ -1899,7 +1910,7 @@ body.nav-open.over-hero .header-cta {
   font-style: normal;
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: .2em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
   vertical-align: middle;
@@ -1983,7 +1994,7 @@ body.nav-open.over-hero .header-cta {
   margin: 0 0 12px;
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: .14em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: rgba(255,255,255,.6);
 }
@@ -2010,7 +2021,7 @@ body.nav-open.over-hero .header-cta {
   margin: 0 0 6px;
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: .12em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: rgba(255,255,255,.55);
 }
@@ -2197,7 +2208,7 @@ body.nav-open.over-hero .header-cta {
   font-family: var(--sans);
   font-size: 0.3em;
   font-weight: 600;
-  letter-spacing: .1em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
   margin-left: 8px;
@@ -2206,7 +2217,7 @@ body.nav-open.over-hero .header-cta {
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: .12em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
 }
@@ -2229,7 +2240,7 @@ body.nav-open.over-hero .header-cta {
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: .12em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
 }
@@ -2248,7 +2259,7 @@ body.nav-open.over-hero .header-cta {
 .fund-kf-tag {
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: .14em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--accent-deep);
   border: 1px solid var(--line);
@@ -2283,7 +2294,7 @@ body.nav-open.over-hero .header-cta {
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: .1em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
   cursor: pointer;
@@ -2325,7 +2336,7 @@ body.nav-open.over-hero .header-cta {
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: .12em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
 }
@@ -2336,7 +2347,8 @@ body.nav-open.over-hero .header-cta {
   border: 1px solid var(--line);
   border-radius: 2px;
   font-size: 9px;
-  letter-spacing: .18em;
+  /* inherits text-transform:uppercase from .fund-data-label — same label scale */
+  letter-spacing: var(--track-label);
   color: var(--ink-mute);
 }
 .fund-data-value {
@@ -2400,7 +2412,7 @@ body.nav-open.over-hero .header-cta {
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: .12em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
 }
@@ -2452,7 +2464,7 @@ body.nav-open.over-hero .header-cta {
   background: var(--bg-elev);
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: .12em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
   border-bottom: 1px solid var(--line);
@@ -2838,7 +2850,7 @@ body.nav-open.over-hero .header-cta {
   font-family: var(--sans);
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: .20em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--on-dark-mute);
 }
@@ -2876,7 +2888,7 @@ body.nav-open.over-hero .header-cta {
   font-family: var(--sans);
   font-weight: 600;
   font-size: clamp(13px, 1.05vw, 15px);
-  letter-spacing: .14em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--on-dark-mute);
 }
@@ -3007,8 +3019,8 @@ body.nav-open.over-hero .header-cta {
   margin: 0 0 clamp(36px, 5vh, 56px);
   font-family: var(--sans);
   font-weight: 600;
-  font-size: 12px;
-  letter-spacing: .22em;
+  font-size: 13px;
+  letter-spacing: var(--track-eyebrow);
   text-transform: uppercase;
   color: var(--on-dark);
 }
@@ -3130,7 +3142,7 @@ body.nav-open.over-hero .header-cta {
 .insights-intro-eyebrow {
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: .26em;
+  letter-spacing: var(--track-eyebrow);
   text-transform: uppercase;
   color: var(--on-dark-mute);
   margin: 0 0 36px;
@@ -3206,8 +3218,8 @@ body.nav-open.over-hero .header-cta {
   gap: 16px;
   margin: 0 0 20px;
   font-weight: 600;
-  font-size: 12px;
-  letter-spacing: .22em;
+  font-size: 13px;
+  letter-spacing: var(--track-eyebrow);
   text-transform: uppercase;
   color: var(--ink-mute);
 }
@@ -3295,7 +3307,7 @@ body.nav-open.over-hero .header-cta {
   margin: 0 0 14px;
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: .16em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--accent-deep);
 }
@@ -3331,7 +3343,7 @@ body.nav-open.over-hero .header-cta {
   margin: 0 0 20px;
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: .18em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
 }
@@ -3447,7 +3459,7 @@ body.nav-open.over-hero .header-cta {
   border-bottom: 1px solid var(--line);
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: .2em;
+  letter-spacing: var(--track-eyebrow);
   text-transform: uppercase;
   color: var(--ink-mute);
 }
@@ -3521,7 +3533,7 @@ body.nav-open.over-hero .header-cta {
   margin: 0 0 14px;
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: .14em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--accent-deep);
 }
@@ -3532,7 +3544,7 @@ body.nav-open.over-hero .header-cta {
   margin-top: 12px;
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: .16em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
   transition: color .2s ease;
@@ -3604,7 +3616,7 @@ body.nav-open.over-hero .header-cta {
   margin: 0 0 18px;
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: .16em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--accent-deep);
 }
@@ -3692,7 +3704,7 @@ body.modal-open { overflow: hidden; }
 .ins-tag {
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: .16em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--accent-deep);
   background: rgba(80, 110, 136, .08);
@@ -3702,7 +3714,7 @@ body.modal-open { overflow: hidden; }
 .ins-date {
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: .18em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
 }
@@ -3730,7 +3742,7 @@ body.modal-open { overflow: hidden; }
 .ins-read-link {
   font-size: 14px;
   font-weight: 600;
-  letter-spacing: .08em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--accent-deep);
   text-decoration: none;
@@ -3765,7 +3777,7 @@ body.modal-open { overflow: hidden; }
   font-family: var(--sans);
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: .18em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
   background: none;
@@ -3904,7 +3916,7 @@ body.modal-open { overflow: hidden; }
   gap: 8px;
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: .16em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: rgba(255,255,255,.92);
 }
@@ -3916,17 +3928,24 @@ body.modal-open { overflow: hidden; }
   background: var(--accent);
   box-shadow: 0 0 0 3px rgba(255,255,255,.14);
 }
-/* Attention pulse — only the latest essay (the first card in the grid). Two
-   staggered rings + a brighter, glowing core; shares the home page's keyframe.
-   DOM order is newest-first, so :first-child is always the latest article. */
-.ins-card:first-child .ins-card-dot {
+/* Attention pulse — the newest essay CURRENTLY IN VIEW. Two staggered rings +
+   a brighter, glowing core; shares the home page's keyframe.
+   Not :first-child — the grid is filtered by category (applyFilter hides the
+   non-matching cards with display:none), so the structurally-first card is
+   often hidden and its pulse invisible. applyFilter tags the first VISIBLE card
+   with .is-latest instead, and re-tags on every tab change.
+   No-JS fallback: nothing is filtered, so the first card IS the newest. */
+.ins-card.is-latest .ins-card-dot,
+html:not(.js) .ins-card:first-child .ins-card-dot {
   width: 8px;
   height: 8px;
   background: #9cc0e0;
   box-shadow: 0 0 8px 1px rgba(156, 192, 224, .6);
 }
-.ins-card:first-child .ins-card-dot::before,
-.ins-card:first-child .ins-card-dot::after {
+.ins-card.is-latest .ins-card-dot::before,
+.ins-card.is-latest .ins-card-dot::after,
+html:not(.js) .ins-card:first-child .ins-card-dot::before,
+html:not(.js) .ins-card:first-child .ins-card-dot::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -3934,7 +3953,8 @@ body.modal-open { overflow: hidden; }
   box-shadow: 0 0 0 2px #9cc0e0;
   animation: insight-dot-pulse 2s cubic-bezier(.3, 0, .5, 1) infinite;
 }
-.ins-card:first-child .ins-card-dot::before { animation-delay: -1s; }
+.ins-card.is-latest .ins-card-dot::before,
+html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s; }
 
 /* Caption — title + byline, bottom */
 .ins-card-cap {
@@ -4024,7 +4044,7 @@ body.modal-open { overflow: hidden; }
   .ins-grid { grid-template-columns: 1fr; }
   .ins-tabs { gap: 18px; flex-wrap: wrap; }
   /* Top padding gives the filter tabs a thumb-sized tap target on touch. */
-  .ins-filter { padding: 10px 2px 14px; letter-spacing: .12em; font-size: 11px; }
+  .ins-filter { padding: 10px 2px 14px; letter-spacing: var(--track-label); font-size: 11px; }
   .ins-card-media { aspect-ratio: 4 / 3; }
 }
 
@@ -4042,7 +4062,7 @@ body.modal-open { overflow: hidden; }
   display: inline-block;
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: .18em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
   text-decoration: none;
@@ -4090,7 +4110,7 @@ body.modal-open { overflow: hidden; }
   padding: clamp(20px, 2.5vh, 28px) 0;
   font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: .22em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
 }
@@ -4213,7 +4233,7 @@ body.modal-open { overflow: hidden; }
   display: block;
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: .2em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
   margin-bottom: 4px;

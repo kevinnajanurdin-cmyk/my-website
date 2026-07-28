@@ -18,13 +18,12 @@ if (toggle) {
 }
 
 // ─── Founders data ─────────────────────────────────────
+// Deck order: the carousel opens on the MIDDLE card so the fan is symmetric —
+// cards spread evenly left and right instead of trailing off to one side (see
+// `cfPos` in the coverflow block). Jensen Huang, the founder we lead with, is
+// therefore placed at the centre index rather than first; everyone else keeps
+// their relative order. Move a founder here and the opening card moves with it.
 const founders = [
-  {
-    first: "Jensen", last: "Huang", company: "Nvidia",
-    role: "Co-founder & CEO", founded: "1993", sector: "AI Hardware",
-    geo: "United States", accent: "#76b900",
-    thesis: "Three decades of compounding without selling a share. The accelerator-computing platform he willed into existence now underwrites the entire AI build-out."
-  },
   {
     first: "Alex", last: "Karp", company: "Palantir",
     role: "Co-founder & CEO", founded: "2003", sector: "AI Platforms",
@@ -66,6 +65,13 @@ const founders = [
     role: "Founder & CEO", founded: "2012", sector: "FinTech",
     geo: "Japan", accent: "#0099a8",
     thesis: "Japan's leading household-finance and SaaS-for-SMB platform. A founder rebuilding the country's financial plumbing for a digital generation."
+  },
+  {
+    // ── Centre of the deck: the card the carousel opens on ──
+    first: "Jensen", last: "Huang", company: "Nvidia",
+    role: "Co-founder & CEO", founded: "1993", sector: "AI Hardware",
+    geo: "United States", accent: "#76b900",
+    thesis: "Three decades of compounding without selling a share. The accelerated-computing platform he willed into existence now underwrites the entire AI build-out."
   },
   {
     first: "Rick", last: "Smith", company: "Axon",
@@ -305,9 +311,13 @@ if (stage) {
     card.setAttribute("aria-label", `${f.first} ${f.last}, ${f.company}${f.company2 ? " and " + f.company2 : ""}`);
     const url = portraitUrl(f.company);
     const initials = (f.first[0] + f.last[0]).toUpperCase();
-    // Carousel is above the fold: eager-load the first cards (lead gets high
-    // fetch priority); lazy-load the rest further along the arc.
-    const imgAttrs = i < 6 ? (i === 0 ? ' fetchpriority="high"' : '') : ' loading="lazy"';
+    // Carousel is above the fold: eager-load the cards visible in the opening
+    // fan (the centred card gets high fetch priority); lazy-load the rest
+    // further along the arc. The fan opens CENTRED (see START_INDEX below), so
+    // this window is measured from the middle of the deck, not from index 0 —
+    // renderCoverflow() hides anything more than 4 steps from the centre.
+    const cardDist = Math.abs(i - Math.floor((founders.length - 1) / 2));
+    const imgAttrs = cardDist <= 4 ? (cardDist === 0 ? ' fetchpriority="high"' : '') : ' loading="lazy"';
     const inner = url
       ? `<img src="${url}" alt="${f.first} ${f.last}"${imgAttrs} />`
       : `<span class="cover-card-fallback">${initials}</span>`;
@@ -629,7 +639,12 @@ if (coverflow && cards.length) {
   const total = cards.length;
   const pad2 = (n) => String(n).padStart(2, "0");
   let lastActiveInt = -1;
-  let cfPos = 0;            // floating active index (0 … total-1), hover-driven
+  // Open on the MIDDLE card, so the fan is symmetric — roughly equal numbers of
+  // cards spread to the left and the right — rather than starting at index 0
+  // with the whole deck trailing off to the right. The `founders` array is
+  // ordered so the founder we lead with sits at this index.
+  const START_INDEX = Math.floor((total - 1) / 2);
+  let cfPos = START_INDEX;  // floating active index (0 … total-1), hover-driven
 
   // Tunables — feel free to adjust
   // Phones get a tighter arc so the (larger) mobile cards still show their
@@ -775,8 +790,11 @@ if (coverflow && cards.length) {
     const MAX_STEP = 0.13;   // founders/frame at the screen edge (~8/s)
     const RAMP = 1.4;        // acceleration curve from MIN → MAX with distance
     const DEAD_PAD = 12;     // px of neutral space beyond the card edge
+    const HOLD_MS = 1500;    // keep flicking this long after leaving a side edge
+    const COAST_MS = 700;    // then ease the speed down to rest over this long
     let pointerX = null;
     let hoverRaf = null;
+    let heldSince = 0;       // when the pointer left via a side edge (0 = tracking)
 
     // Run only while the carousel is on-screen and no modal is open.
     const onScreen = () => {
@@ -785,9 +803,25 @@ if (coverflow && cards.length) {
         !document.body.classList.contains("panel-open");
     };
 
+    const stopHover = () => { pointerX = null; heldSince = 0; hoverRaf = null; };
+
     const tick = () => {
       if (pointerX == null || !onScreen()) { hoverRaf = null; return; }
       if (glideTimer) { hoverRaf = requestAnimationFrame(tick); return; } // glide owns cfPos
+
+      // While the pointer is held off a side edge (see mouseleave), run at the
+      // edge speed for HOLD_MS, then ease to rest over COAST_MS so it settles
+      // instead of either cutting dead or spinning at full tilt forever.
+      let fade = 1;
+      if (heldSince) {
+        const held = Date.now() - heldSince;
+        if (held > HOLD_MS) {
+          fade = 1 - (held - HOLD_MS) / COAST_MS;
+          if (fade <= 0) { stopHover(); return; }
+          fade *= fade;                       // ease-out
+        }
+      }
+
       const cx = centerX();
       const dead = cardHalf() + DEAD_PAD;
       const dx = pointerX - cx;
@@ -795,8 +829,12 @@ if (coverflow && cards.length) {
       if (adx > dead) {
         const reach = Math.max(1, cx - dead);
         const t = Math.min(1, (adx - dead) / reach);
-        const speed = MIN_STEP + (MAX_STEP - MIN_STEP) * Math.pow(t, RAMP);
+        const speed = (MIN_STEP + (MAX_STEP - MIN_STEP) * Math.pow(t, RAMP)) * fade;
+        const before = cfPos;
         setPos(cfPos + Math.sign(dx) * speed);
+        // Held against the first/last founder — nothing left to reveal, so stop
+        // rather than burning frames on a clamped position.
+        if (heldSince && cfPos === before) { stopHover(); return; }
       }
       hoverRaf = requestAnimationFrame(tick);
     };
@@ -804,9 +842,29 @@ if (coverflow && cards.length) {
     const pin = coverflow.querySelector(".coverflow-pin") || coverflow;
     pin.addEventListener("mousemove", (e) => {
       pointerX = e.clientX;
+      heldSince = 0;                    // pointer is back — resume live tracking
       if (hoverRaf == null) hoverRaf = requestAnimationFrame(tick);
     }, { passive: true });
-    pin.addEventListener("mouseleave", () => { pointerX = null; });
+
+    // The pin stops at documentElement.clientWidth, so the native scrollbar sits
+    // just outside it — and scrollbars don't emit mousemove. Sliding onto one
+    // therefore fires mouseleave while the flick is at ~full speed, which used to
+    // cut it dead mid-motion. If the pointer left through a SIDE edge, keep
+    // feeding the loop that edge position so the motion carries on seamlessly
+    // (then coast to rest in tick). Leaving via the top or bottom still stops
+    // immediately — that's a genuine "done with the carousel" gesture.
+    pin.addEventListener("mouseleave", (e) => {
+      const r = pin.getBoundingClientRect();
+      const sideExit = (e.clientX >= r.right - 2 || e.clientX <= r.left + 2) &&
+                       e.clientY > r.top && e.clientY < r.bottom;
+      if (!sideExit) { pointerX = null; heldSince = 0; return; }
+      pointerX = e.clientX >= r.right - 2 ? r.right : r.left;  // pin to that edge
+      heldSince = Date.now();
+      if (hoverRaf == null) hoverRaf = requestAnimationFrame(tick);
+    });
+
+    // Pointer gone to another window/app — don't keep flicking in the background.
+    window.addEventListener("blur", stopHover);
   }
 
   // ─── Touch: drag to flick (mobile, where hover is unavailable) ───
@@ -1086,13 +1144,17 @@ if (odds.length) {
       ctx.fillText("x", endX + numW + 2, fEndY + 4 - bigSize * 0.36);
       ctx.textBaseline = "bottom";
 
-      // "Founder-led Stocks*"
-      ctx.font = "10px 'Formata Light', sans-serif";
+      // "Founder-led Stocks*" — series label under the end value. Shared size
+      // with "All Stocks" below; line gap tracks the size so the two-line
+      // label keeps its spacing if the size is tuned.
+      var subSize = W < 500 ? 11 : 12;
+      var subLead = Math.round(subSize * 1.4);
+      ctx.font = subSize + "px 'Formata Light', sans-serif";
       ctx.textBaseline = "top";
       ctx.fillStyle = "rgba(255,255,255,0.55)";
       var subY = fEndY + 8;
       ctx.fillText("Founder-led", endX, subY);
-      ctx.fillText("Stocks", endX, subY + 14);
+      ctx.fillText("Stocks", endX, subY + subLead);
 
       // "5x" — number italic serif, "x" upright, muted
       var midSize = W < 500 ? 28 : 40;
@@ -1108,8 +1170,8 @@ if (odds.length) {
       ctx.fillText("x", endX + numW5 + 1, mEndY + 2 - midSize * 0.36);
       ctx.textBaseline = "bottom";
 
-      // "All Stocks*"
-      ctx.font = "10px 'Formata Light', sans-serif";
+      // "All Stocks*" — same series-label size as "Founder-led Stocks" above
+      ctx.font = subSize + "px 'Formata Light', sans-serif";
       ctx.textBaseline = "top";
       ctx.fillStyle = "rgba(168,178,194,0.54)";
       ctx.fillText("All Stocks", endX, mEndY + 6);
