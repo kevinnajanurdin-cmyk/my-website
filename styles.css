@@ -4414,31 +4414,6 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    for its own Founder-led Advantage band; the two must not collide.
    ═══════════════════════════════════════════════════════════ */
 
-/* ── Section spine ───────────────────────────────────────── */
-.fla-spine {
-  position: fixed;
-  right: clamp(14px, 1.8vw, 30px);
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 40;
-  display: grid;
-  gap: 2px;
-  justify-items: center;
-}
-.fla-spine a {
-  display: grid; place-items: center;
-  width: 28px; height: 28px;
-  font-size: 10px; font-weight: 600;
-  letter-spacing: var(--track-label);
-  color: var(--ink-mute); opacity: .4;
-  transition: opacity .35s ease, color .35s ease;
-}
-.fla-spine a:hover { opacity: 1; }
-.fla-spine a.is-active { opacity: 1; color: var(--accent-deep); }
-.fla-spine.is-ondark a { color: var(--on-dark); }
-.fla-spine.is-ondark a.is-active { color: #fff; }
-@media (max-width: 1180px) { .fla-spine { display: none; } }
-
 /* ── Hero: pinned, dark, rippling ────────────────────────── */
 .fla-hero {
   /* The topbar + header (93px) sit above this in flow, so a full 100vh box
@@ -4455,15 +4430,32 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   background: var(--dark); color: var(--on-dark);
 }
 .fla-hero-inner { position: relative; z-index: 2; }
+
+/* ── Entrance ────────────────────────────────────────────────
+   The device the home hero uses: the glow blooms open first,
+   then the type arrives on a short stagger, reusing that hero's
+   own `hero-fade-up` keyframe so the two pages move alike. Every
+   element that starts at opacity 0 here has to be handed back its
+   opacity in the reduced-motion block, or killing the animation
+   leaves it invisible.
+   ────────────────────────────────────────────────────────── */
+.fla-mark, .fla-hero-title, .fla-hero-lede, .fla-cue {
+  opacity: 0;
+  animation: hero-fade-up .85s ease-out forwards;
+}
+.fla-mark       { animation-delay: .45s; }
+.fla-hero-title { animation-delay: .70s; }
+.fla-hero-lede  { animation-delay: .95s; }
+.fla-cue        { animation-delay: 1.6s; }
+
 .fla-mark { display: block; width: 48px; height: 1px; background: var(--on-dark-mute); margin: 0 0 clamp(22px, 3.4vh, 34px); }
 /* Sized so "The Founder-led" always holds one line — the break is explicit,
    so the title reads as exactly two lines at every width. */
 .fla-hero-title {
-  font-family: var(--serif); font-weight: 500;
-  /* One line. At 100px the title measures 1111px and the container's inner
-     width is ~0.77 of the viewport, so 7.4vw holds a single line from ~360px
-     up; capped at 96px so it never outgrows the 1240px container. */
-  font-size: min(7.4vw, 96px);
+  font-family: var(--serif); font-weight: 500; font-style: italic;
+  /* One line, at 80% of the size this was originally calibrated to
+     (7.4vw / 96px) — still comfortably inside the 1240px container. */
+  font-size: min(5.9vw, 77px);
   line-height: 1.04; letter-spacing: -.01em;
   margin: 0 0 clamp(22px, 3.2vh, 34px);
 }
@@ -4498,7 +4490,10 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   --dropw: clamp(34px, 3.2vw, 52px);  /* the droplet, at arm's length */
   --droph: calc(var(--dropw) * 1.273);/* = the symbol's 44:56 viewBox, or
                                          preserveAspectRatio letterboxes it */
-  --fall: 46vh;                       /* how far above the surface it starts */
+  /* The impact point sits 77% down a (100vh - 93px) hero, i.e. 77vh - 72px
+     below its top edge. Falling that plus a little starts the drop just
+     off the top of the frame, so it enters rather than appears. */
+  --fall: calc(77vh - 40px);
   --cycle: 9s;
   /* Not --line: that is a site-wide hex border token, and shadowing it here
      with an RGB triplet would break any bordered thing dropped into the
@@ -4511,7 +4506,13 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   border-radius: 50%;
   background: radial-gradient(circle, rgba(100, 122, 154, .30) 0%, rgba(88, 106, 134, .13) 36%, transparent 66%);
   transition: transform 1.6s cubic-bezier(.2, .7, .2, 1);
+  /* opacity only — the page script owns this element's transform for the
+     pointer drift, and a `forwards` animation on transform would win the
+     cascade against the inline style and freeze it */
+  opacity: 0;
+  animation: fla-glow-in 2.4s cubic-bezier(.2, .7, .2, 1) .2s forwards;
 }
+@keyframes fla-glow-in { to { opacity: 1; } }
 /* A tighter lift centred on the impact point, flattened to the pool's own
    proportions. It is atmosphere, not a surface — the linework has to sit in
    something, but anything with a readable edge would put the rendered look
@@ -4524,6 +4525,14 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   background: radial-gradient(closest-side,
     rgba(132, 157, 192, .38) 0%, rgba(114, 137, 170, .22) 38%,
     rgba(96, 115, 146, .09) 66%, transparent 84%);
+  /* the home hero's glow-bloom, on the layer the script does not touch */
+  opacity: 0; transform: scale(.55);
+  animation: fla-sheen-bloom 2.8s cubic-bezier(.2, .7, .2, 1) .2s forwards;
+}
+@keyframes fla-sheen-bloom {
+  0%   { opacity: 0; transform: scale(.55);  filter: brightness(2); }
+  50%  { opacity: 1; transform: scale(1.06); filter: brightness(1.15); }
+  100% { opacity: 1; transform: scale(1);    filter: brightness(1); }
 }
 .fla-drop-defs { position: absolute; width: 0; height: 0; }
 
@@ -4582,7 +4591,9 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    but not a CSS transform on the host <svg>, which is where the squeeze is. */
 .fla-drop {
   stroke-width: 1.1;
-  animation: fla-drop var(--cycle) linear infinite;
+  opacity: 0;
+  animation: fla-drop var(--cycle) linear infinite,
+             fla-drop-fade var(--cycle) linear infinite;
 }
 /* The reflection rising to meet the drop. Its translateY values are the
    drop's exactly — the flip turns a fall into a rise from below the
@@ -4594,7 +4605,8 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   /* softer than anything else on the page: a crisp outline down there reads
      as a second droplet rather than as the first one reflected */
   filter: blur(1.4px);
-  animation: fla-mirror var(--cycle) linear infinite;
+  animation: fla-mirror var(--cycle) linear infinite,
+             fla-mirror-fade var(--cycle) linear infinite;
 }
 /* The Worthington jet — the column the landing throws back up. The same
    outline drawn tall, with its base masked so the line dissolves into the
@@ -4604,58 +4616,96 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   -webkit-mask-image: linear-gradient(180deg, #000 0 52%, transparent 88%);
           mask-image: linear-gradient(180deg, #000 0 52%, transparent 88%);
   opacity: 0;
-  animation: fla-column var(--cycle) cubic-bezier(.3, .7, .4, 1) infinite;
+  animation: fla-column var(--cycle) linear infinite,
+             fla-column-fade var(--cycle) linear infinite;
 }
 .fla-bead {
   stroke-width: 1.65;                 /* ÷ scaleX(.66) */
   opacity: 0;
-  animation: fla-bead var(--cycle) cubic-bezier(.4, 0, .5, 1) infinite;
+  animation: fla-bead var(--cycle) linear infinite,
+             fla-bead-fade var(--cycle) linear infinite;
 }
 
-/* The lane runs behind the headline — no column of the hero is clear of it
-   at any width — so the drop stays hidden until it is below the last
-   descender and only then resolves out of the dark. It is travelling at
-   speed by that point, which is what the acceleration wants anyway. */
+/* ── Motion ──────────────────────────────────────────────────
+   Gravity is a quadratic, and a quadratic converts to a cubic
+   Bézier exactly with its control points at 1/3 and 2/3 — so
+   `cubic-bezier(.333, 0, .667, .333)` IS free-fall and
+   `cubic-bezier(.333, .667, .667, 1)` is its mirror. Easing the
+   motion this way beats approximating the curve with a run of
+   keyframes: no polyline facets for the eye to catch, and the
+   whole arc is two keyframes instead of nine.
+
+   Opacity rides its own animation on each element, so adding a
+   fade step can never split a motion interval and break the
+   easing above it.
+   ────────────────────────────────────────────────────────── */
 @keyframes fla-drop {
-  0%     { opacity: 0; transform: translateY(calc(var(--fall) * -1))     scale(.94, 1.05); }
-  6.5%   { opacity: 0; transform: translateY(calc(var(--fall) * -.9375)) scale(.93, 1.09); }
-  13%    { opacity: 0; transform: translateY(calc(var(--fall) * -.75))   scale(.90, 1.15); }
-  18%    { opacity: 0; transform: translateY(calc(var(--fall) * -.51))   scale(.87, 1.21); }
-  21%    { opacity: 1; transform: translateY(calc(var(--fall) * -.33))   scale(.85, 1.25); }
-  24%    { opacity: 1; transform: translateY(calc(var(--fall) * -.115))  scale(.84, 1.29); }
-  26%    { opacity: 1; transform: translateY(0) scale(1.02, .92); }
-  28%    { opacity: .7; transform: translateY(0) scale(1.62, .32); }
-  30.5%  { opacity: 0; transform: translateY(0) scale(2.2, .08); }
-  100%   { opacity: 0; transform: translateY(0) scale(2.2, .08); }
+  0%     { transform: translateY(calc(var(--fall) * -1)) scale(.95, 1.04);
+           animation-timing-function: cubic-bezier(.333, 0, .667, .333); }
+  26%    { transform: translateY(0) scale(1.02, .92); }
+  28%    { transform: translateY(0) scale(1.62, .32); }
+  30.5%  { transform: translateY(0) scale(2.2, .08); }
+  100%   { transform: translateY(0) scale(2.2, .08); }
 }
+@keyframes fla-drop-fade {
+  0%    { opacity: 0; }
+  3%    { opacity: 1; }
+  26%   { opacity: 1; }
+  28%   { opacity: .7; }
+  30.5% { opacity: 0; }
+  100%  { opacity: 0; }
+}
+/* Same motion as the drop with the flip in front of it, so the two stay
+   locked together. It stays dark until the drop is close enough to the
+   surface for a reflection to mean anything. */
 @keyframes fla-mirror {
-  0%     { opacity: 0;   transform: scaleY(-.46) translateY(calc(var(--fall) * -1))     scale(.94, 1.05); }
-  13%    { opacity: 0;   transform: scaleY(-.46) translateY(calc(var(--fall) * -.75))   scale(.90, 1.15); }
-  18%    { opacity: 0;   transform: scaleY(-.46) translateY(calc(var(--fall) * -.51))   scale(.87, 1.21); }
-  21%    { opacity: .16; transform: scaleY(-.46) translateY(calc(var(--fall) * -.33))   scale(.85, 1.25); }
-  24%    { opacity: .3;  transform: scaleY(-.46) translateY(calc(var(--fall) * -.115))  scale(.84, 1.29); }
-  26%    { opacity: .4;  transform: scaleY(-.46) translateY(0) scale(1.02, .92); }
-  29%    { opacity: 0;   transform: scaleY(-.46) translateY(0) scale(1.7, .3); }
-  100%   { opacity: 0;   transform: scaleY(-.46) translateY(0) scale(1.7, .3); }
+  0%    { transform: scaleY(-.46) translateY(calc(var(--fall) * -1)) scale(.95, 1.04);
+          animation-timing-function: cubic-bezier(.333, 0, .667, .333); }
+  26%   { transform: scaleY(-.46) translateY(0) scale(1.02, .92); }
+  29%   { transform: scaleY(-.46) translateY(0) scale(1.7, .3); }
+  100%  { transform: scaleY(-.46) translateY(0) scale(1.7, .3); }
 }
+@keyframes fla-mirror-fade {
+  0%, 13% { opacity: 0; }
+  19.5%   { opacity: .16; }
+  22.75%  { opacity: .3; }
+  26%     { opacity: .4; }
+  29%     { opacity: 0; }
+  100%    { opacity: 0; }
+}
+/* Rises decelerating to its apex at 37%, then collapses accelerating. */
 @keyframes fla-column {
-  0%, 26.5% { opacity: 0;   transform: scaleY(0)    scaleX(1.5); }
-  29%       { opacity: .9;  transform: scaleY(.72)  scaleX(.94); }
-  33%       { opacity: .95; transform: scaleY(1.48) scaleX(.72); }
-  37%       { opacity: .95; transform: scaleY(1.72) scaleX(.62); }
-  44%       { opacity: .85; transform: scaleY(1.5)  scaleX(.56); }
-  52%       { opacity: 0;   transform: scaleY(.22)  scaleX(.95); }
-  100%      { opacity: 0;   transform: scaleY(0)    scaleX(1.1); }
+  0%, 26.5% { transform: scaleY(0) scaleX(1.5);
+              animation-timing-function: cubic-bezier(.333, .667, .667, 1); }
+  37%       { transform: scaleY(1.72) scaleX(.62);
+              animation-timing-function: cubic-bezier(.333, 0, .667, .333); }
+  53%       { transform: scaleY(0) scaleX(1.05); }
+  100%      { transform: scaleY(0) scaleX(1.1); }
 }
+@keyframes fla-column-fade {
+  0%, 26.5% { opacity: 0; }
+  29%       { opacity: 1; }
+  45%       { opacity: 1; }
+  53%       { opacity: 0; }
+  100%      { opacity: 0; }
+}
+/* One clean ballistic arc: up on the decelerating half, down on the
+   accelerating one, apex at 41.25%. */
 @keyframes fla-bead {
-  0%, 28.5% { opacity: 0;  transform: translateY(0) scale(.5, .5); }
-  31%       { opacity: 1;  transform: translateY(calc(var(--droph) * -.9))   scale(.66, .74); }
-  37%       { opacity: 1;  transform: translateY(calc(var(--droph) * -1.9))  scale(.66, .72); }
-  41%       { opacity: 1;  transform: translateY(calc(var(--droph) * -2.12)) scale(.64, .7); }
-  47%       { opacity: 1;  transform: translateY(calc(var(--droph) * -1.44)) scale(.66, .76); }
-  52%       { opacity: .7; transform: translateY(calc(var(--droph) * -.18))  scale(.76, .62); }
-  54%       { opacity: 0;  transform: translateY(0) scale(1.1, .22); }
-  100%      { opacity: 0;  transform: translateY(0) scale(1.1, .22); }
+  0%, 28.5% { transform: translateY(0) scale(.62, .68);
+              animation-timing-function: cubic-bezier(.333, .667, .667, 1); }
+  41.25%    { transform: translateY(calc(var(--droph) * -2.2)) scale(.65, .71);
+              animation-timing-function: cubic-bezier(.333, 0, .667, .333); }
+  54%       { transform: translateY(0) scale(.8, .6); }
+  55.5%     { transform: translateY(0) scale(1.15, .2); }
+  100%      { transform: translateY(0) scale(1.15, .2); }
+}
+@keyframes fla-bead-fade {
+  0%, 28.5% { opacity: 0; }
+  31%       { opacity: 1; }
+  52%       { opacity: 1; }
+  55.5%     { opacity: 0; }
+  100%      { opacity: 0; }
 }
 
 .fla-cue { position: absolute; left: 50%; bottom: 38px; z-index: 2; width: 30px; height: 50px; margin-left: -15px; display: grid; place-items: start center; }
@@ -4669,6 +4719,12 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 @media (prefers-reduced-motion: reduce) {
   .fla-waves ellipse, .fla-drop, .fla-mirror,
   .fla-column, .fla-bead, .fla-cue span::after { animation: none; }
+  /* the entrance sets these to opacity 0 and animates them back — killing
+     the animation without restoring it would leave the hero blank */
+  .fla-mark, .fla-hero-title, .fla-hero-lede, .fla-cue, .fla-glow, .fla-sheen {
+    animation: none; opacity: 1;
+  }
+  .fla-sheen { transform: none; filter: none; }
   .fla-glow { transition: none; }
   .fla-drop, .fla-mirror { opacity: 0; }
   .fla-waves ellipse:nth-child(1) { transform: scale(.16); opacity: .62; }
@@ -4679,7 +4735,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   .fla-waves ellipse:nth-child(6) { transform: scale(.88); opacity: .22; }
   .fla-waves ellipse:nth-child(7) { transform: scale(1);   opacity: .14; }
   .fla-column { opacity: 1; transform: scaleY(1.72) scaleX(.62); }
-  .fla-bead { opacity: 1; transform: translateY(calc(var(--droph) * -2.12)) scale(.64, .7); }
+  .fla-bead { opacity: 1; transform: translateY(calc(var(--droph) * -2.2)) scale(.65, .71); }
 }
 
 /* ── The curtain: everything below scrolls over the pinned hero ── */
@@ -4777,29 +4833,16 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 /* contain, not cover: the frame is taller than 16:9 so it can match the blurb
    beside it, and the poster carries titling on its right that must not be cut. */
 .fla-video-el { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
-.fla-play {
-  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  width: 72px; height: 72px; border-radius: 50%; padding: 0;
-  display: grid; place-items: center; cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, .5);
-  background: rgba(12, 18, 30, .3); color: #fff;
-  transition: transform .4s cubic-bezier(.2,.7,.2,1), background .4s ease, border-color .4s ease;
-}
-.fla-play::before {
-  content: ""; position: absolute; inset: -1px; border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.36); animation: fla-pulse 2.8s cubic-bezier(.3,0,.5,1) infinite;
-}
-@keyframes fla-pulse { 0% { transform: scale(1); opacity: .8 } 70%, 100% { transform: scale(1.5); opacity: 0 } }
-.fla-play svg { width: 24px; height: 24px; margin-left: 3px; }
-.fla-play:hover { transform: translate(-50%, -50%) scale(1.07); background: rgba(12,18,30,.58); border-color: #fff; }
-.fla-video.is-playing .fla-play { display: none; }
+/* the whole frame is the pause/play target */
+.fla-video-frame { cursor: pointer; }
 .fla-video figcaption { margin-top: 12px; font-size: 11px; font-weight: 600; letter-spacing: var(--track-label); text-transform: uppercase; color: var(--ink-mute); }
-@media (prefers-reduced-motion: reduce) { .fla-play::before { animation: none; } }
 
 /* Holdings. Each cell is bordered in its own right and the row is gapped, so a
    part-filled last row simply has fewer tiles — no empty grey cell. */
+/* the hint now carries the clearance from the video figure above, so the
+   grid only needs the small gap under the hint itself */
 .fla-holdings {
-  list-style: none; margin: clamp(40px, 6vh, 72px) 0 0; padding: 0;
+  list-style: none; margin: clamp(14px, 2vh, 20px) 0 0; padding: 0;
   /* flex, not grid: 17 logos never divide evenly, so a part-filled last row
      centres instead of stranding one tile against an empty gap. */
   display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
@@ -4807,7 +4850,12 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .fla-holdings li {
   flex: 0 0 118px;
   background: #fff; border: 1px solid var(--line); border-radius: 3px;
-  display: grid; place-items: center; padding: 20px 16px; min-height: 84px;
+  display: grid; place-items: center; min-height: 84px;
+}
+/* the tile's padding lives on the link, so the whole tile is the hit area */
+.fla-holdings li > a {
+  display: grid; place-items: center;
+  width: 100%; height: 100%; padding: 20px 16px;
 }
 .fla-act--paper .fla-holdings li { background: #fff; }
 .fla-holdings img {
@@ -4817,6 +4865,18 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 }
 .fla-holdings li:hover { border-color: var(--accent); }
 .fla-holdings li:hover img { filter: none; opacity: 1; }
+/* same mark as the home carousel's "Click a founder…" line, since it is
+   telling you the same thing about the same cards */
+.fla-holdings-hint {
+  text-align: center;
+  /* the gap off the video figure above — the grid's own top margin is small
+     so this number is the whole separation between the two blocks */
+  margin: clamp(76px, 10vh, 120px) 0 0;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
 
 /* ── 04 Reasons — small index marks, not decorative numerals ── */
 .fla-reasons {
@@ -4955,7 +5015,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   }
   .fla-glow { width: 130vmax; height: 130vmax; margin: -65vmax 0 0 -65vmax; }
   /* below here a single line would be too small to carry the page — let it wrap */
-  .fla-hero-title { font-size: clamp(34px, 8.4vw, 54px); }
+  .fla-hero-title { font-size: clamp(27px, 6.7vw, 43px); }
   .fla-cue { display: none; }
   .fla-spec-grid, .fla-etf-grid, .fla-outperf-grid { grid-template-columns: 1fr; }
   .fla-outperf-copy { max-width: 62ch; }

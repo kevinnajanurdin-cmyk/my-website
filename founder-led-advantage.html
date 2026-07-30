@@ -70,18 +70,6 @@
     </div>
   </header>
 
-  <!-- Section spine — numerals only, so no invented labels; each carries its
-       real heading as its accessible name and hover title. -->
-  <nav class="fla-spine" aria-label="Sections on this page">
-    <a href="#fla-why"      data-spine><span>01</span></a>
-    <a href="#fla-outperf"  data-spine><span>02</span></a>
-    <a href="#fla-spec"     data-spine><span>03</span></a>
-    <a href="#fla-advisers" data-spine><span>04</span></a>
-    <a href="#fla-proof"    data-spine><span>05</span></a>
-    <a href="#fla-etf"      data-spine><span>06</span></a>
-    <a href="#fla-team"     data-spine><span>07</span></a>
-  </nav>
-
   <main class="fla-page">
 
     <!-- ══ Hero — pins to the viewport while the page scrolls over it, the
@@ -188,43 +176,49 @@
             <div class="fla-spec-copy">
               <h2 class="fla-h2" id="fla-spec-h" data-reveal>A specialist way to access the founder-led advantage</h2>
               <p class="fla-say fla-say--tight" data-reveal style="--d:.06s">Founder quality sits at the centre of Ziller&rsquo;s investment process. Through intensive founder assessment, business quality analysis and disciplined valuation, Ziller builds a highly selective portfolio of 15 to 25 global founder-led companies chosen for their ability to adapt, grow and compound shareholder value over time.</p>
-              <p data-reveal style="--d:.12s">Watch Joseph Ziller, CIO and Founder, explain why Ziller believes founder-led businesses can be a powerful source of long-term opportunity in global equities.</p>
             </div>
 
             <figure class="fla-video" data-video data-reveal style="--d:.16s">
               <div class="fla-video-frame">
-                <video class="fla-video-el" playsinline preload="none"
+                <!-- No `muted` attribute: we want sound. The script tries an
+                     unmuted play first and only falls back to muted if the
+                     browser refuses. preload=metadata so it starts promptly. -->
+                <video class="fla-video-el" playsinline preload="metadata"
                        poster="https://uat.zillerfm.com/wp-content/uploads/c8e15d_29ba757365ba4e2198665a4349c3fbf5mv2.png">
                   <source src="https://uat.zillerfm.com/wp-content/uploads/file2.mp4" type="video/mp4" />
                   <source src="https://uat.zillerfm.com/wp-content/uploads/file2.webm" type="video/webm" />
                 </video>
-                <button class="fla-play" type="button" aria-label="Play the video">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 5.1v13.8L19.2 12z" fill="currentColor"/></svg>
-                </button>
+                <!-- No overlay of any kind: the frame itself is the
+                     pause/play control. -->
               </div>
               <figcaption>Joseph Ziller &middot; CIO &amp; Founder</figcaption>
             </figure>
           </div>
 
-          <!-- The portfolio those 15–25 companies actually are -->
+          <!-- The portfolio those 15–25 companies actually are. Each tile
+               deep-links to that company's founder card on the home page:
+               #founder-<slug of the company name>, resolved in script.js
+               against the same `founders` array the carousel is built from.
+               Tesla and SpaceX both land on Musk. -->
+          <p class="fla-holdings-hint" data-reveal>Click to learn about the founder</p>
           <ul class="fla-holdings" aria-label="Founder-led companies held in the portfolio">
-            <li data-reveal><img src="assets/companies/Nvidia_logo.svg.png" alt="Nvidia" loading="lazy" /></li>
-            <li data-reveal style="--d:.02s"><img src="assets/companies/Tesla_logo.png" alt="Tesla" loading="lazy" /></li>
-            <li data-reveal style="--d:.04s"><img src="assets/companies/Palantir_Technologies_logo.svg.png" alt="Palantir" loading="lazy" /></li>
-            <li data-reveal style="--d:.06s"><img src="assets/companies/Coinbase.svg.png" alt="Coinbase" loading="lazy" /></li>
-            <li data-reveal style="--d:.08s"><img src="assets/companies/spacex.svg" alt="SpaceX" loading="lazy" /></li>
-            <li data-reveal style="--d:.1s"><img src="assets/companies/XPeng-Logo.png" alt="XPeng" loading="lazy" /></li>
-            <li data-reveal style="--d:.12s"><img src="assets/companies/Figma-Logo.png" alt="Figma" loading="lazy" /></li>
-            <li data-reveal style="--d:.14s"><img src="assets/companies/Rocket_Lab_logo.svg.png" alt="Rocket Lab" loading="lazy" /></li>
-            <li data-reveal style="--d:.16s"><img src="assets/companies/AXON_Company_logo.svg.png" alt="Axon" loading="lazy" /></li>
-            <li data-reveal style="--d:.18s"><img src="assets/companies/Contemporary_Amperex_Technology_logo.svg.png" alt="CATL" loading="lazy" /></li>
-            <li data-reveal style="--d:.2s"><img src="assets/companies/Fortinet_logo.svg" alt="Fortinet" loading="lazy" /></li>
-            <li data-reveal style="--d:.22s"><img src="assets/companies/Mercado_Libre_logo_(Spanish_version).svg" alt="Mercado Libre" loading="lazy" /></li>
-            <li data-reveal style="--d:.24s"><img src="assets/companies/PME.AX_BIG-541b1641.png" alt="Pro Medicus" loading="lazy" /></li>
-            <li data-reveal style="--d:.26s"><img src="assets/companies/LMN.V_BIG-19c8956c.png" alt="Lumine" loading="lazy" /></li>
-            <li data-reveal style="--d:.28s"><img src="assets/companies/roblox.png" alt="Roblox" loading="lazy" /></li>
-            <li data-reveal style="--d:.3s"><img src="assets/companies/kaspi.png" alt="Kaspi" loading="lazy" /></li>
-            <li data-reveal style="--d:.32s"><img src="assets/companies/19376c0c-5919-4cc1-af04-097179e8140a.png" alt="Money Forward" loading="lazy" /></li>
+            <li data-reveal><a href="index.html#founder-nvidia"><img src="assets/companies/Nvidia_logo.svg.png" alt="Nvidia" loading="lazy" /></a></li>
+            <li data-reveal style="--d:.02s"><a href="index.html#founder-tesla"><img src="assets/companies/Tesla_logo.png" alt="Tesla" loading="lazy" /></a></li>
+            <li data-reveal style="--d:.04s"><a href="index.html#founder-palantir"><img src="assets/companies/Palantir_Technologies_logo.svg.png" alt="Palantir" loading="lazy" /></a></li>
+            <li data-reveal style="--d:.06s"><a href="index.html#founder-coinbase"><img src="assets/companies/Coinbase.svg.png" alt="Coinbase" loading="lazy" /></a></li>
+            <li data-reveal style="--d:.08s"><a href="index.html#founder-spacex"><img src="assets/companies/spacex.svg" alt="SpaceX" loading="lazy" /></a></li>
+            <li data-reveal style="--d:.1s"><a href="index.html#founder-xpeng"><img src="assets/companies/XPeng-Logo.png" alt="XPeng" loading="lazy" /></a></li>
+            <li data-reveal style="--d:.12s"><a href="index.html#founder-figma"><img src="assets/companies/Figma-Logo.png" alt="Figma" loading="lazy" /></a></li>
+            <li data-reveal style="--d:.14s"><a href="index.html#founder-rocket-lab"><img src="assets/companies/Rocket_Lab_logo.svg.png" alt="Rocket Lab" loading="lazy" /></a></li>
+            <li data-reveal style="--d:.16s"><a href="index.html#founder-axon"><img src="assets/companies/AXON_Company_logo.svg.png" alt="Axon" loading="lazy" /></a></li>
+            <li data-reveal style="--d:.18s"><a href="index.html#founder-catl"><img src="assets/companies/Contemporary_Amperex_Technology_logo.svg.png" alt="CATL" loading="lazy" /></a></li>
+            <li data-reveal style="--d:.2s"><a href="index.html#founder-fortinet"><img src="assets/companies/Fortinet_logo.svg" alt="Fortinet" loading="lazy" /></a></li>
+            <li data-reveal style="--d:.22s"><a href="index.html#founder-mercado-libre"><img src="assets/companies/Mercado_Libre_logo_(Spanish_version).svg" alt="Mercado Libre" loading="lazy" /></a></li>
+            <li data-reveal style="--d:.24s"><a href="index.html#founder-pro-medicus"><img src="assets/companies/PME.AX_BIG-541b1641.png" alt="Pro Medicus" loading="lazy" /></a></li>
+            <li data-reveal style="--d:.26s"><a href="index.html#founder-lumine"><img src="assets/companies/LMN.V_BIG-19c8956c.png" alt="Lumine" loading="lazy" /></a></li>
+            <li data-reveal style="--d:.28s"><a href="index.html#founder-roblox"><img src="assets/companies/roblox.png" alt="Roblox" loading="lazy" /></a></li>
+            <li data-reveal style="--d:.3s"><a href="index.html#founder-kaspi"><img src="assets/companies/kaspi.png" alt="Kaspi" loading="lazy" /></a></li>
+            <li data-reveal style="--d:.32s"><a href="index.html#founder-money-forward"><img src="assets/companies/19376c0c-5919-4cc1-af04-097179e8140a.png" alt="Money Forward" loading="lazy" /></a></li>
           </ul>
         </div>
       </section>
@@ -253,7 +247,7 @@
       <!-- ══ CTA ══ -->
       <section class="fla-say-band" aria-label="Speak with our team">
         <div class="container fla-say-band-inner">
-          <p data-reveal>If you&rsquo;d like to explore how this strategy could fit within client portfolios, speak with our <a class="fla-inline" href="contact.html">team</a>.</p>
+          <p data-reveal>If you&rsquo;d like to explore how this strategy could fit within client portfolios, speak with our team.</p>
           <a class="btn btn-outline" href="contact.html" data-reveal style="--d:.08s">Contact us</a>
         </div>
       </section>
@@ -283,17 +277,17 @@
             <img src="assets/icons/proof-performance.png" alt="" />
           </span>
           <h3>Strong fund performance</h3>
-          <p>The fund has generated net returns of 22.6% p.a. since inception (1 November 2022), versus 18.5% for the benchmark as at 30 June 2026. Past performance is not a reliable indicator of future performance.</p>
+          <p>The fund has generated net returns of 22.6% p.a. since inception (1 November 2022), versus 18.5% for the benchmark as at 30 June 2026.<a class="fla-ref" href="#fla-note-2" aria-label="See footnote 2"><sup>2</sup></a></p>
         </article>
           </div>
         </div>
       </section>
 
       <!-- ══ CTA ══ -->
-      <section class="fla-say-band fla-say-band--paper" aria-label="Discuss the strategy">
+      <section class="fla-say-band" aria-label="Discuss the strategy">
         <div class="container fla-say-band-inner">
-          <p data-reveal>If you&rsquo;d like to discuss the strategy, the process or the fund&rsquo;s performance in more detail, speak with our <a class="fla-inline" href="contact.html">team</a>.</p>
-          <a class="btn btn-primary" href="contact.html" data-reveal style="--d:.08s">Contact us</a>
+          <p data-reveal>If you&rsquo;d like to discuss the strategy, the process or the fund&rsquo;s performance in more detail, speak with our team.</p>
+          <a class="btn btn-outline" href="contact.html" data-reveal style="--d:.08s">Contact us</a>
         </div>
       </section>
 
@@ -363,6 +357,7 @@
       <section class="fla-notes" aria-label="Notes">
         <div class="container">
           <p id="fla-note-1"><span>1</span> Based on an analysis of MSCI All Country World Index Constituents from 2006 &ndash; 2026 by Ziller Funds Management. All Stocks = MSCI All Country World Index (AUD). Founder-led stocks have been chosen based on Ziller&rsquo;s experience and selections are subjective and in no way meant to be definitive or exhaustive. Whilst every effort has been made to ensure that the information is accurate; its accuracy, reliability or completeness is not guaranteed. Data has been sourced from MSCI and LSEG. Past performance is not a reliable indicator of future performance.</p>
+          <p id="fla-note-2"><span>2</span> Past performance is not a reliable indicator of future performance.</p>
         </div>
       </section>
 
@@ -465,42 +460,6 @@
         }
       }
 
-      // ── Spine: mark the act you are in, and flip to light over dark acts.
-      //    Each numeral takes its real heading as its accessible name so no
-      //    label copy is invented. ──
-      var spine = document.querySelector('.fla-spine');
-      var links = [].slice.call(document.querySelectorAll('[data-spine]'));
-      var acts = links.map(function (a) {
-        var el = document.querySelector(a.getAttribute('href'));
-        if (el) {
-          var h = el.querySelector('h2');
-          if (h) { a.setAttribute('aria-label', h.textContent.trim()); a.title = h.textContent.trim(); }
-        }
-        return el;
-      });
-      function onSpine() {
-        if (!spine || !links.length) return;
-        var mid = (window.innerHeight || 800) * 0.42;
-        var active = -1;
-        for (var i = 0; i < acts.length; i++) {
-          if (acts[i] && acts[i].getBoundingClientRect().top <= mid) active = i;
-        }
-        links.forEach(function (a, i) { a.classList.toggle('is-active', i === active); });
-        // Is the spine sitting over a dark act? Hit-test what is actually
-        // painted there — the hero is pinned, so a purely geometric test keeps
-        // reporting it even once the curtain has scrolled over the top of it.
-        var sr = spine.getBoundingClientRect();
-        var pe = spine.style.pointerEvents;
-        spine.style.pointerEvents = 'none';   // so the probe sees past the spine
-        var probe = document.elementFromPoint(
-          Math.min(window.innerWidth - 2, Math.max(2, sr.left + sr.width / 2)),
-          Math.min(window.innerHeight - 2, Math.max(2, sr.top + sr.height / 2))
-        );
-        spine.style.pointerEvents = pe;
-        spine.classList.toggle('is-ondark', !!(probe && probe.closest(
-          '.fla-act--dark, .fla-say-band:not(.fla-say-band--paper), .fla-pds, .fla-hero'
-        )));
-      }
 
       // ── Count the 3.3% up as it arrives ──
       var counters = [].slice.call(document.querySelectorAll('[data-count]'));
@@ -525,7 +484,7 @@
         }
       }
 
-      function onScroll() { onReveal(); onSpine(); onCount(); }
+      function onScroll() { onReveal(); onCount(); }
       onScroll();
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', onScroll, { passive: true });
@@ -561,18 +520,86 @@
       if (fig) {
         var vid = fig.querySelector('.fla-video-el');
         var first = vid && vid.querySelector('source');
-        var play = fig.querySelector('.fla-play');
         if (!first || !first.getAttribute('src')) {
-          if (play) play.remove();
           if (vid) vid.remove();
           fig.remove();
-        } else if (play) {
-          play.addEventListener('click', function () {
-            fig.classList.add('is-playing');
-            vid.setAttribute('controls', '');
+        } else {
+          var frame = fig.querySelector('.fla-video-frame');
+
+          // ── Always start with sound. ────────────────────────────────
+          // Browsers only permit unmuted autoplay once the visitor has
+          // enough media engagement with the domain; where they refuse,
+          // play() rejects and the clip would not start at all. So we
+          // attempt sound first, and only if that is refused do we start
+          // muted — then switch the sound on at the very first instant the
+          // browser will accept it. Nothing is shown and nothing is asked.
+
+          // Unmuting an already-playing element without user activation
+          // makes Chrome pause it, so always re-assert play() afterwards.
+          function soundOn() {
+            if (!vid.muted) return;
+            vid.muted = false;
             var p = vid.play();
-            if (p && p.catch) p.catch(function () { vid.setAttribute('controls', ''); });
+            if (p && p.catch) p.catch(function () { vid.muted = true; });
+          }
+
+          // Armed from page load, not just after a refusal: any click or
+          // keypress anywhere counts, so by the time the clip scrolls into
+          // view the sound is usually already unlocked.
+          var GESTURES = ['pointerdown', 'keydown', 'touchstart'];
+          function onFirstGesture(e) {
+            // A press on the frame belongs to the frame's own click handler,
+            // which decides between "buy sound" and "pause". Unmuting here
+            // first would leave that click nothing to do but pause — which
+            // is what made sound arrive only after a pause and a resume.
+            var onFrame = e && e.target && e.target.closest &&
+                          e.target.closest('.fla-video-frame');
+            GESTURES.forEach(function (ev) {
+              document.removeEventListener(ev, onFirstGesture, true);
+            });
+            if (!onFrame) soundOn();
+          }
+          GESTURES.forEach(function (e) {
+            document.addEventListener(e, onFirstGesture, true);
           });
+
+          function start() {
+            if (!vid.paused) return;
+            vid.muted = false;
+            var p = vid.play();
+            if (p && p.catch) {
+              p.catch(function () {
+                vid.muted = true;          // the only way it starts at all
+                var q = vid.play();
+                if (q && q.catch) q.catch(function () {});
+              });
+            }
+          }
+
+          // The frame is the play/pause control — except while the clip is
+          // running silently because the browser refused sound. Pausing
+          // then would spend the visitor's one unlocking gesture on a
+          // pause, which is why sound previously only arrived after a
+          // pause-and-resume. That first click buys sound instead; every
+          // click after it pauses and resumes as normal.
+          frame.addEventListener('click', function () {
+            if (vid.paused) { start(); return; }
+            if (vid.muted) { soundOn(); return; }
+            vid.pause();
+          });
+
+          // ── Play while it is on screen, pause once it is not. Skipped
+          //    under reduced motion, where the frame click is the only way
+          //    to start it. ──
+          if (!reduce && 'IntersectionObserver' in window) {
+            var seen = new IntersectionObserver(function (entries) {
+              entries.forEach(function (en) {
+                if (en.isIntersecting) { start(); }
+                else if (!vid.paused) { vid.pause(); }
+              });
+            }, { threshold: 0.5 });
+            seen.observe(fig);
+          }
         }
       }
     })();

@@ -1243,3 +1243,31 @@ if (video && heroSection) {
     videoIO.observe(video);
   }
 }
+
+// ─── Deep link to a founder card ───────────────────────
+// The Founder-led Advantage page links each holding logo here as
+// "/#founder-<company slug>". Resolve it against the same `founders`
+// array the carousel is built from, so the two can never drift apart.
+// Runs after a tick: coverflowGlideTo is assigned further down this file
+// and the stage needs one layout pass before it can glide anywhere.
+if (stage) {
+  const founderSlug = (s) =>
+    s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const openFounderFromHash = () => {
+    const m = /^#founder-(.+)$/.exec(location.hash || "");
+    if (!m) return;
+    const want = m[1].toLowerCase();
+    const i = founders.findIndex(
+      (f) => founderSlug(f.company) === want ||
+             (f.company2 && founderSlug(f.company2) === want)
+    );
+    if (i < 0) return;
+    // instant, not smooth: arriving from another page should land already
+    // there rather than animate the whole way down
+    document.getElementById("founders")
+      ?.scrollIntoView({ behavior: "instant", block: "start" });
+    openPanel(i);
+  };
+  setTimeout(openFounderFromHash, 0);
+  window.addEventListener("hashchange", openFounderFromHash);
+}
