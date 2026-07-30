@@ -4487,7 +4487,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   --fy: 77%;                          /* low enough that the widest ring
                                          stays clear of the lede */
   --pool: min(78vw, 1040px);          /* width of the outermost ring */
-  --dropw: clamp(34px, 3.2vw, 52px);  /* the droplet, at arm's length */
+  --dropw: clamp(21px, 2vw, 32px);    /* a bead of water, not a motif */
   --droph: calc(var(--dropw) * 1.273);/* = the symbol's 44:56 viewBox, or
                                          preserveAspectRatio letterboxes it */
   /* The impact point sits 77% down a (100vh - 93px) hero, i.e. 77vh - 72px
@@ -4590,7 +4590,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    all three render at ~1px. non-scaling-stroke cancels the viewBox scale
    but not a CSS transform on the host <svg>, which is where the squeeze is. */
 .fla-drop {
-  stroke-width: 1.1;
+  stroke-width: 1;                    /* the ring hairline exactly */
   opacity: 0;
   animation: fla-drop var(--cycle) linear infinite,
              fla-drop-fade var(--cycle) linear infinite;
@@ -4600,7 +4600,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    surface. Softened just enough that it reads as reflected rather than as
    a second object; it never gets as strong as the line above it. */
 .fla-mirror {
-  stroke-width: 1.3;
+  stroke-width: 1.15;
   opacity: 0;
   /* softer than anything else on the page: a crisp outline down there reads
      as a second droplet rather than as the first one reflected */
@@ -4612,7 +4612,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    outline drawn tall, with its base masked so the line dissolves into the
    surface instead of closing into a bulb. */
 .fla-column {
-  stroke-width: 1.36;                 /* ÷ scaleX(.81) */
+  stroke-width: 1.23;                 /* ÷ scaleX(.81) */
   -webkit-mask-image: linear-gradient(180deg, #000 0 52%, transparent 88%);
           mask-image: linear-gradient(180deg, #000 0 52%, transparent 88%);
   opacity: 0;
@@ -4620,7 +4620,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
              fla-column-fade var(--cycle) linear infinite;
 }
 .fla-bead {
-  stroke-width: 1.65;                 /* ÷ scaleX(.66) */
+  stroke-width: 1.54;                 /* ÷ scaleX(.65) */
   opacity: 0;
   animation: fla-bead var(--cycle) linear infinite,
              fla-bead-fade var(--cycle) linear infinite;
@@ -4679,7 +4679,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 @keyframes fla-column {
   0%, 26.5% { transform: scaleY(0) scaleX(1.96);
               animation-timing-function: cubic-bezier(.333, .667, .667, 1); }
-  37%       { transform: scaleY(1.72) scaleX(.81);
+  37%       { transform: scaleY(2) scaleX(.81);
               animation-timing-function: cubic-bezier(.333, 0, .667, .333); }
   53%       { transform: scaleY(0) scaleX(1.37); }
   100%      { transform: scaleY(0) scaleX(1.44); }
@@ -4696,7 +4696,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 @keyframes fla-bead {
   0%, 28.5% { transform: translateY(0) scale(.62, .68);
               animation-timing-function: cubic-bezier(.333, .667, .667, 1); }
-  41.25%    { transform: translateY(calc(var(--droph) * -2.2)) scale(.65, .71);
+  41.25%    { transform: translateY(calc(var(--droph) * -2.6)) scale(.65, .71);
               animation-timing-function: cubic-bezier(.333, 0, .667, .333); }
   54%       { transform: translateY(0) scale(.8, .6); }
   55.5%     { transform: translateY(0) scale(1.15, .2); }
@@ -4736,8 +4736,8 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   .fla-waves ellipse:nth-child(5) { transform: scale(.73); opacity: .30; }
   .fla-waves ellipse:nth-child(6) { transform: scale(.88); opacity: .22; }
   .fla-waves ellipse:nth-child(7) { transform: scale(1);   opacity: .14; }
-  .fla-column { opacity: 1; transform: scaleY(1.72) scaleX(.81); }
-  .fla-bead { opacity: 1; transform: translateY(calc(var(--droph) * -2.2)) scale(.65, .71); }
+  .fla-column { opacity: 1; transform: scaleY(2) scaleX(.81); }
+  .fla-bead { opacity: 1; transform: translateY(calc(var(--droph) * -2.6)) scale(.65, .71); }
 }
 
 /* ── The curtain: everything below scrolls over the pinned hero ── */
@@ -5040,7 +5040,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   .fla-stage {
     --fx: 50%; --fy: 87%;
     --pool: min(108vw, 560px);
-    --dropw: clamp(28px, 8vw, 40px);
+    --dropw: clamp(18px, 5vw, 26px);
     --fall: 22vh;
   }
   .fla-glow { width: 130vmax; height: 130vmax; margin: -65vmax 0 0 -65vmax; }
