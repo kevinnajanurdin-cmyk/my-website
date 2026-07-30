@@ -845,7 +845,10 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   align-items: center;
 }
 .insights-text .section-title { margin-bottom: 28px; }
-.insights-text > p {
+/* :not(.section-eyebrow) — the eyebrow is a <p> too, and this body-copy rule
+   was outranking .section-eyebrow on it: 18px instead of 13px, so its
+   tracking came out at 2.52px against the 1.82px every other eyebrow uses. */
+.insights-text > p:not(.section-eyebrow) {
   color: var(--ink-soft);
   font-size: 18px;
   max-width: 460px;
@@ -3158,25 +3161,17 @@ body.nav-open.over-hero .header-cta {
   background: var(--bg);
 }
 .insights-intro-eyebrow {
-  /* Same eyebrow + dash motif as .approach-intro-eyebrow (and .invest-eyebrow /
-     .fund-section-eyebrow): 16px gap, 48px dash set BESIDE the text, dark-theme
-     colours. This hero is centred, so the inline-flex box centres as one unit. */
+  /* The eyebrow + dash motif the other heroes use (.approach-intro-eyebrow,
+     .invest-eyebrow, .fund-section-eyebrow) but without the dash here. No
+     gap either, since the text is now the only thing in the box. */
   display: inline-flex;
   align-items: center;
-  gap: 16px;
   font-size: 13px;
   font-weight: 600;
   letter-spacing: var(--track-eyebrow);
   text-transform: uppercase;
   color: var(--on-dark);
   margin: 0 0 36px;
-}
-.insights-intro-eyebrow::after {
-  content: "";
-  display: inline-block;
-  width: 48px;
-  height: 1px;
-  background: var(--on-dark-mute);
 }
 .insights-intro-headline {
   font-family: var(--serif);
