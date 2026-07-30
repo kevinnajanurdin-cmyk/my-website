@@ -188,8 +188,12 @@
                   <source src="https://uat.zillerfm.com/wp-content/uploads/file2.mp4" type="video/mp4" />
                   <source src="https://uat.zillerfm.com/wp-content/uploads/file2.webm" type="video/webm" />
                 </video>
-                <!-- No overlay of any kind: the frame itself is the
-                     pause/play control. -->
+                <!-- Marks the poster as a video. Purely an affordance — the
+                     click is handled by the frame beneath it, and it fades
+                     out whenever the clip is actually running. -->
+                <span class="fla-play" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M8.6 5.1v13.8L19.2 12z" fill="currentColor"/></svg>
+                </span>
               </div>
               <figcaption>Joseph Ziller &middot; CIO &amp; Founder</figcaption>
             </figure>
@@ -526,67 +530,28 @@
         } else {
           var frame = fig.querySelector('.fla-video-frame');
 
-          // ── Always start with sound. ────────────────────────────────
-          // Browsers only permit unmuted autoplay once the visitor has
-          // enough media engagement with the domain; where they refuse,
-          // play() rejects and the clip would not start at all. So we
-          // attempt sound first, and only if that is refused do we start
-          // muted — then switch the sound on at the very first instant the
-          // browser will accept it. Nothing is shown and nothing is asked.
-
-          // Unmuting an already-playing element without user activation
-          // makes Chrome pause it, so always re-assert play() afterwards.
-          function soundOn() {
-            if (!vid.muted) return;
+          // It never plays silently. Browsers refuse unmuted autoplay until
+          // the page has had a click or keypress, so on a cold visit this
+          // first call is rejected and the poster simply stays — one click
+          // on the frame then starts it, with sound. There is deliberately
+          // no muted fallback and no document-level listener: both of those
+          // ended up racing this click handler, which is what made sound
+          // take two clicks.
+          function playWithSound() {
             vid.muted = false;
             var p = vid.play();
-            if (p && p.catch) p.catch(function () { vid.muted = true; });
+            if (p && p.catch) p.catch(function () {});
           }
 
-          // Armed from page load, not just after a refusal: any click or
-          // keypress anywhere counts, so by the time the clip scrolls into
-          // view the sound is usually already unlocked.
-          var GESTURES = ['pointerdown', 'keydown', 'touchstart'];
-          function onFirstGesture(e) {
-            // A press on the frame belongs to the frame's own click handler,
-            // which decides between "buy sound" and "pause". Unmuting here
-            // first would leave that click nothing to do but pause — which
-            // is what made sound arrive only after a pause and a resume.
-            var onFrame = e && e.target && e.target.closest &&
-                          e.target.closest('.fla-video-frame');
-            GESTURES.forEach(function (ev) {
-              document.removeEventListener(ev, onFirstGesture, true);
-            });
-            if (!onFrame) soundOn();
-          }
-          GESTURES.forEach(function (e) {
-            document.addEventListener(e, onFirstGesture, true);
-          });
-
-          function start() {
-            if (!vid.paused) return;
-            vid.muted = false;
-            var p = vid.play();
-            if (p && p.catch) {
-              p.catch(function () {
-                vid.muted = true;          // the only way it starts at all
-                var q = vid.play();
-                if (q && q.catch) q.catch(function () {});
-              });
-            }
-          }
-
-          // The frame is the play/pause control — except while the clip is
-          // running silently because the browser refused sound. Pausing
-          // then would spend the visitor's one unlocking gesture on a
-          // pause, which is why sound previously only arrived after a
-          // pause-and-resume. That first click buys sound instead; every
-          // click after it pauses and resumes as normal.
+          // The frame is the play/pause control.
           frame.addEventListener('click', function () {
-            if (vid.paused) { start(); return; }
-            if (vid.muted) { soundOn(); return; }
-            vid.pause();
+            if (vid.paused) { playWithSound(); } else { vid.pause(); }
           });
+
+          // Let the media drive the centre mark rather than the handlers, so
+          // it stays correct whatever started or stopped playback.
+          vid.addEventListener('play', function () { fig.classList.add('is-playing'); });
+          vid.addEventListener('pause', function () { fig.classList.remove('is-playing'); });
 
           // ── Play while it is on screen, pause once it is not. Skipped
           //    under reduced motion, where the frame click is the only way
@@ -594,7 +559,7 @@
           if (!reduce && 'IntersectionObserver' in window) {
             var seen = new IntersectionObserver(function (entries) {
               entries.forEach(function (en) {
-                if (en.isIntersecting) { start(); }
+                if (en.isIntersecting) { playWithSound(); }
                 else if (!vid.paused) { vid.pause(); }
               });
             }, { threshold: 0.5 });

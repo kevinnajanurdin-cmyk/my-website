@@ -4819,7 +4819,10 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    inside it (contain, not cover) — nothing is cropped off the poster, which
    carries titling on its right-hand side. */
 .fla-video { display: flex; flex-direction: column; min-width: 0; }
-.fla-video-frame { flex: 1 1 auto; aspect-ratio: auto; min-height: 300px; min-width: 0; }
+/* 0 0 auto, not 1 1 auto: the frame must keep its 16:9 exactly. Stretched
+   taller by the flex column it would no longer match the clip, and the
+   `cover` below would start cropping the titling off the poster's right. */
+.fla-video-frame { flex: 0 0 auto; min-height: 300px; min-width: 0; }
 /* grid/flex children default to min-width:auto, which lets the frame push the
    track wider than the container; pin them so the column governs the width */
 .fla-spec-grid > * { min-width: 0; }
@@ -4830,11 +4833,36 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   background: linear-gradient(165deg, #1d2738 0%, #141b29 100%);
   box-shadow: 0 24px 50px -28px rgba(10, 18, 32, .45);
 }
-/* contain, not cover: the frame is taller than 16:9 so it can match the blurb
-   beside it, and the poster carries titling on its right that must not be cut. */
-.fla-video-el { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
+/* cover, not contain: the clip is 1280x720 and the frame is pinned to 16:9,
+   so nothing is cropped either way — but `contain` leaves the element's
+   painted edge a fraction of a pixel short at non-integer widths, and the
+   frame's dark gradient shows through it as a hairline down each side. */
+.fla-video-el { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 /* the whole frame is the pause/play target */
 .fla-video-frame { cursor: pointer; }
+/* Centre mark so a still poster still reads as a video. pointer-events are
+   off throughout: the frame underneath owns the click either way. */
+.fla-play {
+  position: absolute; left: 50%; top: 50%; z-index: 2;
+  width: 72px; height: 72px; border-radius: 50%;
+  display: grid; place-items: center; pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, .5);
+  background: rgba(12, 18, 30, .3); color: #fff;
+  transform: translate(-50%, -50%);
+  transition: opacity .45s ease, transform .45s cubic-bezier(.2,.7,.2,1);
+}
+.fla-play::before {
+  content: ""; position: absolute; inset: -1px; border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .36);
+  animation: fla-pulse 2.8s cubic-bezier(.3, 0, .5, 1) infinite;
+}
+@keyframes fla-pulse { 0% { transform: scale(1); opacity: .8 } 70%, 100% { transform: scale(1.5); opacity: 0 } }
+.fla-play svg { width: 24px; height: 24px; margin-left: 3px; }
+.fla-video-frame:hover .fla-play { transform: translate(-50%, -50%) scale(1.07); background: rgba(12, 18, 30, .58); border-color: #fff; }
+/* driven by the media's own play/pause events, so it is right however
+   playback started or stopped — including the scroll-past pause */
+.fla-video.is-playing .fla-play { opacity: 0; transform: translate(-50%, -50%) scale(.9); }
+@media (prefers-reduced-motion: reduce) { .fla-play::before { animation: none; } }
 .fla-video figcaption { margin-top: 12px; font-size: 11px; font-weight: 600; letter-spacing: var(--track-label); text-transform: uppercase; color: var(--ink-mute); }
 
 /* Holdings. Each cell is bordered in its own right and the row is gapped, so a
