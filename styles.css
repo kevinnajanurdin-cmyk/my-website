@@ -4439,14 +4439,13 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    opacity in the reduced-motion block, or killing the animation
    leaves it invisible.
    ────────────────────────────────────────────────────────── */
-.fla-mark, .fla-hero-title, .fla-hero-lede, .fla-cue {
+.fla-mark, .fla-hero-title, .fla-hero-lede {
   opacity: 0;
   animation: hero-fade-up .85s ease-out forwards;
 }
 .fla-mark       { animation-delay: .45s; }
 .fla-hero-title { animation-delay: .70s; }
 .fla-hero-lede  { animation-delay: .95s; }
-.fla-cue        { animation-delay: 1.6s; }
 
 .fla-mark { display: block; width: 48px; height: 1px; background: var(--on-dark-mute); margin: 0 0 clamp(22px, 3.4vh, 34px); }
 /* Sized so "The Founder-led" always holds one line — the break is explicit,
@@ -4710,20 +4709,15 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   100%      { opacity: 0; }
 }
 
-.fla-cue { position: absolute; left: 50%; bottom: 38px; z-index: 2; width: 30px; height: 50px; margin-left: -15px; display: grid; place-items: start center; }
-.fla-cue span { display: block; width: 1px; height: 42px; background: linear-gradient(to bottom, rgba(255,255,255,.5), rgba(255,255,255,0)); }
-.fla-cue span::after { content: ""; display: block; width: 1px; height: 13px; background: #fff; animation: fla-cue 2.4s cubic-bezier(.5,0,.5,1) infinite; }
-@keyframes fla-cue { 0% { transform: translateY(0); opacity: 0 } 30% { opacity: 1 } 100% { transform: translateY(29px); opacity: 0 } }
-
 /* Held still, the effect resolves to the pose the animation is built
    around: the bead suspended over its column, rings standing on the
    water. It reads as an illustration rather than a stopped video. */
 @media (prefers-reduced-motion: reduce) {
   .fla-waves ellipse, .fla-drop, .fla-mirror,
-  .fla-column, .fla-bead, .fla-cue span::after { animation: none; }
+  .fla-column, .fla-bead { animation: none; }
   /* the entrance sets these to opacity 0 and animates them back — killing
      the animation without restoring it would leave the hero blank */
-  .fla-mark, .fla-hero-title, .fla-hero-lede, .fla-cue, .fla-glow, .fla-sheen {
+  .fla-mark, .fla-hero-title, .fla-hero-lede, .fla-glow, .fla-sheen {
     animation: none; opacity: 1;
   }
   .fla-sheen { transform: none; filter: none; }
@@ -4800,7 +4794,9 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   font-size: clamp(18px, 1.45vw, 21px); line-height: 1.5;
   color: #fff;
 }
-.fla-stat-fig { font-weight: 600; font-size: 1.45em; letter-spacing: 0; }
+/* set at the body size like the rest of the line — the weight alone
+   carries the emphasis */
+.fla-stat-fig { font-weight: 600; letter-spacing: 0; }
 .fla-ref { color: inherit; }
 .fla-ref sup { font-size: .72em; margin-left: .2em; }
 .fla-ref:hover { color: #fff; }
@@ -4991,6 +4987,10 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .fla-arrows p { margin: 0; font-size: 18px; line-height: 1.66; color: var(--ink-soft); }
 
 .fla-etf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 68px); align-items: start; }
+/* The shared h2 measure is 26ch and this title's first line is 33 characters,
+   so it wrapped on the measure rather than on the column. Widened just enough
+   to hold it; the <br> in the markup takes (ASX: ZILR) to line two. */
+#fla-etf-h { max-width: 34ch; }
 .fla-ticker {
   display: inline-block; margin: 0 0 20px; padding: 8px 16px; border-radius: 3px;
   background: var(--dark); color: var(--on-dark);
@@ -5046,7 +5046,6 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   .fla-glow { width: 130vmax; height: 130vmax; margin: -65vmax 0 0 -65vmax; }
   /* below here a single line would be too small to carry the page — let it wrap */
   .fla-hero-title { font-size: clamp(27px, 6.7vw, 43px); }
-  .fla-cue { display: none; }
   .fla-spec-grid, .fla-etf-grid, .fla-outperf-grid { grid-template-columns: 1fr; }
   .fla-outperf-copy { max-width: 62ch; }
   .fla-outperf-chart { margin-top: clamp(24px, 4vh, 40px); }
