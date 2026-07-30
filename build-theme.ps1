@@ -29,7 +29,7 @@ $theme     = Join-Path $buildRoot 'ziller'
 $zip       = Join-Path (Split-Path $src -Parent) 'ziller-theme.zip'
 
 # --- Validate the source before building ------------------------------------
-$required = @('index.html','approach.html','team.html','invest.html','fund.html','insights.html','styles.css','script.js','assets')
+$required = @('index.html','approach.html','team.html','invest.html','fund.html','insights.html','founder-led-advantage.html','styles.css','script.js','founder-chart.js','assets')
 $missing  = @($required | Where-Object { -not (Test-Path (Join-Path $src $_)) })
 if ($missing.Count -gt 0) {
   Write-Host ("BUILD FAILED: missing source in '{0}': {1}" -f $src, ($missing -join ', '))
@@ -52,6 +52,7 @@ $html = $html.Replace("'assets/", "'" + $T + '/assets/')
 # styles.css is enqueued via functions.php; scripts too
 $html = $html.Replace('<link rel="stylesheet" href="styles.css" />', '')
 $html = $html.Replace('<script src="script.js" defer></script>', '')
+$html = $html.Replace('<script src="founder-chart.js" defer></script>', '')
 $html = $html.Replace('<script src="prefetch.js" defer></script>', '')
 
 # Dynamic body class (functions.php adds page-home on the front page)
@@ -150,8 +151,14 @@ $front  = "<?php get_header(); ?>`r`n" + $main + "`r`n<?php get_footer(); ?>`r`n
 # (careers is NOT a standalone page: it lives as the accordion at the bottom of the
 # Team page. Trash the old WP "Careers" page at cutover so /careers/ doesn't fall
 # back to index.php with the stale WPBakery content.)
-$ziller_wpslug = @{ 'approach' = 'investment-philosophy-and-process'; 'team' = 'people'; 'invest' = 'invest-with-us'; 'contact' = 'contact'; 'disclaimer' = 'disclaimer'; 'subscribe' = 'subscribe' }
-foreach ($slug in @('approach','team','invest','contact','disclaimer','subscribe')) {
+# founder-led-advantage -> the EXISTING WP page "The Founder-led Advantage".
+# Its slug is assumed to be the WordPress default for that title. If the live page
+# actually sits on a different slug, change the value here and rebuild — otherwise
+# WP silently keeps serving the old WPBakery content. The template also declares a
+# "Template Name", so it can be picked by hand under Page > Page Attributes as a
+# fallback if the slug ever moves.
+$ziller_wpslug = @{ 'approach' = 'investment-philosophy-and-process'; 'team' = 'people'; 'invest' = 'invest-with-us'; 'contact' = 'contact'; 'disclaimer' = 'disclaimer'; 'subscribe' = 'subscribe'; 'founder-led-advantage' = 'the-founder-led-advantage' }
+foreach ($slug in @('approach','team','invest','contact','disclaimer','subscribe','founder-led-advantage')) {
 	$p = [System.IO.File]::ReadAllText((Join-Path $src "$slug.html"))
 	$cls = "page-$slug"
 
@@ -173,10 +180,24 @@ foreach ($slug in @('approach','team','invest','contact','disclaimer','subscribe
 	$p = $p.Replace('"peter-beck-rocket-lab.html"','"/peter-beck-rocket-lab/"')
 	$p = $p.Replace('"the-founders-advantage.html"','"/the-founders-advantage/"')
 	$p = $p.Replace('"catl.html"','"/catl/"')
+	$p = $p.Replace('"subscribe.html"','"/subscribe/"')
+	$p = $p.Replace('"founder-led-advantage.html"','"/the-founder-led-advantage/"')
 
 	# styles.css enqueued globally; prefetch dropped
 	$p = $p.Replace('<link rel="stylesheet" href="styles.css" />', '')
 	$p = $p.Replace('<script src="prefetch.js" defer></script>', '')
+
+	# Sub-pages carry their own scripts, so point the shared chart module at the
+	# theme directory rather than a page-relative URL.
+	$p = $p.Replace('<script src="founder-chart.js" defer></script>',
+		'<script src="' + $T + '/founder-chart.js" defer></script>')
+
+	# Founder-led Advantage video. The source ships pointing at the file that is
+	# already live (uat.zillerfm.com/.../file2.mp4). Prefer a Media Library copy
+	# when one is uploaded as "founder-led-advantage.mp4", so the page can be moved
+	# off the staging host without another theme build.
+	$p = $p.Replace('src="https://uat.zillerfm.com/wp-content/uploads/file2.mp4"',
+		'src="<?php $zv = ziller_advantage_video_url(); echo esc_url( $zv ? $zv : ''https://uat.zillerfm.com/wp-content/uploads/file2.mp4'' ); ?>"')
 
 	# Body class via WP (keeps admin bar working, preserves page-xxx)
 	$p = $p.Replace("<body class=""$cls"">", "<body <?php body_class('$cls'); ?>>")
@@ -188,6 +209,13 @@ foreach ($slug in @('approach','team','invest','contact','disclaimer','subscribe
 	# Let WP / Rank Math own title + description
 	$p = $p -replace '\s*<title>.*?</title>', ''
 	$p = $p -replace '\s*<meta name="description"[^>]*>', ''
+
+	# Declare a Template Name on the Advantage page so it can also be selected by
+	# hand (Page > Page Attributes > Template) if the live slug is not the one
+	# assumed in $ziller_wpslug above.
+	if ($slug -eq 'founder-led-advantage') {
+		$p = "<?php /* Template Name: Founder-led Advantage (landing) */ ?>`r`n" + $p
+	}
 
 	[System.IO.File]::WriteAllText((Join-Path $theme "page-$($ziller_wpslug[$slug]).php"), $p, $utf8)
 }
@@ -689,6 +717,10 @@ function ziller_assets() {
 			'window.ZILLER_SCENE_VIDEOS=' . wp_json_encode( (object) ziller_scene_video_map() ) . ';',
 			'before'
 		);
+		// The 20-year founder-led performance chart. Shared with the Founder-led
+		// Advantage page, which loads it from its own template instead (it is a
+		// self-contained sub-page), so it is only enqueued here for the home page.
+		wp_enqueue_script( 'ziller-founder-chart', $uri . '/founder-chart.js', array(), $ver, true );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'ziller_assets' );
@@ -699,6 +731,29 @@ add_action( 'wp_enqueue_scripts', 'ziller_assets' );
 // each filename to its Media Library URL; attachment titles default to the
 // filename, so matching is by title. Cached for an hour; any new media upload
 // clears the cache, so a freshly uploaded or replaced clip shows immediately.
+// Founder-led Advantage landing page: Joseph's explainer clip. Same approach as
+// the scene videos — upload the file to Media > Add New named
+// "founder-led-advantage.mp4" and it is picked up here. Returns '' when nothing
+// is uploaded, in which case the page shows the portrait plate with no player.
+function ziller_advantage_video_url() {
+	$url = get_transient( 'ziller_advantage_video' );
+	if ( is_string( $url ) ) { return $url; }
+	$q = new WP_Query( array(
+		'post_type'      => 'attachment',
+		'post_status'    => 'inherit',
+		'post_mime_type' => 'video/mp4',
+		'posts_per_page' => 1,
+		'title'          => 'founder-led-advantage',
+		'orderby'        => 'date',
+		'order'          => 'DESC',
+		'fields'         => 'ids',
+		'no_found_rows'  => true,
+	) );
+	$url = $q->posts ? (string) wp_get_attachment_url( $q->posts[0] ) : '';
+	set_transient( 'ziller_advantage_video', $url, HOUR_IN_SECONDS );
+	return $url;
+}
+
 function ziller_scene_video_map() {
 	$map = get_transient( 'ziller_scene_videos' );
 	if ( is_array( $map ) ) { return $map; }
@@ -732,6 +787,7 @@ add_action( 'add_attachment', 'ziller_scene_video_flush' );
 add_action( 'delete_attachment', 'ziller_scene_video_flush' );
 function ziller_scene_video_flush() {
 	delete_transient( 'ziller_scene_videos' );
+	delete_transient( 'ziller_advantage_video' );
 }
 
 // Preserve the design's per-page body classes (CSS targets .page-home etc.).
@@ -884,6 +940,10 @@ $js = "var A=(typeof window!=='undefined'&&window.ZILLER_ASSETS)?window.ZILLER_A
 
 # ── styles.css (verbatim) + assets the home page needs ──────────────────
 Copy-Item (Join-Path $src "styles.css") (Join-Path $theme "styles.css")
+# Shared 20-year performance chart: enqueued for the home page in functions.php,
+# and loaded directly by the Founder-led Advantage template. No asset paths inside,
+# so it ships verbatim (unlike script.js, which gets the asset-base shim below).
+Copy-Item (Join-Path $src "founder-chart.js") (Join-Path $theme "founder-chart.js")
 # Bundle the assets folder, minus the essay hero images: with Insights now driven
 # by WP Posts, those images live in the media library, so dropping them keeps the
 # theme zip small and the upload reliable.
