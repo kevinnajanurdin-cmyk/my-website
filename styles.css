@@ -4474,179 +4474,141 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 }
 
 /* ── The ripple ──────────────────────────────────────────────
-   A water surface, not a diagram. The wave train lives on a plane
-   laid back in perspective, so the rings read as ellipses seen at
-   a low angle; a big glassy droplet falls into it, throws back a
-   rebound column with a bead on top, and the rings travel out.
+   Drawn, not rendered: hairline outlines only. Earlier passes
+   modelled the material (Fresnel body, caustic, specular, a lit
+   pool) and every one of them read as illustration. There is
+   nothing in a 1px stroke to look glossy.
 
    Everything hangs off the impact point (--fx, --fy): move that
    one pair and the pool, the fall lane and the glow all follow.
-   The droplet artwork is an SVG symbol in the page (#flaDropShape)
-   used three times — the drop, its reflection, the rebound bead.
 
    Timings are percentages of --cycle. The landing is at 26%, so
-   the wave delays below all start from 0.26 × 9s = 2.34s. Change
+   the ring delays below all start from 0.26 × 9s = 2.34s. Change
    --cycle and those delays need re-deriving.
 
-   Pure CSS, so it runs with JS off; the page script only casts an
-   extra ring where you press and drifts the glow with the pointer.
-   ────────────────────────────────────────────────────────────── */
+   Pure CSS, so it runs with JS off; the page script only drifts
+   the ambient glow with the pointer.
+   ────────────────────────────────────────────────────────── */
 .fla-stage {
   position: absolute; inset: 0; z-index: 1; pointer-events: none;
   --fx: 71%;                          /* impact point within the hero */
-  --fy: 77%;                          /* low enough that the far edge of the
-                                         widest ring stays under the lede */
-  --pool: min(78vw, 1040px);          /* diameter of the outermost ring */
+  --fy: 77%;                          /* low enough that the widest ring
+                                         stays clear of the lede */
+  --pool: min(78vw, 1040px);          /* width of the outermost ring */
   --dropw: clamp(34px, 3.2vw, 52px);  /* the droplet, at arm's length */
   --droph: calc(var(--dropw) * 1.273);/* = the symbol's 44:56 viewBox, or
                                          preserveAspectRatio letterboxes it */
   --fall: 46vh;                       /* how far above the surface it starts */
   --cycle: 9s;
-  /* Near-neutral on purpose. A saturated cyan reads as plastic; water on a
-     dark ground is the ground's own colour with the light moved around. */
-  --crest: 216, 227, 240;             /* light catching the top of a wave */
-  --trough: 10, 17, 28;               /* the shaded side of one */
+  /* Not --line: that is a site-wide hex border token, and shadowing it here
+     with an RGB triplet would break any bordered thing dropped into the
+     stage later. */
+  --fla-ink: 205, 219, 236;               /* the one ink colour, near-neutral */
 }
 .fla-glow {
   position: absolute; left: var(--fx); top: var(--fy);
   width: 86vmax; height: 86vmax; margin: -43vmax 0 0 -43vmax;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(98, 120, 150, .26) 0%, rgba(86, 104, 130, .11) 36%, transparent 66%);
+  background: radial-gradient(circle, rgba(100, 122, 154, .30) 0%, rgba(88, 106, 134, .13) 36%, transparent 66%);
   transition: transform 1.6s cubic-bezier(.2, .7, .2, 1);
+}
+/* A tighter lift centred on the impact point, flattened to the pool's own
+   proportions. It is atmosphere, not a surface — the linework has to sit in
+   something, but anything with a readable edge would put the rendered look
+   straight back. Pairs with the broad --glow above: ambient, then a core. */
+.fla-sheen {
+  position: absolute; left: var(--fx); top: var(--fy);
+  width: calc(var(--pool) * 1.16); height: calc(var(--pool) * .44);
+  margin: calc(var(--pool) * -.22) 0 0 calc(var(--pool) * -.58);
+  border-radius: 50%;
+  background: radial-gradient(closest-side,
+    rgba(132, 157, 192, .38) 0%, rgba(114, 137, 170, .22) 38%,
+    rgba(96, 115, 146, .09) 66%, transparent 84%);
 }
 .fla-drop-defs { position: absolute; width: 0; height: 0; }
 
-/* The tilted surface. --pool sizes it; the perspective sits on the
-   zero-size box at the impact point, so the vanishing point is the
-   landing itself and the ellipses stay symmetrical about it. */
+/* ── The surface ─────────────────────────────────────────── */
 .fla-pool {
   position: absolute; left: var(--fx); top: var(--fy);
-  width: 0; height: 0;
-  perspective: 2400px;
+  width: var(--pool); height: calc(var(--pool) * .42);
+  margin: calc(var(--pool) * -.21) 0 0 calc(var(--pool) / -2);
+  /* the global `img, svg { max-width: 100% }` would otherwise clamp this
+     against the hero's width and squash the ellipses */
+  max-width: none;
+  overflow: visible;
 }
-.fla-plane { position: absolute; transform: rotateX(66deg); transform-style: preserve-3d; }
-.fla-plane > *, .fla-waves > span {
-  position: absolute; left: 0; top: 0;
-  width: var(--pool); height: var(--pool);
-  margin: calc(var(--pool) / -2) 0 0 calc(var(--pool) / -2);
-  border-radius: 50%;
-}
-.fla-waves { position: absolute; left: 0; top: 0; width: 0; height: 0; margin: 0; border-radius: 0; }
-
-/* A broad wash of light so the water sits above the hero's navy —
-   without it the shaded side of each wave has nothing to bite into. */
-.fla-sheen {
-  width: calc(var(--pool) * 1.24); height: calc(var(--pool) * 1.24);
-  margin: calc(var(--pool) * -.62) 0 0 calc(var(--pool) * -.62);
-  background: radial-gradient(closest-side,
-    rgba(116, 140, 172, .24) 0%, rgba(102, 124, 154, .16) 34%,
-    rgba(86, 104, 132, .07) 62%, transparent 82%);
-}
-/* The depression the droplet punches, and the flash off it. */
-.fla-bowl {
-  width: calc(var(--pool) * .34); height: calc(var(--pool) * .34);
-  margin: calc(var(--pool) * -.17) 0 0 calc(var(--pool) * -.17);
-  background: radial-gradient(closest-side,
-    rgba(var(--trough), .58) 0%, rgba(var(--trough), .34) 48%, transparent 78%);
-  animation: fla-bowl var(--cycle) ease-out infinite;
-}
-.fla-flash {
-  width: calc(var(--pool) * .2); height: calc(var(--pool) * .2);
-  margin: calc(var(--pool) * -.1) 0 0 calc(var(--pool) * -.1);
-  background: radial-gradient(closest-side,
-    rgba(228, 236, 246, .68) 0%, rgba(176, 196, 222, .28) 42%, transparent 74%);
-  opacity: 0;
-  animation: fla-flash var(--cycle) ease-out infinite;
-}
-
-/* Each wave is a soft annulus rather than a hairline: a shaded
-   trough, a lit crest, a shaded far edge. Scaling widens the band
-   as it travels, which is what the outer swells do anyway. */
-.fla-waves > span {
-  background: radial-gradient(closest-side,
-    transparent 0 58%,
-    rgba(var(--trough), .26) 72%,
-    rgba(var(--crest), .46) 84%,
-    rgba(var(--trough), .15) 93%,
-    transparent 100%);
-  opacity: 0; transform: scale(.05);
+.fla-waves ellipse {
+  fill: none;
+  stroke: rgb(var(--fla-ink));
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;   /* one weight at every radius */
+  /* SVG elements default to transform-origin: 0 0, not 50% 50% like HTML —
+     without this the rings expand from the corner instead of concentrically */
+  transform-box: fill-box; transform-origin: 50% 50%;
+  opacity: 0; transform: scale(.04);
   animation: fla-wave var(--cycle) cubic-bezier(.14, .58, .3, 1) infinite;
 }
-/* The train thrown off the landing, then one late, smaller ring from
-   the rebound bead falling back in at 54%. --wmax keeps them from all
-   dying at the same radius; --wop lets the train fall away behind its
-   leading edge instead of arriving as a set of matching hoops. */
-.fla-waves > span:nth-child(1) { animation-delay: 2.34s; --wmax: 1;   --wop: 1;   }
-.fla-waves > span:nth-child(2) { animation-delay: 2.56s; --wmax: .96; --wop: .94; }
-.fla-waves > span:nth-child(3) { animation-delay: 2.80s; --wmax: .92; --wop: .87; }
-.fla-waves > span:nth-child(4) { animation-delay: 3.06s; --wmax: .87; --wop: .79; }
-.fla-waves > span:nth-child(5) { animation-delay: 3.36s; --wmax: .81; --wop: .70; }
-.fla-waves > span:nth-child(6) { animation-delay: 3.72s; --wmax: .74; --wop: .60; }
-.fla-waves > span:nth-child(7) { animation-delay: 4.16s; --wmax: .66; --wop: .50; }
-.fla-waves > span:nth-child(8) { animation-delay: 4.70s; --wmax: .56; --wop: .40; }
-.fla-waves > span:nth-child(9) { animation-delay: 4.95s; --wmax: .42; --wop: .52; }
+/* The train thrown off the landing, then one late, smaller ring as the
+   rebound bead falls back in at 54%. --wmax stops them all dying at the
+   same radius; --wop falls away behind the leading edge. */
+.fla-waves ellipse:nth-child(1) { animation-delay: 2.34s; --wmax: 1;   --wop: .70; }
+.fla-waves ellipse:nth-child(2) { animation-delay: 2.62s; --wmax: .94; --wop: .60; }
+.fla-waves ellipse:nth-child(3) { animation-delay: 2.94s; --wmax: .87; --wop: .51; }
+.fla-waves ellipse:nth-child(4) { animation-delay: 3.32s; --wmax: .79; --wop: .42; }
+.fla-waves ellipse:nth-child(5) { animation-delay: 3.76s; --wmax: .70; --wop: .33; }
+.fla-waves ellipse:nth-child(6) { animation-delay: 4.28s; --wmax: .60; --wop: .24; }
+.fla-waves ellipse:nth-child(7) { animation-delay: 4.95s; --wmax: .46; --wop: .28; }
 @keyframes fla-wave {
-  0%   { opacity: 0; transform: scale(.05); }
-  4%   { opacity: calc(.95 * var(--wop, 1)); }
-  30%  { opacity: calc(.8 * var(--wop, 1)); }
+  0%   { opacity: 0; transform: scale(.04); }
+  5%   { opacity: var(--wop, .5); }
   73%  { opacity: 0; transform: scale(var(--wmax, 1)); }
   100% { opacity: 0; transform: scale(var(--wmax, 1)); }
 }
-@keyframes fla-bowl {
-  0%, 24%  { opacity: .22; transform: scale(.62); }
-  27%      { opacity: .9;  transform: scale(1.16); }
-  42%      { opacity: .5;  transform: scale(.92); }
-  100%     { opacity: .22; transform: scale(.62); }
-}
-@keyframes fla-flash {
-  0%, 25.4% { opacity: 0; transform: scale(.2); }
-  26.6%     { opacity: 1; transform: scale(.9); }
-  31%       { opacity: 0; transform: scale(1.9); }
-  100%      { opacity: 0; transform: scale(1.9); }
-}
 
-/* ── The fall lane: upright in screen space, over the tilted pool ── */
+/* ── The fall lane: upright in screen space, over the pool ── */
 .fla-fall { position: absolute; left: var(--fx); top: var(--fy); width: 0; height: 0; z-index: 2; }
 .fla-fall > * {
   position: absolute; left: 0; top: 0;
   width: var(--dropw); height: var(--droph);
-  /* the lane is a zero-width box, and the global `svg { max-width: 100% }`
-     would resolve that to zero and collapse the artwork */
-  max-width: none;
+  max-width: none;                    /* see .fla-pool above */
   margin: calc(var(--droph) * -1) 0 0 calc(var(--dropw) / -2);
   transform-origin: 50% 100%;         /* the surface line, so squash sits on it */
+  fill: none;
+  stroke: rgb(var(--fla-ink));
+  stroke-linejoin: round;
 }
-/* A tight separation shadow, not a halo — a wide coloured bloom is the other
-   half of what makes rendered water look like a game asset. */
+/* Each stroke-width is pre-divided by the squeeze its keyframes apply, so
+   all three render at ~1px. non-scaling-stroke cancels the viewBox scale
+   but not a CSS transform on the host <svg>, which is where the squeeze is. */
 .fla-drop {
-  filter: drop-shadow(0 2px 9px rgba(146, 168, 196, .3));
+  stroke-width: 1.1;
   animation: fla-drop var(--cycle) linear infinite;
 }
-/* Its reflection. The translateY values match the drop's exactly — the
-   flip turns them into a rise from below the surface. It stays faint
-   until the last of the fall, or it reads as a second object. */
+/* The reflection rising to meet the drop. Its translateY values are the
+   drop's exactly — the flip turns a fall into a rise from below the
+   surface. Softened just enough that it reads as reflected rather than as
+   a second object; it never gets as strong as the line above it. */
 .fla-mirror {
-  opacity: 0; filter: blur(2.6px);
+  stroke-width: 1.3;
+  opacity: 0;
+  /* softer than anything else on the page: a crisp outline down there reads
+     as a second droplet rather than as the first one reflected */
+  filter: blur(1.4px);
   animation: fla-mirror var(--cycle) linear infinite;
 }
-/* The Worthington jet — the column the landing throws back up. It is the
-   same droplet artwork drawn tall and thin, which is close to the real
-   shape, with the base masked off so it dissolves into the surface
-   instead of ending in a bulb. */
-/* Sized like the drop and drawn tall by the keyframes: <use> of a symbol
-   letterboxes rather than stretches, so the elongation has to be a CSS
-   transform, not a taller box. */
+/* The Worthington jet — the column the landing throws back up. The same
+   outline drawn tall, with its base masked so the line dissolves into the
+   surface instead of closing into a bulb. */
 .fla-column {
-  -webkit-mask-image: linear-gradient(180deg, #000 0 56%, transparent 94%);
-          mask-image: linear-gradient(180deg, #000 0 56%, transparent 94%);
+  stroke-width: 1.75;                 /* ÷ scaleX(.62) */
+  -webkit-mask-image: linear-gradient(180deg, #000 0 52%, transparent 88%);
+          mask-image: linear-gradient(180deg, #000 0 52%, transparent 88%);
   opacity: 0;
-  filter: drop-shadow(0 0 7px rgba(146, 168, 196, .22));
   animation: fla-column var(--cycle) cubic-bezier(.3, .7, .4, 1) infinite;
 }
-/* The bead the jet carries — the moment the reference image is of. */
 .fla-bead {
+  stroke-width: 1.65;                 /* ÷ scaleX(.66) */
   opacity: 0;
-  filter: drop-shadow(0 2px 8px rgba(146, 168, 196, .28));
   animation: fla-bead var(--cycle) cubic-bezier(.4, 0, .5, 1) infinite;
 }
 
@@ -4662,56 +4624,38 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   21%    { opacity: 1; transform: translateY(calc(var(--fall) * -.33))   scale(.85, 1.25); }
   24%    { opacity: 1; transform: translateY(calc(var(--fall) * -.115))  scale(.84, 1.29); }
   26%    { opacity: 1; transform: translateY(0) scale(1.02, .92); }
-  28%    { opacity: .8; transform: translateY(0) scale(1.62, .32); }
+  28%    { opacity: .7; transform: translateY(0) scale(1.62, .32); }
   30.5%  { opacity: 0; transform: translateY(0) scale(2.2, .08); }
   100%   { opacity: 0; transform: translateY(0) scale(2.2, .08); }
 }
 @keyframes fla-mirror {
   0%     { opacity: 0;   transform: scaleY(-.46) translateY(calc(var(--fall) * -1))     scale(.94, 1.05); }
-  16%    { opacity: 0;   transform: scaleY(-.46) translateY(calc(var(--fall) * -.62))   scale(.88, 1.18); }
-  19.5%  { opacity: .1;  transform: scaleY(-.46) translateY(calc(var(--fall) * -.4375)) scale(.86, 1.23); }
+  13%    { opacity: 0;   transform: scaleY(-.46) translateY(calc(var(--fall) * -.75))   scale(.90, 1.15); }
+  18%    { opacity: 0;   transform: scaleY(-.46) translateY(calc(var(--fall) * -.51))   scale(.87, 1.21); }
+  21%    { opacity: .16; transform: scaleY(-.46) translateY(calc(var(--fall) * -.33))   scale(.85, 1.25); }
   24%    { opacity: .3;  transform: scaleY(-.46) translateY(calc(var(--fall) * -.115))  scale(.84, 1.29); }
-  26%    { opacity: .46; transform: scaleY(-.46) translateY(0) scale(1.02, .92); }
+  26%    { opacity: .4;  transform: scaleY(-.46) translateY(0) scale(1.02, .92); }
   29%    { opacity: 0;   transform: scaleY(-.46) translateY(0) scale(1.7, .3); }
   100%   { opacity: 0;   transform: scaleY(-.46) translateY(0) scale(1.7, .3); }
 }
 @keyframes fla-column {
   0%, 26.5% { opacity: 0;   transform: scaleY(0)    scaleX(1.5); }
-  29%       { opacity: .95; transform: scaleY(.72)  scaleX(.86); }
-  33%       { opacity: 1;   transform: scaleY(1.56) scaleX(.6); }
-  37%       { opacity: 1;   transform: scaleY(1.86) scaleX(.5); }
-  44%       { opacity: .9;  transform: scaleY(1.6)  scaleX(.46); }
+  29%       { opacity: .9;  transform: scaleY(.72)  scaleX(.94); }
+  33%       { opacity: .95; transform: scaleY(1.48) scaleX(.72); }
+  37%       { opacity: .95; transform: scaleY(1.72) scaleX(.62); }
+  44%       { opacity: .85; transform: scaleY(1.5)  scaleX(.56); }
   52%       { opacity: 0;   transform: scaleY(.22)  scaleX(.95); }
   100%      { opacity: 0;   transform: scaleY(0)    scaleX(1.1); }
 }
 @keyframes fla-bead {
   0%, 28.5% { opacity: 0;  transform: translateY(0) scale(.5, .5); }
-  31%       { opacity: 1;  transform: translateY(calc(var(--droph) * -.95))  scale(.6, .68); }
-  37%       { opacity: 1;  transform: translateY(calc(var(--droph) * -2))    scale(.6, .66); }
-  41%       { opacity: 1;  transform: translateY(calc(var(--droph) * -2.22)) scale(.58, .64); }
-  47%       { opacity: 1;  transform: translateY(calc(var(--droph) * -1.5))  scale(.6, .7); }
-  52%       { opacity: .8; transform: translateY(calc(var(--droph) * -.18))  scale(.7, .58); }
+  31%       { opacity: 1;  transform: translateY(calc(var(--droph) * -.9))   scale(.66, .74); }
+  37%       { opacity: 1;  transform: translateY(calc(var(--droph) * -1.9))  scale(.66, .72); }
+  41%       { opacity: 1;  transform: translateY(calc(var(--droph) * -2.12)) scale(.64, .7); }
+  47%       { opacity: 1;  transform: translateY(calc(var(--droph) * -1.44)) scale(.66, .76); }
+  52%       { opacity: .7; transform: translateY(calc(var(--droph) * -.18))  scale(.76, .62); }
   54%       { opacity: 0;  transform: translateY(0) scale(1.1, .22); }
   100%      { opacity: 0;  transform: translateY(0) scale(1.1, .22); }
-}
-
-/* The ring the script casts where you press — flat, in screen space,
-   since it answers a pointer rather than the pool. */
-.fla-ring--cast {
-  position: absolute;
-  width: 30vmax; height: 30vmax; margin: -15vmax 0 0 -15vmax;
-  border-radius: 50%;
-  background: radial-gradient(closest-side,
-    transparent 0 76%,
-    rgba(var(--trough), .28) 84%,
-    rgba(var(--crest), .6) 91%,
-    transparent 100%);
-  animation: fla-cast 2.6s cubic-bezier(.14, .58, .3, 1) 1 both;
-}
-@keyframes fla-cast {
-  0%   { opacity: 0;  transform: scale(.04); }
-  8%   { opacity: .9; }
-  100% { opacity: 0;  transform: scale(1); }
 }
 
 .fla-cue { position: absolute; left: 50%; bottom: 38px; z-index: 2; width: 30px; height: 50px; margin-left: -15px; display: grid; place-items: start center; }
@@ -4723,22 +4667,19 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    around: the bead suspended over its column, rings standing on the
    water. It reads as an illustration rather than a stopped video. */
 @media (prefers-reduced-motion: reduce) {
-  .fla-waves > span, .fla-bowl, .fla-flash, .fla-drop, .fla-mirror,
+  .fla-waves ellipse, .fla-drop, .fla-mirror,
   .fla-column, .fla-bead, .fla-cue span::after { animation: none; }
   .fla-glow { transition: none; }
-  .fla-drop, .fla-flash, .fla-mirror { opacity: 0; }
-  .fla-bowl { opacity: .5; transform: scale(.95); }
-  .fla-waves > span:nth-child(1) { transform: scale(.17); opacity: .92; }
-  .fla-waves > span:nth-child(2) { transform: scale(.27); opacity: .84; }
-  .fla-waves > span:nth-child(3) { transform: scale(.38); opacity: .74; }
-  .fla-waves > span:nth-child(4) { transform: scale(.50); opacity: .63; }
-  .fla-waves > span:nth-child(5) { transform: scale(.63); opacity: .52; }
-  .fla-waves > span:nth-child(6) { transform: scale(.76); opacity: .40; }
-  .fla-waves > span:nth-child(7) { transform: scale(.89); opacity: .28; }
-  .fla-waves > span:nth-child(8) { transform: scale(1);   opacity: .16; }
-  .fla-waves > span:nth-child(9) { opacity: 0; }
-  .fla-column { opacity: 1; transform: scaleY(1.86) scaleX(.5); }
-  .fla-bead { opacity: 1; transform: translateY(calc(var(--droph) * -2.22)) scale(.58, .64); }
+  .fla-drop, .fla-mirror { opacity: 0; }
+  .fla-waves ellipse:nth-child(1) { transform: scale(.16); opacity: .62; }
+  .fla-waves ellipse:nth-child(2) { transform: scale(.29); opacity: .54; }
+  .fla-waves ellipse:nth-child(3) { transform: scale(.43); opacity: .46; }
+  .fla-waves ellipse:nth-child(4) { transform: scale(.58); opacity: .38; }
+  .fla-waves ellipse:nth-child(5) { transform: scale(.73); opacity: .30; }
+  .fla-waves ellipse:nth-child(6) { transform: scale(.88); opacity: .22; }
+  .fla-waves ellipse:nth-child(7) { transform: scale(1);   opacity: .14; }
+  .fla-column { opacity: 1; transform: scaleY(1.72) scaleX(.62); }
+  .fla-bead { opacity: 1; transform: translateY(calc(var(--droph) * -2.12)) scale(.64, .7); }
 }
 
 /* ── The curtain: everything below scrolls over the pinned hero ── */

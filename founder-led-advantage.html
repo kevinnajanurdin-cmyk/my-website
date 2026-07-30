@@ -90,78 +90,42 @@
     <section class="fla-hero" id="fla-top" aria-label="The Founder-led Advantage">
       <div class="fla-stage" data-ripple aria-hidden="true">
         <span class="fla-glow" data-glow></span>
+        <span class="fla-sheen"></span>
 
-        <!-- The droplet is drawn once and used three times: the one that
-             falls, its reflection in the surface, and the bead the rebound
-             throws back up. -->
+        <!-- Line art, not rendering. Every attempt to model the material —
+             gradients, caustics, speculars — landed somewhere between glossy
+             and illustrated. A single hairline outline can't: there is
+             nothing in it to look plastic. The silhouette is an ovoid with a
+             rounded cap and no interior mark, because a pointed teardrop
+             with a highlight arc inside it IS the clip-art water icon.
+
+             One outline, used four times: the drop that falls, its
+             reflection rising to meet it, the rebound column (the same form
+             drawn tall) and the bead it throws up. -->
         <svg class="fla-drop-defs" aria-hidden="true" focusable="false">
           <defs>
-            <!-- A drop of water on a dark ground is mostly the dark ground.
-                 You read it by the light bent round its lower edge, one small
-                 specular where the key light reflects, and the caustic it
-                 focuses low in its belly. Nothing here is opaque and nothing
-                 is saturated — a filled, glossy, cyan teardrop is the clip-art
-                 convention, not what water looks like. The silhouette is an
-                 ovoid with a rounded cap for the same reason: a sharp point
-                 reads as an icon. -->
-            <!-- Body darkest at the core and brightening to the edge: that
-                 Fresnel falloff is what separates glass from plastic. The
-                 contrast is high but the colour is not — all of it sits
-                 within a few degrees of the hero's own navy. -->
-            <radialGradient id="flaDropBody" cx="50%" cy="56%" r="60%">
-              <stop offset="0%"   stop-color="#0e1726" stop-opacity=".62"/>
-              <stop offset="54%"  stop-color="#18233a" stop-opacity=".58"/>
-              <stop offset="80%"  stop-color="#7b93af" stop-opacity=".5"/>
-              <stop offset="100%" stop-color="#eaf1f8" stop-opacity="1"/>
-            </radialGradient>
-            <linearGradient id="flaDropTop" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"   stop-color="#121b2b" stop-opacity=".5"/>
-              <stop offset="42%"  stop-color="#121b2b" stop-opacity="0"/>
-            </linearGradient>
-            <linearGradient id="flaDropRim" x1=".26" y1="0" x2=".58" y2="1">
-              <stop offset="0%"   stop-color="#c6d4e4" stop-opacity=".12"/>
-              <stop offset="38%"  stop-color="#dbe5f0" stop-opacity=".34"/>
-              <stop offset="74%"  stop-color="#ffffff" stop-opacity=".96"/>
-              <stop offset="100%" stop-color="#eef4fa" stop-opacity=".7"/>
-            </linearGradient>
-            <radialGradient id="flaDropCaustic">
-              <stop offset="0%"   stop-color="#ffffff" stop-opacity=".6"/>
-              <stop offset="40%"  stop-color="#e2ecf6" stop-opacity=".24"/>
-              <stop offset="100%" stop-color="#e2ecf6" stop-opacity="0"/>
-            </radialGradient>
-            <radialGradient id="flaDropSpec">
-              <stop offset="0%"   stop-color="#ffffff" stop-opacity=".92"/>
-              <stop offset="70%"  stop-color="#ffffff" stop-opacity=".35"/>
-              <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-            </radialGradient>
-            <!-- no fill/stroke here: each <use> below supplies its own -->
-            <path id="flaDropOutline" d="M22 7c2 0 3 1.9 4 4.4 3 7.6 13 14.2 13 24.6a17 17 0 0 1-34 0c0-10.4 10-17 13-24.6C19 8.9 20 7 22 7z"/>
             <symbol id="flaDropShape" viewBox="0 0 44 56">
-              <use href="#flaDropOutline" fill="url(#flaDropBody)"/>
-              <use href="#flaDropOutline" fill="url(#flaDropTop)"/>
-              <use href="#flaDropOutline" fill="none" stroke="url(#flaDropRim)" stroke-width="1.9"/>
-              <!-- broad, so it reads as light pooling in the belly; a tight
-                   disc here plus the specular reads as a pair of eyes -->
-              <ellipse cx="22" cy="41" rx="11" ry="8" fill="url(#flaDropCaustic)"/>
-              <ellipse cx="14.8" cy="25.5" rx="2.1" ry="3" fill="url(#flaDropSpec)" transform="rotate(-24 14.8 25.5)"/>
+              <path d="M22 7c2 0 3 1.9 4 4.4 3 7.6 13 14.2 13 24.6a17 17 0 0 1-34 0c0-10.4 10-17 13-24.6C19 8.9 20 7 22 7z" vector-effect="non-scaling-stroke"/>
             </symbol>
           </defs>
         </svg>
 
-        <!-- The surface: a plane laid back in perspective and centred on the
-             point the droplet lands, so the wave train reads as ellipses on
-             water rather than flat circles on a page. -->
-        <div class="fla-pool">
-          <div class="fla-plane">
-            <span class="fla-sheen"></span>
-            <span class="fla-bowl"></span>
-            <div class="fla-waves">
-              <span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span>
-            </div>
-            <span class="fla-flash"></span>
-          </div>
-        </div>
+        <!-- The surface: concentric hairlines, flattened to the angle the
+             pool is seen at. The stroke is non-scaling, so a ring that has
+             travelled to the edge is drawn at exactly the same weight as one
+             just leaving the centre — which is what keeps it reading as a
+             drawing rather than as expanding rubber bands. -->
+        <svg class="fla-pool" viewBox="0 0 1000 420" preserveAspectRatio="none" aria-hidden="true">
+          <g class="fla-waves">
+            <ellipse cx="500" cy="210" rx="486" ry="204"/>
+            <ellipse cx="500" cy="210" rx="486" ry="204"/>
+            <ellipse cx="500" cy="210" rx="486" ry="204"/>
+            <ellipse cx="500" cy="210" rx="486" ry="204"/>
+            <ellipse cx="500" cy="210" rx="486" ry="204"/>
+            <ellipse cx="500" cy="210" rx="486" ry="204"/>
+            <ellipse cx="500" cy="210" rx="486" ry="204"/>
+          </g>
+        </svg>
 
         <!-- The fall lane stays upright in screen space. -->
         <div class="fla-fall">
@@ -566,22 +530,13 @@
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', onScroll, { passive: true });
 
-      // ── Hero: cast a ring where you press, and drift the glow with the
-      //    pointer. The resting ripple is pure CSS, so this only adds to it. ──
+      // ── Hero: drift the ambient glow with the pointer. The ripple itself
+      //    is pure CSS and runs on its own; pressing the hero no longer
+      //    casts a ring. ──
       var stage = document.querySelector('[data-ripple]');
       if (stage && !reduce) {
         var hero = stage.closest('.fla-hero');
         var glow = stage.querySelector('[data-glow]');
-        hero.addEventListener('pointerdown', function (e) {
-          if (e.target.closest('a, button')) return;
-          var r = hero.getBoundingClientRect();
-          var ring = document.createElement('span');
-          ring.className = 'fla-ring fla-ring--cast';
-          ring.style.left = ((e.clientX - r.left) / r.width * 100) + '%';
-          ring.style.top = ((e.clientY - r.top) / r.height * 100) + '%';
-          stage.appendChild(ring);
-          setTimeout(function () { ring.remove(); }, 2800);
-        });
         if (glow) {
           hero.addEventListener('pointermove', function (e) {
             var r = hero.getBoundingClientRect();
