@@ -4612,7 +4612,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    outline drawn tall, with its base masked so the line dissolves into the
    surface instead of closing into a bulb. */
 .fla-column {
-  stroke-width: 1.75;                 /* ÷ scaleX(.62) */
+  stroke-width: 1.36;                 /* ÷ scaleX(.81) */
   -webkit-mask-image: linear-gradient(180deg, #000 0 52%, transparent 88%);
           mask-image: linear-gradient(180deg, #000 0 52%, transparent 88%);
   opacity: 0;
@@ -4674,13 +4674,15 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   100%    { opacity: 0; }
 }
 /* Rises decelerating to its apex at 37%, then collapses accelerating. */
+/* scaleX values are the old ones x 1.31, compensating for the narrower
+   droplet outline this is drawn from, so the jet keeps its own width. */
 @keyframes fla-column {
-  0%, 26.5% { transform: scaleY(0) scaleX(1.5);
+  0%, 26.5% { transform: scaleY(0) scaleX(1.96);
               animation-timing-function: cubic-bezier(.333, .667, .667, 1); }
-  37%       { transform: scaleY(1.72) scaleX(.62);
+  37%       { transform: scaleY(1.72) scaleX(.81);
               animation-timing-function: cubic-bezier(.333, 0, .667, .333); }
-  53%       { transform: scaleY(0) scaleX(1.05); }
-  100%      { transform: scaleY(0) scaleX(1.1); }
+  53%       { transform: scaleY(0) scaleX(1.37); }
+  100%      { transform: scaleY(0) scaleX(1.44); }
 }
 @keyframes fla-column-fade {
   0%, 26.5% { opacity: 0; }
@@ -4734,7 +4736,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   .fla-waves ellipse:nth-child(5) { transform: scale(.73); opacity: .30; }
   .fla-waves ellipse:nth-child(6) { transform: scale(.88); opacity: .22; }
   .fla-waves ellipse:nth-child(7) { transform: scale(1);   opacity: .14; }
-  .fla-column { opacity: 1; transform: scaleY(1.72) scaleX(.62); }
+  .fla-column { opacity: 1; transform: scaleY(1.72) scaleX(.81); }
   .fla-bead { opacity: 1; transform: translateY(calc(var(--droph) * -2.2)) scale(.65, .71); }
 }
 
