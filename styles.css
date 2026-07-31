@@ -4817,7 +4817,14 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    content width. Measure removed so the container governs, and the cap set to
    48px, which lands it at ~1076px. One line from ~820px up; below that it
    wraps, as 52 characters must. */
-#fla-spec-h { max-width: none; font-size: clamp(32px, 3.72vw, 48px); }
+/* Roughly double the shared h2 gap. This heading introduces a two-column
+   block rather than a paragraph, and it spans the full container, so it
+   needs more air under it than a heading sitting directly on its own copy. */
+#fla-spec-h {
+  max-width: none;
+  font-size: clamp(32px, 3.72vw, 48px);
+  margin-bottom: clamp(46px, 7vh, 84px);
+}
 
 /* The heading is above the grid (full container width), so this row carries
    only the blurb and the clip — which lets the video track take the larger
