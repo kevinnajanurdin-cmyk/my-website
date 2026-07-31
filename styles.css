@@ -3419,11 +3419,12 @@ body.nav-open.over-hero .header-cta {
   align-items: center;
   justify-content: center;
   height: 54px;
-  padding: 8px 12px;
   border: 1px solid var(--line);
   border-radius: 3px;
   background: #fff;
 }
+/* padding lives on the link so the whole tile is the hit area */
+.invest-platforms li > a { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 8px 12px; }
 .invest-platforms img {
   max-height: 30px;
   max-width: 100%;
@@ -5028,8 +5029,10 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   font-size: 16px; font-weight: 600; letter-spacing: var(--track-eyebrow); text-transform: uppercase;
 }
 .fla-plats { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px; }
-.fla-plats li { background: #fff; border: 1px solid var(--line); border-radius: 3px; display: grid; place-items: center; padding: 26px 14px; min-height: 92px; }
-.fla-plats img { max-width: 100%; height: auto; filter: grayscale(1); opacity: .55; transition: filter .4s ease, opacity .4s ease; }
+.fla-plats li { background: #fff; border: 1px solid var(--line); border-radius: 3px; display: grid; place-items: center; min-height: 92px; }
+.fla-plats li > a { display: grid; place-items: center; width: 100%; height: 100%; padding: 26px 14px; }
+.fla-plats img { max-width: 100%; max-height: 34px; width: auto; height: auto; object-fit: contain;
+                 filter: grayscale(1); opacity: .55; transition: filter .4s ease, opacity .4s ease; }
 .fla-plats li:hover { border-color: var(--accent); }
 .fla-plats li:hover img { filter: none; opacity: 1; }
 
@@ -5049,8 +5052,10 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 
 /* ── Footnote ── */
 .fla-notes { background: #fff; border-top: 1px solid var(--line); padding: clamp(30px, 4.4vh, 52px) 0 clamp(40px, 6vh, 68px); }
-/* deliberately the quietest type on the page */
-.fla-notes p { margin: 0; max-width: 88ch; font-size: 13px; line-height: 1.62; color: var(--ink-mute); opacity: .82; }
+/* Deliberately the quietest type on the page, but full container width —
+   a ch measure at 13px pulled it in to ~667px and left it stranded in a
+   narrow column. Disclaimers run the page. */
+.fla-notes p { margin: 0; max-width: none; font-size: 13px; line-height: 1.62; color: var(--ink-mute); opacity: .82; }
 .fla-notes p span { font-weight: 600; margin-right: 3px; }
 
 /* ── Responsive ─────────────────────────────────────────── */
@@ -5087,9 +5092,17 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   .fla-video-frame { flex: 0 0 auto; aspect-ratio: 16 / 9; min-height: 0; }
   .fla-reasons, .fla-proofs, .fla-ways { grid-template-columns: 1fr; }
   .fla-plats { grid-template-columns: repeat(3, 1fr); }
+  /* fewer columns means wider cells, so pull the tiles in rather than
+     letting a 3-across grid become three big boxes */
+  .fla-plats li { min-height: 74px; }
+  .fla-plats li > a { padding: 16px 12px; }
+  .fla-plats img { max-height: 28px; }
   .fla-holdings li { flex-basis: 100px; }
 }
 @media (max-width: 560px) {
   .fla-plats { grid-template-columns: repeat(2, 1fr); }
+  .fla-plats li { min-height: 64px; }
+  .fla-plats li > a { padding: 12px 10px; }
+  .fla-plats img { max-height: 24px; }
   .fla-h2, .fla-say { max-width: none; }
 }
