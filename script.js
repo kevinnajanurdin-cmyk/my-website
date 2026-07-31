@@ -28,25 +28,25 @@ const founders = [
     first: "Alex", last: "Karp", company: "Palantir",
     role: "Co-founder & CEO", founded: "2003", sector: "AI Platforms",
     geo: "United States", accent: "#0a1a2f",
-    thesis: "Long-duration software for the institutions that matter most. Karp's intellectual independence and mission orientation produce a workforce — and a product — competitors can't replicate."
+    thesis: "Karp built Palantir to turn a company’s scattered data into a working model of its operations, allowing employees to understand what is happening, decide what to do and act through one system."
   },
   {
     first: "Brian", last: "Armstrong", company: "Coinbase",
     role: "Co-founder & CEO", founded: "2012", sector: "FinTech",
     geo: "United States", accent: "#0052ff",
-    thesis: "The most regulated, most trusted on-ramp to digital assets. A founder who has earned the right to lead the category through every cycle."
+    thesis: "Armstrong chose regulation when much of crypto ran offshore, giving institutions the custody, compliance and infrastructure needed to bring blockchain assets into mainstream finance."
   },
   {
     first: "Elon", last: "Musk", company: "Tesla", company2: "SpaceX",
     role: "Co-founder & CEO", founded: "2003 · 2002", sector: "Robotics · Space",
     geo: "United States", accent: "#cc1f2e",
-    thesis: "The most consequential industrial founder of his generation — a vertical integrator who turned electric vehicles, energy storage and autonomy into a single compounding flywheel. With SpaceX, he rewrote the economics of reaching orbit."
+    thesis: "Musk made electric cars desirable and rockets reusable by rebuilding both industries around first-principles engineering, vertical integration and relentless reductions in cost."
   },
   {
     first: "He", last: "Xiaopeng", company: "XPeng",
     role: "Co-founder & CEO", founded: "2014", sector: "Robotics",
     geo: "China", accent: "#0a8de8",
-    thesis: "Software-first EV native with the highest-rated assisted-driving stack in China. Iteration speed and engineering culture set XPeng apart from the legacy auto cohort."
+    thesis: "He Xiaopeng built XPeng like a technology company rather than a traditional carmaker, using software, AI and rapid iteration to improve the vehicle long after it leaves the factory."
   },
   {
     first: "Dylan", last: "Field", company: "Figma",
@@ -58,7 +58,7 @@ const founders = [
     first: "Peter", last: "Beck", company: "Rocket Lab",
     role: "Founder & CEO", founded: "2006", sector: "Access to Space",
     geo: "New Zealand / USA", accent: "#e63312",
-    thesis: "From garage tinkerer to the second most prolific Western launch provider. Now moving up-stack into spacecraft — a vertical integrator in the making."
+    thesis: "Beck turned a rocket built in a garage into a reliable launch service, then expanded into the satellites and systems needed to run complete space missions."
   },
   {
     first: "Yosuke", last: "Tsuji", company: "Money Forward",
@@ -95,7 +95,7 @@ const founders = [
     first: "Robin", last: "Zeng", company: "CATL",
     role: "Founder & Chair", founded: "2011", sector: "New Energy",
     geo: "China", accent: "#003a78",
-    thesis: "The world's dominant battery maker. Scale, chemistry leadership and customer breadth that competitors will need a decade and a balance sheet to approach."
+    thesis: "Zeng combined chemistry innovation, simpler battery packs and enormous manufacturing scale to cut the cost of energy storage, helping electric vehicles compete with petrol cars on price and performance."
   },
   {
     first: "Sam", last: "Hupert", company: "Pro Medicus",
@@ -113,13 +113,13 @@ const founders = [
     first: "David", last: "Baszucki", company: "Roblox",
     role: "Co-founder & CEO", founded: "2004", sector: "Gaming Platforms",
     geo: "United States", accent: "#e2241a",
-    thesis: "The platform on which a generation creates, plays and increasingly earns. A 20-year founder still treating it like year one."
+    thesis: "Baszucki built Roblox as a platform rather than a collection of games, giving users the tools to create experiences, attract audiences and earn from the worlds they build."
   },
   {
     first: "Mikheil", last: "Lomtadze", company: "Kaspi",
     role: "Co-founder & CEO", founded: "2006", sector: "Ecommerce",
     geo: "Kazakhstan", accent: "#f14635",
-    thesis: "Kazakhstan's dominant e-commerce marketplace and consumer super-app. Lomtadze turned a regional bank into the daily-use platform for shopping and payments, with rare profitability and deep founder ownership."
+    thesis: "Lomtadze turned a regional bank into Kazakhstan’s dominant everyday app by combining payments, shopping and personal finance in one place, making Kaspi part of how millions live and transact."
   }
 ];
 
