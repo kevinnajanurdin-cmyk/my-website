@@ -4811,15 +4811,19 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .fla-fine { margin: 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.44); }
 
 /* ── 03 Specialist — copy + video, then the holdings ── */
-/* The heading sits in the left column so the video's top edge lines up with
-   it, instead of starting a block further down the page. */
-.fla-spec-grid { display: grid; grid-template-columns: 0.86fr 1.14fr; gap: clamp(28px, 4vw, 68px); align-items: stretch; }
-.fla-spec-copy .fla-h2 { margin-bottom: clamp(20px, 3vh, 30px); }
-/* The frame stretches to the height of the blurb beside it. A 16:9 box can't
-   reach that height at this width, so the frame grows and the video is fitted
-   inside it (contain, not cover) — nothing is cropped off the poster, which
-   carries titling on its right-hand side. */
-.fla-video { display: flex; flex-direction: column; min-width: 0; }
+/* The heading is above the grid (full container width), so this row carries
+   only the blurb and the clip — which lets the video track take the larger
+   share without squeezing the heading into four lines. */
+.fla-spec-grid { display: grid; grid-template-columns: 0.82fr 1.18fr; gap: clamp(28px, 4vw, 68px); align-items: stretch; }
+/* Only give the clip the lion's share once there is width to spare — below
+   this the blurb's column falls under ~35 characters and stops reading. */
+@media (min-width: 1200px) {
+  .fla-spec-grid { grid-template-columns: 0.68fr 1.32fr; }
+}
+/* The frame is pinned to 16:9 (see below), so it cannot fill the column's
+   full height when the blurb beside it runs long. Centre it in the track
+   rather than leaving all the slack underneath. */
+.fla-video { display: flex; flex-direction: column; justify-content: center; min-width: 0; }
 /* 0 0 auto, not 1 1 auto: the frame must keep its 16:9 exactly. Stretched
    taller by the flex column it would no longer match the clip, and the
    `cover` below would start cropping the titling off the poster's right. */
