@@ -44,6 +44,11 @@
      Dense fund-data labels and table headers stay tighter on purpose. */
   --track-eyebrow: .14em;
   --track-label: .10em;
+  /* Running copy. Formata Light is narrow and light, and at the browser's
+     default `normal` it sets tighter than most sans faces do at the same
+     size. Set on body so it inherits everywhere; the serif headings
+     override it back to their own tracking. */
+  --track-body: .015em;
 
   --container: 1240px;
   --gutter: clamp(24px, 5vw, 64px);
@@ -59,6 +64,7 @@ body {
   font-family: var(--sans);
   font-size: 18px;
   line-height: 1.65;
+  letter-spacing: var(--track-body);
   font-weight: 400;
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
