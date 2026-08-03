@@ -50,7 +50,7 @@ const founders = [
   },
   {
     first: "Sam", last: "Hupert", company: "Pro Medicus",
-    role: "Co-founder & CEO", founded: "1983", sector: "Medical Imaging",
+    role: "Co-founder & CEO", founded: "1983", sector: "MedTech",
     geo: "Australia", accent: "#0a4f8a",
     thesis: "Four-decade founder still compounding. Pro Medicus's Visage platform is the gold standard in radiology and is winning the largest US health systems one by one."
   },
@@ -62,7 +62,7 @@ const founders = [
   },
   {
     first: "David", last: "Baszucki", company: "Roblox",
-    role: "Co-founder & CEO", founded: "2004", sector: "Gaming Platforms",
+    role: "Co-founder & CEO", founded: "2004", sector: "Digital Media",
     geo: "United States", accent: "#e2241a",
     thesis: "Baszucki built Roblox as a platform rather than a collection of games, giving users the tools to create experiences, attract audiences and earn from the worlds they build."
   },
