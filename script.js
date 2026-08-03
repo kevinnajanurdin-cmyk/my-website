@@ -25,55 +25,6 @@ if (toggle) {
 // their relative order. Move a founder here and the opening card moves with it.
 const founders = [
   {
-    first: "Alex", last: "Karp", company: "Palantir",
-    role: "Co-founder & CEO", founded: "2003", sector: "AI Platforms",
-    geo: "United States", accent: "#0a1a2f",
-    thesis: "Karp built Palantir to turn a company’s scattered data into a working model of its operations, allowing employees to understand what is happening, decide what to do and act through one system."
-  },
-  {
-    first: "Brian", last: "Armstrong", company: "Coinbase",
-    role: "Co-founder & CEO", founded: "2012", sector: "FinTech",
-    geo: "United States", accent: "#0052ff",
-    thesis: "Armstrong chose regulation when much of crypto ran offshore, giving institutions the custody, compliance and infrastructure needed to bring blockchain assets into mainstream finance."
-  },
-  {
-    first: "Elon", last: "Musk", company: "Tesla", company2: "SpaceX",
-    role: "Co-founder & CEO", founded: "2003 · 2002", sector: "Robotics · Space",
-    geo: "United States", accent: "#cc1f2e",
-    thesis: "Musk made electric cars desirable and rockets reusable by rebuilding both industries around first-principles engineering, vertical integration and relentless reductions in cost."
-  },
-  {
-    first: "He", last: "Xiaopeng", company: "XPeng",
-    role: "Co-founder & CEO", founded: "2014", sector: "Robotics",
-    geo: "China", accent: "#0a8de8",
-    thesis: "He Xiaopeng built XPeng like a technology company rather than a traditional carmaker, using software, AI and rapid iteration to improve the vehicle long after it leaves the factory."
-  },
-  {
-    first: "Dylan", last: "Field", company: "Figma",
-    role: "Co-founder & CEO", founded: "2012", sector: "Digital Media",
-    geo: "United States", accent: "#a259ff",
-    thesis: "Collaborative design as default. A founder with an unusually long horizon who turned down the largest software deal ever to keep building."
-  },
-  {
-    first: "Peter", last: "Beck", company: "Rocket Lab",
-    role: "Founder & CEO", founded: "2006", sector: "Access to Space",
-    geo: "New Zealand / USA", accent: "#e63312",
-    thesis: "Beck turned a rocket built in a garage into a reliable launch service, then expanded into the satellites and systems needed to run complete space missions."
-  },
-  {
-    first: "Yosuke", last: "Tsuji", company: "Money Forward",
-    role: "Founder & CEO", founded: "2012", sector: "FinTech",
-    geo: "Japan", accent: "#0099a8",
-    thesis: "Japan's leading household-finance and SaaS-for-SMB platform. A founder rebuilding the country's financial plumbing for a digital generation."
-  },
-  {
-    // ── Centre of the deck: the card the carousel opens on ──
-    first: "Jensen", last: "Huang", company: "Nvidia",
-    role: "Co-founder & CEO", founded: "1993", sector: "AI Hardware",
-    geo: "United States", accent: "#76b900",
-    thesis: "Three decades of compounding without selling a share. The accelerated-computing platform he willed into existence now underwrites the entire AI build-out."
-  },
-  {
     first: "Rick", last: "Smith", company: "Axon",
     role: "Co-founder & CEO", founded: "1993", sector: "Internet of Things",
     geo: "United States", accent: "#fdb414",
@@ -114,6 +65,55 @@ const founders = [
     role: "Co-founder & CEO", founded: "2004", sector: "Gaming Platforms",
     geo: "United States", accent: "#e2241a",
     thesis: "Baszucki built Roblox as a platform rather than a collection of games, giving users the tools to create experiences, attract audiences and earn from the worlds they build."
+  },
+  {
+    // ── Centre of the deck: the card the carousel opens on ──
+    first: "Jensen", last: "Huang", company: "Nvidia",
+    role: "Co-founder & CEO", founded: "1993", sector: "AI Hardware",
+    geo: "United States", accent: "#76b900",
+    thesis: "Three decades of compounding without selling a share. The accelerated-computing platform he willed into existence now underwrites the entire AI build-out."
+  },
+  {
+    first: "Alex", last: "Karp", company: "Palantir",
+    role: "Co-founder & CEO", founded: "2003", sector: "AI Platforms",
+    geo: "United States", accent: "#0a1a2f",
+    thesis: "Karp built Palantir to turn a company’s scattered data into a working model of its operations, allowing employees to understand what is happening, decide what to do and act through one system."
+  },
+  {
+    first: "Brian", last: "Armstrong", company: "Coinbase",
+    role: "Co-founder & CEO", founded: "2012", sector: "FinTech",
+    geo: "United States", accent: "#0052ff",
+    thesis: "Armstrong chose regulation when much of crypto ran offshore, giving institutions the custody, compliance and infrastructure needed to bring blockchain assets into mainstream finance."
+  },
+  {
+    first: "Elon", last: "Musk", company: "Tesla", company2: "SpaceX",
+    role: "Co-founder & CEO", founded: "2003 · 2002", sector: "Robotics · Space",
+    geo: "United States", accent: "#cc1f2e",
+    thesis: "Musk made electric cars desirable and rockets reusable by rebuilding both industries around first-principles engineering, vertical integration and relentless reductions in cost."
+  },
+  {
+    first: "He", last: "Xiaopeng", company: "XPeng",
+    role: "Co-founder & CEO", founded: "2014", sector: "Robotics",
+    geo: "China", accent: "#0a8de8",
+    thesis: "He Xiaopeng built XPeng like a technology company rather than a traditional carmaker, using software, AI and rapid iteration to improve the vehicle long after it leaves the factory."
+  },
+  {
+    first: "Dylan", last: "Field", company: "Figma",
+    role: "Co-founder & CEO", founded: "2012", sector: "Digital Media",
+    geo: "United States", accent: "#a259ff",
+    thesis: "Collaborative design as default. A founder with an unusually long horizon who turned down the largest software deal ever to keep building."
+  },
+  {
+    first: "Peter", last: "Beck", company: "Rocket Lab",
+    role: "Founder & CEO", founded: "2006", sector: "Access to Space",
+    geo: "New Zealand / USA", accent: "#e63312",
+    thesis: "Beck turned a rocket built in a garage into a reliable launch service, then expanded into the satellites and systems needed to run complete space missions."
+  },
+  {
+    first: "Yosuke", last: "Tsuji", company: "Money Forward",
+    role: "Founder & CEO", founded: "2012", sector: "FinTech",
+    geo: "Japan", accent: "#0099a8",
+    thesis: "Japan's leading household-finance and SaaS-for-SMB platform. A founder rebuilding the country's financial plumbing for a digital generation."
   },
   {
     first: "Mikheil", last: "Lomtadze", company: "Kaspi",
