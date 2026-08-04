@@ -84,17 +84,29 @@ blockquote {
   margin: 40px 0;
   padding: 0 0 0 clamp(24px, 3vw, 36px);
   border-left: 2px solid var(--accent);
+  /* Pinned, not inherited. Pasted editor content and page-builder columns
+     routinely arrive centred and inset; the house quote is flush left and
+     runs the full measure of the body it sits in. */
+  text-align: left;
+  max-width: none;
+  width: auto;
 }
-blockquote p {
+/* The .essay-body variant is not redundant: .essay-body p is (0,1,1) and
+   would otherwise outrank a bare `blockquote p` (0,0,2), handing a quote
+   inside a WordPress essay the body-copy size, colour and bottom margin. */
+blockquote p,
+.essay-body blockquote p {
   font-family: var(--sans);
   font-style: normal;
   font-size: clamp(18px, 2vw, 21px);
   line-height: 1.55;
   color: var(--ink);
   margin: 0;
+  text-align: left;
 }
 /* the editor can put several paragraphs inside one quote */
-blockquote p + p { margin-top: .8em; }
+blockquote p + p,
+.essay-body blockquote p + p { margin-top: .8em; }
 blockquote cite {
   display: block;
   margin-top: 14px;
