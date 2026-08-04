@@ -542,8 +542,11 @@ $sFoot  = $sShell.Substring($sfs, $sfe - $sfs)
 
 $essayStyle = @'
 <style>
-  .essay-body blockquote:not(.essay-inline-quote):not(.essay-epigraph) { font-family: var(--serif); font-style: italic; font-size: clamp(1.25rem, 2.4vw, 1.6rem); line-height: 1.5; color: var(--ink); text-align: center; max-width: 32ch; margin: 2.5rem auto; }
-  .essay-body blockquote p { margin: 0; }
+  /* WP-authored blockquotes deliberately have NO rule here: they inherit the
+     house quote treatment from styles.css (2px accent rule, sans, flush
+     left, full measure), which matches .essay-inline-quote on the static
+     pages. A former rule here made them centred serif pull-quotes at 32ch,
+     which outranked the stylesheet on both specificity and load order. */
   /* Hide the Reading Time WP plugin's injected "Reading Time: N minutes" span
      (overrides its inline display:block); the essay header shows a computed
      "N min read" instead. */
