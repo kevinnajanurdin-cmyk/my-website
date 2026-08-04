@@ -73,6 +73,40 @@ body {
 
 img, svg { display: block; max-width: 100%; }
 
+/* ── Quotes authored in WordPress ─────────────────────────
+   The editor emits a bare <blockquote> whose class names are machine
+   generated (cvGsUA, a_GcMg …), so the element itself is the only stable
+   hook. These values mirror .essay-inline-quote, the house treatment.
+   The hand-built quote classes are class selectors and so outrank this;
+   .essay-epigraph and .hero-quote additionally reset the rule and padding,
+   since neither wants a left rule. */
+blockquote {
+  margin: 40px 0;
+  padding: 0 0 0 clamp(24px, 3vw, 36px);
+  border-left: 2px solid var(--accent);
+}
+blockquote p {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: clamp(18px, 2vw, 21px);
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0;
+}
+/* the editor can put several paragraphs inside one quote */
+blockquote p + p { margin-top: .8em; }
+blockquote cite {
+  display: block;
+  margin-top: 14px;
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
 a { color: inherit; text-decoration: none; transition: color .2s ease; }
 a:hover { color: var(--accent-deep); }
 
@@ -325,6 +359,9 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 .section-eyebrow.light { color: var(--on-dark-mute); }
 
 .hero-quote {
+  /* opts out of the base blockquote rule above, as .essay-epigraph does */
+  padding: 0;
+  border: none;
   font-family: var(--serif);
   font-style: italic;
   font-weight: 500;
