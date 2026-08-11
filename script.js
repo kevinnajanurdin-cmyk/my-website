@@ -28,19 +28,19 @@ const founders = [
     first: "Rick", last: "Smith", company: "Axon",
     role: "Co-founder & CEO", founded: "1993", sector: "Internet of Things",
     geo: "United States", accent: "#fdb414",
-    thesis: "From Taser to a category-defining public-safety software platform. Razor-and-blades hardware funds a recurring software business with extraordinary stickiness."
+    thesis: "Smith transformed Axon from a single-product company into a connected public safety platform, combining hardware, software and AI to modernise how law enforcement agencies operate."
   },
   {
     first: "David", last: "Nyland", company: "Lumine",
     role: "President & CEO", founded: "2023", sector: "Vertical Market Software",
     geo: "Canada", accent: "#1d3e75",
-    thesis: "The Constellation-Software playbook applied to communications & media software. Decentralised, founder-respecting M&A with a multi-decade reinvestment runway."
+    thesis: "Nyland is applying the Constellation Software playbook to communications and media, acquiring niche software businesses and compounding value through disciplined capital allocation and decentralised management."
   },
   {
     first: "Ken", last: "Xie", company: "Fortinet",
     role: "Founder, Chair & CEO", founded: "2000", sector: "Cyber Security",
     geo: "United States", accent: "#ee3124",
-    thesis: "Founder-built ASIC advantage in network security. Ken still owns a meaningful stake and runs the company with the discipline of an owner-operator."
+    thesis: "Xie built one of the world’s leading cybersecurity platforms by combining proprietary hardware and software, creating a differentiated architecture that enables faster, lower-cost network security at scale."
   },
   {
     first: "Robin", last: "Zeng", company: "CATL",
@@ -52,13 +52,13 @@ const founders = [
     first: "Sam", last: "Hupert", company: "Pro Medicus",
     role: "Co-founder & CEO", founded: "1983", sector: "MedTech",
     geo: "Australia", accent: "#0a4f8a",
-    thesis: "Four-decade founder still compounding. Pro Medicus's Visage platform is the gold standard in radiology and is winning the largest US health systems one by one."
+    thesis: "Hupert transformed medical imaging by enabling radiologists to access and analyse enormous scans almost instantly from the cloud, making Pro Medicus the platform of choice for many of the world’s leading hospitals."
   },
   {
     first: "Marcos", last: "Galperín", company: "Mercado Libre",
     role: "Co-founder & CEO", founded: "1999", sector: "Ecommerce",
     geo: "Latin America", accent: "#ffe600",
-    thesis: "The Amazon-plus-PayPal of Latin America under a founder who has out-executed every regional and global challenger for 25 years."
+    thesis: "Galperín built Latin America’s leading digital commerce ecosystem, integrating e-commerce, payments, logistics and financial services into a platform that has become essential infrastructure for millions of consumers and businesses."
   },
   {
     first: "David", last: "Baszucki", company: "Roblox",
@@ -71,7 +71,7 @@ const founders = [
     first: "Jensen", last: "Huang", company: "Nvidia",
     role: "Co-founder & CEO", founded: "1993", sector: "AI Hardware",
     geo: "United States", accent: "#76b900",
-    thesis: "Three decades of compounding without selling a share. The accelerated-computing platform he willed into existence now underwrites the entire AI build-out."
+    thesis: "Huang recognised that GPUs could power far more than graphics, then spent three decades building the chips, software and developer ecosystem that underpins today’s AI revolution."
   },
   {
     first: "Alex", last: "Karp", company: "Palantir",
@@ -101,7 +101,7 @@ const founders = [
     first: "Dylan", last: "Field", company: "Figma",
     role: "Co-founder & CEO", founded: "2012", sector: "Digital Media",
     geo: "United States", accent: "#a259ff",
-    thesis: "Collaborative design as default. A founder with an unusually long horizon who turned down the largest software deal ever to keep building."
+    thesis: "Field transformed design from a standalone desktop tool into a collaborative, cloud-based platform. By enabling designers, engineers and product managers to collaborate in real time, Figma has become a critical infrastructure for modern software development."
   },
   {
     first: "Peter", last: "Beck", company: "Rocket Lab",
@@ -113,13 +113,13 @@ const founders = [
     first: "Yosuke", last: "Tsuji", company: "Money Forward",
     role: "Founder & CEO", founded: "2012", sector: "FinTech",
     geo: "Japan", accent: "#0099a8",
-    thesis: "Japan's leading household-finance and SaaS-for-SMB platform. A founder rebuilding the country's financial plumbing for a digital generation."
+    thesis: "Tsuji is digitising one of the world’s least digitised business economies. He created a cloud platform that is transforming how Japanese businesses manage accounting, payroll and payments."
   },
   {
     first: "Mikheil", last: "Lomtadze", company: "Kaspi",
     role: "Co-founder & CEO", founded: "2006", sector: "Ecommerce",
     geo: "Kazakhstan", accent: "#f14635",
-    thesis: "Lomtadze turned a regional bank into Kazakhstan’s dominant everyday app by combining payments, shopping and personal finance in one place, making Kaspi part of how millions live and transact."
+    thesis: "Lomtadze transformed a regional bank into Kazakhstan’s leading super app, integrating payments, shopping and financial services to create one of the country’s most deeply embedded digital platforms used by millions every day."
   }
 ];
 
@@ -915,7 +915,16 @@ const counterIO = new IntersectionObserver(
   },
   { threshold: 0.4 }
 );
-counterTargets.forEach((el) => counterIO.observe(el));
+// Seed the animation's starting value from JS rather than hard-coding it in the
+// markup. The HTML carries the REAL figure so crawlers that don't run JS extract
+// 24.7, not a "0.0" placeholder; anyone with JS sees the same count-up as before.
+// Safe to do after paint: every counter sits well below the fold.
+counterTargets.forEach((el) => {
+  const unit = el.querySelector(".perf-unit, .stat-unit, .odd-unit");
+  const decimals = parseInt(el.dataset.decimals || "0", 10);
+  el.innerHTML = (0).toFixed(decimals) + (unit ? unit.outerHTML : "");
+  counterIO.observe(el);
+});
 
 // ─── Reveal on scroll ──────────────────────────────────
 const reveals = document.querySelectorAll(

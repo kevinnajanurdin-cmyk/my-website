@@ -379,7 +379,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   font-weight: 500;
   font-size: clamp(38px, 6vw, 72px);
   line-height: 1.18;
-  letter-spacing: .02em;
+  letter-spacing: normal;
   margin: 0 auto;
   max-width: 1000px;
   color: var(--on-dark);
@@ -490,7 +490,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   line-height: 1.18;
   margin: 0;
   color: var(--ink);
-  letter-spacing: .02em;
+  letter-spacing: normal;
 }
 .about-headline em {
   font-style: italic;
@@ -513,7 +513,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   font-weight: 500;
   line-height: 1;
   color: var(--ink);
-  letter-spacing: .005em;
+  letter-spacing: normal;
 }
 .stat-unit {
   color: var(--accent-deep);
@@ -538,7 +538,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   line-height: 1.15;
   margin: 0 0 72px;
   color: var(--ink);
-  letter-spacing: .015em;
+  letter-spacing: normal;
 }
 .section-title.centered { text-align: center; }
 .section-title.light { color: var(--on-dark); }
@@ -580,7 +580,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   margin: 0;
   color: var(--ink);
   line-height: 1.15;
-  letter-spacing: .02em;
+  letter-spacing: normal;
 }
 
 /* ─── WHAT FOUNDERS DO DIFFERENTLY ─────────────────────── */
@@ -629,7 +629,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   font-style: italic;
   font-weight: 400;
   font-size: 22px;
-  letter-spacing: .035em;
+  letter-spacing: normal;
   opacity: .72;
 }
 .advantage-body {
@@ -641,7 +641,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   font-size: clamp(34px, 3.8vw, 48px);
   margin: 0 0 28px;
   line-height: 1.1;
-  letter-spacing: .02em;
+  letter-spacing: normal;
 }
 .advantage-card p {
   margin: 0;
@@ -786,7 +786,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
      scales the whole numeral display proportionally. */
   font-size: clamp(58px, 9.6vw, 134px);
   line-height: .95;
-  letter-spacing: .005em;
+  letter-spacing: normal;
   color: rgba(255,255,255,.14);
   transition: color .7s cubic-bezier(.2,.7,.2,1), text-shadow .7s cubic-bezier(.2,.7,.2,1);
   text-align: center;
@@ -1062,7 +1062,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   font-weight: 500;
   font-size: clamp(22px, 1.9vw, 27px);
   line-height: 1.2;
-  letter-spacing: .015em;
+  letter-spacing: normal;
   color: #fff;
 }
 /* Focus hierarchy — a closed band shows exactly ONE quiet line: its title,
@@ -1141,7 +1141,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   margin: 0 0 20px;
   color: var(--ink);
   line-height: 1.1;
-  letter-spacing: .015em;
+  letter-spacing: normal;
 }
 .contact-sub {
   color: var(--ink-mute);
@@ -1157,7 +1157,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   color: var(--accent-deep);
   border-bottom: 2px solid var(--accent);
   padding-bottom: 6px;
-  letter-spacing: .025em;
+  letter-spacing: normal;
 }
 .contact-email:hover { color: var(--ink); border-color: var(--ink); }
 
@@ -1371,7 +1371,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   font-family: var(--serif);
   font-style: italic;
   font-size: 88px;
-  letter-spacing: .035em;
+  letter-spacing: normal;
   filter: grayscale(100%);
   transition: filter .6s cubic-bezier(.2,.7,.2,1);
 }
@@ -1432,7 +1432,7 @@ body.panel-open .cover-card.active .cover-card-tag {
   font-size: clamp(24px, 2.6vw, 34px);
   line-height: 1.15;
   margin: 0;
-  letter-spacing: .02em;
+  letter-spacing: normal;
 }
 .coverflow-active-role {
   margin: 6px 0 0;
@@ -1669,7 +1669,7 @@ img.panel-scene.cover-fade {
   line-height: 1.1;
   margin: 0 0 8px;
   color: var(--ink);
-  letter-spacing: .015em;
+  letter-spacing: normal;
 }
 .founder-panel-role {
   font-size: 16px;
@@ -1702,7 +1702,7 @@ img.panel-scene.cover-fade {
   font-weight: 500;
   color: var(--ink);
   line-height: 1.3;
-  letter-spacing: .025em;
+  letter-spacing: normal;
 }
 .founder-panel-thesis {
   font-size: 17px;
@@ -1966,7 +1966,7 @@ body.nav-open.over-hero .header-cta {
   font-weight: 400;
   font-size: clamp(15px, 1.3vw, 18px);
   color: var(--ink-mute);
-  letter-spacing: .035em;
+  letter-spacing: normal;
   flex-shrink: 0;
 }
 .fund-h2 {
@@ -1975,7 +1975,7 @@ body.nav-open.over-hero .header-cta {
   font-weight: 500;
   font-size: clamp(28px, 3.4vw, 42px);
   line-height: 1.15;
-  letter-spacing: .015em;
+  letter-spacing: normal;
   color: var(--ink);
 }
 .fund-h2-sub {
@@ -1995,7 +1995,7 @@ body.nav-open.over-hero .header-cta {
   font-family: var(--serif);
   font-weight: 500;
   font-size: clamp(18px, 1.6vw, 22px);
-  letter-spacing: .02em;
+  letter-spacing: normal;
   color: var(--ink);
 }
 
@@ -2022,7 +2022,7 @@ body.nav-open.over-hero .header-cta {
   font-weight: 500;
   font-size: clamp(40px, 6vw, 76px);
   line-height: 1.06;
-  letter-spacing: .013em;
+  letter-spacing: normal;
   color: var(--ink);
 }
 .fund-hero-title-sub {
@@ -2032,7 +2032,7 @@ body.nav-open.over-hero .header-cta {
   font-size: clamp(26px, 3.4vw, 42px);
   line-height: 1.1;
   color: var(--ink-soft);
-  letter-spacing: .02em;
+  letter-spacing: normal;
 }
 .fund-hero-intro {
   margin: 0;
@@ -2080,7 +2080,7 @@ body.nav-open.over-hero .header-cta {
   font-weight: 400;
   font-size: clamp(72px, 9vw, 112px);
   line-height: .9;
-  letter-spacing: .01em;
+  letter-spacing: normal;
   color: var(--on-dark);
 }
 .fund-ticker-card-meta {
@@ -2217,7 +2217,7 @@ body.nav-open.over-hero .header-cta {
   font-size: 22px;
   font-weight: 400;
   color: var(--accent);
-  letter-spacing: .035em;
+  letter-spacing: normal;
 }
 .fund-doc-title {
   font-family: var(--sans);
@@ -2270,7 +2270,7 @@ body.nav-open.over-hero .header-cta {
   font-weight: 500;
   font-size: clamp(32px, 3.6vw, 52px);
   line-height: 1;
-  letter-spacing: .01em;
+  letter-spacing: normal;
   color: var(--ink);
   display: flex;
   align-items: baseline;
@@ -2440,7 +2440,7 @@ body.nav-open.over-hero .header-cta {
   font-style: italic;
   font-weight: 500;
   color: var(--ink);
-  letter-spacing: .025em;
+  letter-spacing: normal;
 }
 .fund-placeholder {
   font-style: italic;
@@ -2594,7 +2594,7 @@ body.nav-open.over-hero .header-cta {
 .fund-accordion-head::-webkit-details-marker { display: none; }
 .fund-accordion-head .fund-h2 {
   font-size: clamp(17px, 1.7vw, 21px);
-  letter-spacing: .005em;
+  letter-spacing: normal;
 }
 .fund-accordion-head:focus-visible {
   outline: 2px solid var(--ink);
@@ -2770,7 +2770,7 @@ body.nav-open.over-hero .header-cta {
   font-weight: 500;
   font-size: clamp(30px, 4vw, 48px);
   line-height: 1.04;
-  letter-spacing: .011em;
+  letter-spacing: normal;
   color: var(--on-dark);
 }
 
@@ -2782,7 +2782,7 @@ body.nav-open.over-hero .header-cta {
   text-align: center;
   gap: 22px;
 }
-.principles-head .fund-h2 { letter-spacing: .005em; }
+.principles-head .fund-h2 { letter-spacing: normal; }
 .principles-lead {
   margin: 0;
   max-width: 580px;
@@ -2949,7 +2949,7 @@ body.nav-open.over-hero .header-cta {
   font-weight: 400;
   font-size: clamp(72px, 19vh, 168px);
   line-height: 1;
-  letter-spacing: .01em;
+  letter-spacing: normal;
   color: var(--on-dark);
   font-variant-numeric: tabular-nums;
 }
@@ -3022,7 +3022,7 @@ body.nav-open.over-hero .header-cta {
   font-weight: 500;
   font-size: clamp(24px, 2.4vw, 32px);
   line-height: 1.2;
-  letter-spacing: .017em;
+  letter-spacing: normal;
   color: var(--on-dark);
 }
 .discipline-grid {
@@ -3114,7 +3114,7 @@ body.nav-open.over-hero .header-cta {
   font-weight: 400;
   font-size: clamp(28px, 4vw, 52px);
   line-height: 1.18;
-  letter-spacing: .013em;
+  letter-spacing: normal;
   color: var(--on-dark);
 }
 
@@ -3161,7 +3161,7 @@ body.nav-open.over-hero .header-cta {
   font-weight: 500;
   font-size: clamp(24px, 2.8vw, 36px);
   line-height: 1.18;
-  letter-spacing: .013em;
+  letter-spacing: normal;
   color: var(--ink);
 }
 .approach-cta-actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
@@ -3234,9 +3234,12 @@ body.nav-open.over-hero .header-cta {
   font-weight: 500;
   font-size: clamp(48px, 7vw, 88px);
   line-height: 1.08;
-  letter-spacing: .005em;
+  letter-spacing: normal;
   margin: 0 auto 28px;
-  max-width: 800px;
+  /* 840px, not 800px: "Essays from the desk." at 88px sits within ~2% of an
+     800px cap, so any tracking increase orphans "desk." on a second line (a
+     .015em site-wide loosening did exactly that). Headroom keeps it on one. */
+  max-width: 840px;
   color: var(--on-dark);
 }
 .insights-intro-sub {
@@ -3310,7 +3313,7 @@ body.nav-open.over-hero .header-cta {
   font-weight: 400;
   font-size: clamp(30px, 4vw, 50px);
   line-height: 1.14;
-  letter-spacing: .01em;
+  letter-spacing: normal;
   color: var(--ink);
 }
 
@@ -3402,7 +3405,7 @@ body.nav-open.over-hero .header-cta {
   font-weight: 500;
   font-size: clamp(26px, 3vw, 38px);
   line-height: 1.15;
-  letter-spacing: .015em;
+  letter-spacing: normal;
   color: var(--ink);
 }
 .invest-panel-desc {
@@ -3445,7 +3448,7 @@ body.nav-open.over-hero .header-cta {
   font-style: italic;
   font-size: 17px;
   color: var(--accent-deep);
-  letter-spacing: .025em;
+  letter-spacing: normal;
 }
 .invest-amount { font-weight: 600; color: var(--ink); }
 .invest-actions {
@@ -3506,7 +3509,7 @@ body.nav-open.over-hero .header-cta {
   font-weight: 500;
   font-size: clamp(26px, 3vw, 40px);
   line-height: 1.15;
-  letter-spacing: .015em;
+  letter-spacing: normal;
   color: var(--ink);
 }
 .invest-help-text {
@@ -3601,7 +3604,7 @@ body.nav-open.over-hero .header-cta {
   font-family: var(--serif);
   font-weight: 500;
   font-size: clamp(20px, 1.8vw, 24px);
-  letter-spacing: .02em;
+  letter-spacing: normal;
   color: var(--ink);
 }
 .team-role {
@@ -3684,7 +3687,7 @@ body.nav-open.over-hero .header-cta {
   font-family: var(--serif);
   font-weight: 500;
   font-size: clamp(24px, 3vw, 32px);
-  letter-spacing: .015em;
+  letter-spacing: normal;
   color: var(--ink);
 }
 .team-modal-role {
@@ -3798,7 +3801,7 @@ body.modal-open { overflow: hidden; }
   font-weight: 500;
   font-size: clamp(32px, 4vw, 48px);
   line-height: 1.15;
-  letter-spacing: .015em;
+  letter-spacing: normal;
   margin: 0 0 20px;
 }
 .ins-feature-title a {
@@ -4042,7 +4045,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   font-weight: 500;
   font-size: clamp(22px, 1.9vw, 27px);
   line-height: 1.18;
-  letter-spacing: .015em;
+  letter-spacing: normal;
   margin: 0;
   color: #fff;
   transition: color .25s;
@@ -4053,7 +4056,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   font-style: italic;
   color: rgba(255,255,255,.66);
   font-family: var(--serif);
-  letter-spacing: .025em;
+  letter-spacing: normal;
 }
 .ins-card:hover .ins-card-title { color: #eaf0f6; }
 
@@ -4083,7 +4086,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   font-size: clamp(36px, 5vw, 56px);
   margin: 0 0 14px;
   color: var(--ink);
-  letter-spacing: .025em;
+  letter-spacing: normal;
 }
 .ins-subscribe-text {
   font-size: 17px;
@@ -4199,7 +4202,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   font-weight: 500;
   font-size: clamp(32px, 6vw, 64px);
   line-height: 1.05;
-  letter-spacing: 0;
+  letter-spacing: normal;
   text-wrap: balance;
   margin: clamp(8px, 1.5vh, 16px) 0 clamp(40px, 5.5vh, 60px);
   color: var(--ink);
@@ -4220,7 +4223,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   line-height: 1.45;
   color: var(--ink);
   margin: 0;
-  letter-spacing: .025em;
+  letter-spacing: normal;
 }
 
 /* ── Body — editorial typography ───────────────────────── */
@@ -4234,7 +4237,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   font-weight: 500;
   font-size: clamp(22px, 2.6vw, 28px);
   line-height: 1.3;
-  letter-spacing: .02em;
+  letter-spacing: normal;
   margin: clamp(52px, 7vh, 76px) 0 18px;
   color: var(--ink);
 }
@@ -4322,7 +4325,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   font-weight: 500;
   font-size: 19px;
   color: var(--ink);
-  letter-spacing: .025em;
+  letter-spacing: normal;
 }
 
 /* ── Essay responsive ──────────────────────────────────── */
@@ -4504,7 +4507,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   /* One line, at 80% of the size this was originally calibrated to
      (7.4vw / 96px) — still comfortably inside the 1240px container. */
   font-size: min(7.08vw, 92px);
-  line-height: 1.04; letter-spacing: .005em;
+  line-height: 1.04; letter-spacing: normal;
   margin: 0 0 clamp(22px, 3.2vh, 34px);
 }
 .fla-hero-lede {
@@ -4797,7 +4800,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .fla-h2 {
   font-family: var(--serif); font-weight: 500;
   font-size: clamp(32px, 3.72vw, 53px);
-  line-height: 1.14; letter-spacing: .013em;
+  line-height: 1.14; letter-spacing: normal;
   color: var(--ink); margin: 0 0 clamp(24px, 3.6vh, 40px);
   /* 34ch, not 26: at 26 the two 33-character titles broke onto a second
      line for want of a few characters. Everything shorter already fitted
@@ -5034,7 +5037,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .fla-proof[data-reveal].is-visible::before { transform: scaleX(1); }
 .fla-proof-icon { display: block; margin-bottom: clamp(26px, 3.6vh, 36px); }
 .fla-proof-icon img { display: block; width: 52px; height: 52px; object-fit: contain; object-position: left center; }
-.fla-proof h3 { font-family: var(--serif); font-weight: 500; font-size: clamp(29px, 2.64vw, 40px); line-height: 1.2; letter-spacing: .01em; color: var(--ink); margin: 0 0 22px; }
+.fla-proof h3 { font-family: var(--serif); font-weight: 500; font-size: clamp(29px, 2.64vw, 40px); line-height: 1.2; letter-spacing: normal; color: var(--ink); margin: 0 0 22px; }
 .fla-proof p { margin: 0; font-size: 20px; line-height: 1.82; color: var(--ink-soft); }
 @media (prefers-reduced-motion: reduce) {
   .fla-proof::before { transition: none; }
