@@ -13,9 +13,14 @@
   font-display: swap;
 }
 @font-face {
-  font-family: "Formata Light";
-  src: url("assets/fonts/formata-light.otf") format("opentype");
-  font-weight: 100 900;
+  /* Manrope variable, replacing Formata Light as the site sans. One file covers
+     the whole 200-800 axis, so weights are now REAL: the old Formata face was a
+     single Light .otf declared 100-900, which (with font-synthesis: none below)
+     rendered every weight identically light. Weight values across the sheet were
+     retuned when this landed — see the sans weight scale note in :root. */
+  font-family: "Manrope";
+  src: url("assets/fonts/manrope-variable.ttf") format("truetype");
+  font-weight: 200 800;
   font-style: normal;
   font-display: swap;
 }
@@ -29,12 +34,17 @@
   --line: #d8dde3;
   --accent: #506e88;
   --accent-deep: #39536c;
+  /* Brand secondary, used as an ACCENT MARK only — the short eyebrow dashes,
+     pull-quote rules, list numerals, the ticker bar and the discipline ticks,
+     plus the Frontline Obsession panel and the surviving constellation dots.
+     Never running body text on the light page: it is 4.2:1 there, under AA. */
+  --terracotta: #c25332;
   --dark: #171f2f;
   --on-dark: #ffffff;
   --on-dark-mute: #a8b2c2;
 
   --serif: "Riccione Serial", "Cormorant Garamond", "Times New Roman", serif;
-  --sans: "Formata Light", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   /* Uppercase label scale — the site has two small-caps idioms, and they had
      drifted to nine different tracking values. These two tokens are the whole
@@ -44,11 +54,11 @@
      Dense fund-data labels and table headers stay tighter on purpose. */
   --track-eyebrow: .14em;
   --track-label: .10em;
-  /* Running copy. Formata Light is narrow and light, and at the browser's
-     default `normal` it sets tighter than most sans faces do at the same
-     size. Set on body so it inherits everywhere; the serif headings
-     override it back to their own tracking. */
-  --track-body: .015em;
+  /* Running copy. The old .015em existed to open up Formata Light, which set
+     unusually tight. Manrope is a wider, more generously spaced face and needs
+     no such compensation — at .015em it read loose. Set on body so it inherits
+     everywhere; the serif headings override it back to their own tracking. */
+  --track-body: normal;
 
   --container: 1240px;
   --gutter: clamp(24px, 5vw, 64px);
@@ -83,7 +93,7 @@ img, svg { display: block; max-width: 100%; }
 blockquote {
   margin: 40px 0;
   padding: 0 0 0 clamp(24px, 3vw, 36px);
-  border-left: 2px solid var(--accent);
+  border-left: 2px solid var(--terracotta);
   /* Pinned, not inherited. Pasted editor content and page-builder columns
      routinely arrive centred and inset; the house quote is flush left and
      runs the full measure of the body it sits in. */
@@ -113,7 +123,7 @@ blockquote cite {
   font-family: var(--sans);
   font-style: normal;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -148,7 +158,7 @@ a:hover { color: var(--accent-deep); }
   align-items: center;
   gap: 8px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: .06em;
   color: inherit;
   opacity: .65;
@@ -222,7 +232,7 @@ body.over-hero .site-header {
   display: inline-block;
   padding: 14px 26px;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: .03em;
   border-radius: 2px;
   cursor: pointer;
@@ -361,7 +371,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 }
 .eyebrow, .section-eyebrow {
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-eyebrow);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -471,7 +481,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 .hero-video-caption {
   margin-top: 24px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--on-dark-mute);
   letter-spacing: var(--track-label);
   text-transform: uppercase;
@@ -494,8 +504,11 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 }
 .about-headline em {
   font-style: italic;
+  /* Serif, not sans: left at 700 when the sans scale was stepped down for
+     Manrope. Riccione is a static ExtraLight declared 100-900 with
+     font-synthesis:none, so this renders the same at any weight. */
   font-weight: 700;
-  color: var(--accent-deep);
+  color: var(--terracotta);
 }
 
 .about-stat {
@@ -542,6 +555,48 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 }
 .section-title.centered { text-align: center; }
 .section-title.light { color: var(--on-dark); }
+
+/* ─── LINE-BREAK POLISH ────────────────────────────────
+   Display type is set large against narrow columns, so headings regularly
+   dropped a single short word onto a last line ("Essays from the / desk.").
+   `balance` evens the line lengths instead, which kills the orphan without
+   anyone choosing break points by hand — and it respects explicit <br/>, so
+   the deliberate breaks on the home hero and fund title still hold. Ignored
+   by browsers that don't support it, which simply get today's behaviour. */
+.section-title,
+.about-headline,
+.contact-headline,
+.insights-intro-headline,
+.approach-intro-headline,
+.approach-cta-title,
+.discipline-heading,
+.invest-title,
+.invest-panel-title,
+.invest-help-title,
+.fund-h2,
+.fund-h3,
+.fund-hero-title-sub,
+.fla-h2,
+.fla-proof h3,
+.ins-feature-title,
+.ins-card-title,
+.ins-subscribe-title,
+.essay-title,
+.essay-body h2,
+.team-name,
+.team-modal-name,
+.advantage-card h3,
+.pillar h3,
+.founder-panel-name,
+.coverflow-active-name {
+  text-wrap: balance;
+}
+
+/* A figure and its unit are one token — "120.5" and "%" must never split
+   across lines. The compound figure ("23.0 vs 4.8 years") is genuinely
+   multi-part prose, so it keeps normal wrapping. */
+.odd-figure { white-space: nowrap; }
+.odd-figure-compound { white-space: normal; }
 
 /* ─── OUR APPROACH (numbered titles) ───────────────────── */
 .pillars {
@@ -613,9 +668,14 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   transition: transform .5s cubic-bezier(.2,.7,.2,1);
 }
 .advantage-card:nth-child(1) {
-  background: #e7eaf0;
-  color: var(--ink);
+  background: var(--terracotta);
+  color: var(--on-dark);
 }
+/* White on terracotta is 4.6:1, so this card cannot carry the shared .82 body
+   and .72 numeral opacities (they land at 3.7:1 and 3.1:1). Full strength here;
+   the other two cards sit on steel and navy and keep the recessive treatment. */
+.advantage-card:nth-child(1) p { opacity: 1; }
+.advantage-card:nth-child(1) .advantage-num { opacity: 1; }
 .advantage-card:nth-child(2) {
   background: #4a6580;
   color: var(--on-dark);
@@ -686,7 +746,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   align-items: center;
   gap: 14px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--on-dark);
@@ -700,7 +760,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   display: inline-block;
   width: 64px;
   height: 1px;
-  background: var(--on-dark-mute);
+  background: var(--terracotta);
 }
 .odds-head {
   max-width: 720px;
@@ -841,7 +901,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
      measure is scaled to the 14px caption size (was 260-330px at 12px). */
   max-width: clamp(250px, 26vw, 385px);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   line-height: 1.55;
   text-transform: uppercase;
@@ -996,7 +1056,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   align-items: center;
   gap: 9px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: rgba(255,255,255,.92);
@@ -1038,7 +1098,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   right: 18px;
   z-index: 2;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: rgba(255,255,255,.72);
@@ -1213,7 +1273,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 }
 .footer-links h4 {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--accent);
@@ -1388,7 +1448,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   justify-content: space-between;
   color: #fff;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   opacity: 0;
@@ -1462,7 +1522,7 @@ body.panel-open .cover-card.active .cover-card-tag {
   position: absolute;
   top: 0; left: 0; bottom: 0;
   width: 100%;
-  background: var(--ink);
+  background: var(--terracotta);
   transform-origin: left center;
   transform: scaleX(0);
 }
@@ -1470,7 +1530,7 @@ body.panel-open .cover-card.active .cover-card-tag {
   display: block;
   text-align: center;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: .22em;
   color: var(--ink-mute);
 }
@@ -1689,7 +1749,7 @@ img.panel-scene.cover-fade {
 .founder-panel-stats > div { margin: 0; }
 .founder-panel-stats dt {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -1727,7 +1787,7 @@ img.panel-scene.cover-fade {
   border: 0;
   font: inherit;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink);
@@ -1939,7 +1999,7 @@ body.nav-open.over-hero .header-cta {
   gap: 16px;
   margin: 0 0 20px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-eyebrow);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -1948,7 +2008,7 @@ body.nav-open.over-hero .header-cta {
   display: inline-block;
   width: 48px;
   height: 1px;
-  background: var(--line);
+  background: var(--terracotta);
   flex-shrink: 0;
 }
 
@@ -1984,7 +2044,7 @@ body.nav-open.over-hero .header-cta {
   font-family: var(--sans);
   font-style: normal;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -2012,7 +2072,12 @@ body.nav-open.over-hero .header-cta {
 }
 .fund-hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(280px, 1fr);
+  /* 1.6fr, not 1.45fr: "Ziller Global Fund" is one unbreakable phrase and at
+     1.45fr it filled 95% of the column (584px of 613px). With only ~5% spare,
+     any small shift — a scrollbar, browser zoom, the fallback face showing
+     before Riccione loads — tipped "Fund" onto its own line. The extra column
+     width buys real headroom; the ticker card gives up ~6% and is unaffected. */
+  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
   gap: clamp(40px, 6vw, 96px);
   align-items: stretch;
 }
@@ -2020,8 +2085,16 @@ body.nav-open.over-hero .header-cta {
   margin: 12px 0 32px;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(40px, 6vw, 76px);
+  /* Tuned so "Ziller Global Fund" keeps >=11% clearance at every width. The old
+     clamp(40px, 6vw, 76px) left 8-9% on desktop and exactly 0% at 375px, where
+     the phrase measured 308px in a 308px column — one pixel from breaking. */
+  font-size: clamp(34px, 5.4vw, 72px);
   line-height: 1.06;
+  /* The fund name is a single unbreakable phrase. <br/> still forces the break
+     before "Active ETF"; this only stops SOFT wrapping. Safe because of the
+     clearance above — but if the fund is ever renamed to something longer,
+     retune the clamp, or this overflows instead of wrapping. */
+  white-space: nowrap;
   letter-spacing: normal;
   color: var(--ink);
 }
@@ -2063,12 +2136,12 @@ body.nav-open.over-hero .header-cta {
   left: 0;
   width: 60px;
   height: 4px;
-  background: var(--accent);
+  background: var(--terracotta);
 }
 .fund-ticker-card-label {
   margin: 0 0 12px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: rgba(255,255,255,.6);
@@ -2088,14 +2161,19 @@ body.nav-open.over-hero .header-cta {
   padding-top: 24px;
   border-top: 1px solid rgba(255,255,255,.14);
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  /* Content-sized, not equal thirds. Equal thirds pinned each column to 95px,
+     which was enough for Formata Light but not for Manrope — "Global Growth"
+     wrapped to two lines. max-content lets the wider pair take the room it
+     needs while the row still spans the card. */
+  grid-template-columns: repeat(3, max-content);
+  justify-content: space-between;
   gap: 16px;
 }
 .fund-ticker-card-meta > div { margin: 0; }
 .fund-ticker-card-meta dt {
   margin: 0 0 6px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: rgba(255,255,255,.55);
@@ -2236,7 +2314,7 @@ body.nav-open.over-hero .header-cta {
   border: 1px solid currentColor;
   border-radius: 2px;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: .2em;
   opacity: .72;
 }
@@ -2276,13 +2354,13 @@ body.nav-open.over-hero .header-cta {
   align-items: baseline;
 }
 .fund-kf-dash {
-  color: var(--accent);
+  color: var(--terracotta);
   margin: 0 2px;
 }
 .fund-kf-unit {
   font-family: var(--sans);
   font-size: 0.3em;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -2291,7 +2369,7 @@ body.nav-open.over-hero .header-cta {
 .fund-kf-label {
   font-family: var(--sans);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -2314,7 +2392,7 @@ body.nav-open.over-hero .header-cta {
   margin: 0;
   font-family: var(--sans);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -2333,7 +2411,7 @@ body.nav-open.over-hero .header-cta {
 }
 .fund-kf-tag {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--accent-deep);
@@ -2368,7 +2446,7 @@ body.nav-open.over-hero .header-cta {
   font: inherit;
   font-family: var(--sans);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -2410,7 +2488,7 @@ body.nav-open.over-hero .header-cta {
   margin: 0;
   font-family: var(--sans);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -2429,7 +2507,7 @@ body.nav-open.over-hero .header-cta {
 .fund-data-value {
   margin: 0;
   font-family: var(--sans);
-  font-weight: 600;
+  font-weight: 500;
   font-size: clamp(22px, 2vw, 28px);
   line-height: 1.15;
   letter-spacing: .005em;
@@ -2487,7 +2565,7 @@ body.nav-open.over-hero .header-cta {
   margin: 0;
   font-family: var(--sans);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -2495,7 +2573,7 @@ body.nav-open.over-hero .header-cta {
 .fund-mpi-value {
   margin: 0;
   font-family: var(--sans);
-  font-weight: 600;
+  font-weight: 500;
   font-size: clamp(26px, 2.4vw, 34px);
   line-height: 1.05;
   letter-spacing: 0;
@@ -2539,7 +2617,7 @@ body.nav-open.over-hero .header-cta {
 .fund-table thead th {
   background: var(--bg-elev);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -2549,7 +2627,7 @@ body.nav-open.over-hero .header-cta {
 .fund-table tbody td:last-child {
   text-align: right;
   font-family: var(--sans);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 15px;
   color: var(--ink);
   letter-spacing: 0;
@@ -2627,29 +2705,29 @@ body.nav-open.over-hero .header-cta {
 }
 
 /* ─── Homepage about-section CTA pointing to /fund.html ── */
+/* This CTA carries .btn .btn-outline in the markup, so its padding, type scale,
+   border weight and hover all come from the shared button styles and cannot
+   drift from the other outline buttons. The ONE deliberate exception is the
+   shape: the pill is wanted here, on the home page primary CTA, so the radius
+   is overridden back. Declared after .btn, so these win at equal specificity. */
 .about-cta {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   margin-top: 40px;
-  padding: 14px 24px;
-  border: 1px solid var(--ink);
   border-radius: 999px;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: .04em;
-  color: var(--ink);
-  background: transparent;
-  text-decoration: none;
-  transition: background-color .25s ease, color .25s ease;
 }
-.about-cta:hover,
+/* Keyboard focus keeps the fill this button already had. The other outline
+   buttons show only the UA focus ring, so this is an extra affordance rather
+   than a visual divergence — the fill is exactly .btn-outline:hover. */
 .about-cta:focus-visible {
   background: var(--ink);
   color: var(--bg);
+  border-color: var(--ink);
 }
 .about-cta-arrow { transition: transform .25s ease; }
-.about-cta:hover .about-cta-arrow { transform: translateX(3px); }
+.about-cta:hover .about-cta-arrow,
+.about-cta:focus-visible .about-cta-arrow { transform: translateX(3px); }
 
 /* ─── Fund page responsive ─────────────────────────────── */
 @media (max-width: 900px) {
@@ -2925,7 +3003,7 @@ body.nav-open.over-hero .header-cta {
   text-align: center;
   font-family: var(--sans);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--on-dark-mute);
@@ -2962,7 +3040,7 @@ body.nav-open.over-hero .header-cta {
   padding-left: 14px;
   white-space: nowrap;
   font-family: var(--sans);
-  font-weight: 600;
+  font-weight: 500;
   font-size: clamp(13px, 1.05vw, 15px);
   letter-spacing: var(--track-label);
   text-transform: uppercase;
@@ -2996,7 +3074,7 @@ body.nav-open.over-hero .header-cta {
 .funnel-stage-title {
   margin: 0 0 8px;
   font-family: var(--sans);
-  font-weight: 600;
+  font-weight: 500;
   font-size: clamp(17px, 1.5vw, 20px);
   line-height: 1.2;
   letter-spacing: .004em;
@@ -3043,12 +3121,12 @@ body.nav-open.over-hero .header-cta {
   left: 0;
   width: 32px;
   height: 1px;
-  background: rgba(255,255,255,.65);
+  background: var(--terracotta);
 }
 .discipline-title {
   margin: 0 0 10px;
   font-family: var(--sans);
-  font-weight: 600;
+  font-weight: 500;
   font-size: clamp(17px, 1.5vw, 20px);
   line-height: 1.22;
   letter-spacing: .005em;
@@ -3094,7 +3172,7 @@ body.nav-open.over-hero .header-cta {
   gap: 16px;
   margin: 0 0 clamp(36px, 5vh, 56px);
   font-family: var(--sans);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 13px;
   letter-spacing: var(--track-eyebrow);
   text-transform: uppercase;
@@ -3105,7 +3183,7 @@ body.nav-open.over-hero .header-cta {
   display: inline-block;
   width: 48px;
   height: 1px;
-  background: var(--on-dark-mute);
+  background: var(--terracotta);
 }
 .approach-intro-headline {
   margin: 0;
@@ -3222,7 +3300,7 @@ body.nav-open.over-hero .header-cta {
   display: inline-flex;
   align-items: center;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-eyebrow);
   text-transform: uppercase;
   color: var(--on-dark);
@@ -3293,7 +3371,7 @@ body.nav-open.over-hero .header-cta {
   align-items: center;
   gap: 16px;
   margin: 0 0 20px;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 13px;
   letter-spacing: var(--track-eyebrow);
   text-transform: uppercase;
@@ -3304,7 +3382,7 @@ body.nav-open.over-hero .header-cta {
   display: inline-block;
   width: 48px;
   height: 1px;
-  background: var(--line);
+  background: var(--terracotta);
 }
 .invest-title {
   margin: 0;
@@ -3334,7 +3412,7 @@ body.nav-open.over-hero .header-cta {
   color: var(--on-dark);
   font-family: var(--sans);
   font-size: clamp(14px, 1.35vw, 18px);
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: .01em;
   padding: clamp(17px, 2.6vh, 26px) clamp(18px, 2.7vw, 34px);
   text-align: left;
@@ -3382,7 +3460,7 @@ body.nav-open.over-hero .header-cta {
 .invest-panel-ticker {
   margin: 0 0 14px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--accent-deep);
@@ -3396,7 +3474,7 @@ body.nav-open.over-hero .header-cta {
   background: var(--dark);
   color: var(--on-dark);
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: .14em;
 }
 .invest-panel-title {
@@ -3418,7 +3496,7 @@ body.nav-open.over-hero .header-cta {
 .invest-how-label {
   margin: 0 0 20px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -3450,7 +3528,7 @@ body.nav-open.over-hero .header-cta {
   color: var(--accent-deep);
   letter-spacing: normal;
 }
-.invest-amount { font-weight: 600; color: var(--ink); }
+.invest-amount { font-weight: 500; color: var(--ink); }
 .invest-actions {
   margin-top: 28px;
   display: flex;
@@ -3536,7 +3614,7 @@ body.nav-open.over-hero .header-cta {
   padding-bottom: 16px;
   border-bottom: 1px solid var(--line);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-eyebrow);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -3610,7 +3688,7 @@ body.nav-open.over-hero .header-cta {
 .team-role {
   margin: 0 0 14px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--accent-deep);
@@ -3621,7 +3699,7 @@ body.nav-open.over-hero .header-cta {
   display: block;
   margin-top: 12px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -3693,7 +3771,7 @@ body.nav-open.over-hero .header-cta {
 .team-modal-role {
   margin: 0 0 18px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--accent-deep);
@@ -3781,7 +3859,7 @@ body.modal-open { overflow: hidden; }
 }
 .ins-tag {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--accent-deep);
@@ -3791,7 +3869,7 @@ body.modal-open { overflow: hidden; }
 }
 .ins-date {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -3819,7 +3897,7 @@ body.modal-open { overflow: hidden; }
 }
 .ins-read-link {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--accent-deep);
@@ -3854,7 +3932,7 @@ body.modal-open { overflow: hidden; }
   position: relative;
   font-family: var(--sans);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -3873,7 +3951,7 @@ body.modal-open { overflow: hidden; }
   right: 0;
   bottom: -1px;
   height: 2px;
-  background: var(--accent);
+  background: var(--terracotta);
   transform: scaleX(0);
   transition: transform .3s ease;
 }
@@ -3993,7 +4071,7 @@ body.modal-open { overflow: hidden; }
   align-items: center;
   gap: 8px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: rgba(255,255,255,.92);
@@ -4141,7 +4219,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .essay-back {
   display: inline-block;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -4189,7 +4267,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   gap: 8px;
   padding: clamp(20px, 2.5vh, 28px) 0;
   font-size: 10.5px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -4255,7 +4333,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .essay-inline-quote {
   margin: 40px 0;
   padding: 0 0 0 clamp(24px, 3vw, 36px);
-  border-left: 2px solid var(--accent);
+  border-left: 2px solid var(--terracotta);
 }
 .essay-inline-quote p {
   font-family: var(--sans);
@@ -4313,7 +4391,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .essay-author-label {
   display: block;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -4854,7 +4932,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 }
 /* set at the body size like the rest of the line — the weight alone
    carries the emphasis */
-.fla-stat-fig { font-weight: 600; letter-spacing: 0; }
+.fla-stat-fig { font-weight: 500; letter-spacing: 0; }
 .fla-ref { color: inherit; }
 .fla-ref sup { font-size: .72em; margin-left: .2em; }
 .fla-ref:hover { color: #fff; }
@@ -4978,7 +5056,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   /* the gap off the video figure above — the grid's own top margin is small
      so this number is the whole separation between the two blocks */
   margin: clamp(76px, 10vh, 120px) 0 0;
-  font-size: 13px; font-weight: 600;
+  font-size: 13px; font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -5078,7 +5156,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .fla-ticker {
   display: inline-block; margin: 0 0 26px; padding: 8px 16px; border-radius: 3px;
   background: var(--dark); color: var(--on-dark);
-  font-size: 16px; font-weight: 600; letter-spacing: var(--track-eyebrow); text-transform: uppercase;
+  font-size: 16px; font-weight: 500; letter-spacing: var(--track-eyebrow); text-transform: uppercase;
 }
 .fla-plats { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px; }
 .fla-plats li { background: #fff; border: 1px solid var(--line); border-radius: 3px; display: grid; place-items: center; min-height: 92px; }
@@ -5098,7 +5176,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 /* ── 07 Ways to reach the team ── */
 .fla-ways { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(20px, 2.6vw, 44px); margin-top: clamp(32px, 5vh, 54px); }
 .fla-way { display: grid; justify-items: center; gap: 18px; text-align: center; border-top: 1px solid var(--line); padding-top: 26px; }
-.fla-way p { margin: 0; font-size: 14px; font-weight: 600; letter-spacing: var(--track-label); text-transform: uppercase; color: var(--ink-mute); }
+.fla-way p { margin: 0; font-size: 14px; font-weight: 500; letter-spacing: var(--track-label); text-transform: uppercase; color: var(--ink-mute); }
 .fla-li { width: 50px; height: 50px; border-radius: 3px; display: grid; place-items: center; border: 1px solid var(--line); color: var(--accent-deep); transition: color .3s ease, background .3s ease, border-color .3s ease; }
 .fla-li svg { width: 22px; height: 22px; }
 .fla-li:hover { color: #fff; background: #0a66c2; border-color: #0a66c2; }
@@ -5109,7 +5187,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    a ch measure at 13px pulled it in to ~667px and left it stranded in a
    narrow column. Disclaimers run the page. */
 .fla-notes p { margin: 0; max-width: none; font-size: 13px; line-height: 1.62; color: var(--ink-mute); opacity: .82; }
-.fla-notes p span { font-weight: 600; margin-right: 3px; }
+.fla-notes p span { font-weight: 500; margin-right: 3px; }
 
 /* ── Responsive ─────────────────────────────────────────── */
 /* Narrow desktops: a 31/69 split leaves the outperformance copy too tight, so

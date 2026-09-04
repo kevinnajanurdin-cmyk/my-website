@@ -28,98 +28,98 @@ const founders = [
     first: "Rick", last: "Smith", company: "Axon",
     role: "Co-founder & CEO", founded: "1993", sector: "Internet of Things",
     geo: "United States", accent: "#fdb414",
-    thesis: "Smith transformed Axon from a single-product company into a connected public safety platform, combining hardware, software and AI to modernise how law enforcement agencies operate."
+    thesis: "Rick transformed Axon from a single-product company into a connected public safety platform, combining hardware, software and AI to modernise how law enforcement agencies operate."
   },
   {
     first: "David", last: "Nyland", company: "Lumine",
     role: "President & CEO", founded: "2023", sector: "Vertical Market Software",
     geo: "Canada", accent: "#1d3e75",
-    thesis: "Nyland is applying the Constellation Software playbook to communications and media, acquiring niche software businesses and compounding value through disciplined capital allocation and decentralised management."
+    thesis: "David is applying the Constellation Software playbook to communications and media, acquiring niche software businesses and compounding value through disciplined capital allocation and decentralised management."
   },
   {
     first: "Ken", last: "Xie", company: "Fortinet",
     role: "Founder, Chair & CEO", founded: "2000", sector: "Cyber Security",
     geo: "United States", accent: "#ee3124",
-    thesis: "Xie built one of the world’s leading cybersecurity platforms by combining proprietary hardware and software, creating a differentiated architecture that enables faster, lower-cost network security at scale."
+    thesis: "Ken built one of the world’s leading cybersecurity platforms by combining proprietary hardware and software, creating a differentiated architecture that enables faster, lower-cost network security at scale."
   },
   {
     first: "Robin", last: "Zeng", company: "CATL",
     role: "Founder & Chair", founded: "2011", sector: "New Energy",
     geo: "China", accent: "#003a78",
-    thesis: "Zeng combined chemistry innovation, simpler battery packs and enormous manufacturing scale to cut the cost of energy storage, helping electric vehicles compete with petrol cars on price and performance."
+    thesis: "Robin combined chemistry innovation, simpler battery packs and enormous manufacturing scale to cut the cost of energy storage, helping electric vehicles compete with petrol cars on price and performance."
   },
   {
     first: "Sam", last: "Hupert", company: "Pro Medicus",
     role: "Co-founder & CEO", founded: "1983", sector: "MedTech",
     geo: "Australia", accent: "#0a4f8a",
-    thesis: "Hupert transformed medical imaging by enabling radiologists to access and analyse enormous scans almost instantly from the cloud, making Pro Medicus the platform of choice for many of the world’s leading hospitals."
+    thesis: "Sam transformed medical imaging by enabling radiologists to access and analyse enormous scans almost instantly from the cloud, making Pro Medicus the platform of choice for many of the world’s leading hospitals."
   },
   {
     first: "Marcos", last: "Galperín", company: "Mercado Libre",
     role: "Co-founder & CEO", founded: "1999", sector: "Ecommerce",
     geo: "Latin America", accent: "#ffe600",
-    thesis: "Galperín built Latin America’s leading digital commerce ecosystem, integrating e-commerce, payments, logistics and financial services into a platform that has become essential infrastructure for millions of consumers and businesses."
+    thesis: "Marcos built Latin America’s leading digital commerce ecosystem, integrating e-commerce, payments, logistics and financial services into a platform that has become essential infrastructure for millions of consumers and businesses."
   },
   {
     first: "David", last: "Baszucki", company: "Roblox",
     role: "Co-founder & CEO", founded: "2004", sector: "Digital Media",
     geo: "United States", accent: "#e2241a",
-    thesis: "Baszucki built Roblox as a platform rather than a collection of games, giving users the tools to create experiences, attract audiences and earn from the worlds they build."
+    thesis: "David built Roblox as a platform rather than a collection of games, giving users the tools to create experiences, attract audiences and earn from the worlds they build."
   },
   {
     // ── Centre of the deck: the card the carousel opens on ──
     first: "Jensen", last: "Huang", company: "Nvidia",
     role: "Co-founder & CEO", founded: "1993", sector: "AI Hardware",
     geo: "United States", accent: "#76b900",
-    thesis: "Huang recognised that GPUs could power far more than graphics, then spent three decades building the chips, software and developer ecosystem that underpins today’s AI revolution."
+    thesis: "Jensen recognised that GPUs could power far more than graphics, then spent three decades building the chips, software and developer ecosystem that underpins today’s AI revolution."
   },
   {
     first: "Alex", last: "Karp", company: "Palantir",
     role: "Co-founder & CEO", founded: "2003", sector: "AI Platforms",
     geo: "United States", accent: "#0a1a2f",
-    thesis: "Karp built Palantir to turn a company’s scattered data into a working model of its operations, allowing employees to understand what is happening, decide what to do and act through one system."
+    thesis: "Alex built Palantir to turn a company’s scattered data into a working model of its operations, allowing employees to understand what is happening, decide what to do and act through one system."
   },
   {
     first: "Brian", last: "Armstrong", company: "Coinbase",
     role: "Co-founder & CEO", founded: "2012", sector: "FinTech",
     geo: "United States", accent: "#0052ff",
-    thesis: "Armstrong chose regulation when much of crypto ran offshore, giving institutions the custody, compliance and infrastructure needed to bring blockchain assets into mainstream finance."
+    thesis: "Brian chose regulation when much of crypto ran offshore, giving institutions the custody, compliance and infrastructure needed to bring blockchain assets into mainstream finance."
   },
   {
     first: "Elon", last: "Musk", company: "Tesla", company2: "SpaceX",
     role: "Co-founder & CEO", founded: "2003 · 2002", sector: "Robotics · Space",
     geo: "United States", accent: "#cc1f2e",
-    thesis: "Musk made electric cars desirable and rockets reusable by rebuilding both industries around first-principles engineering, vertical integration and relentless reductions in cost."
+    thesis: "Elon made electric cars desirable and rockets reusable by rebuilding both industries around first-principles engineering, vertical integration and relentless reductions in cost."
   },
   {
     first: "He", last: "Xiaopeng", company: "XPeng",
     role: "Co-founder & CEO", founded: "2014", sector: "Robotics",
     geo: "China", accent: "#0a8de8",
-    thesis: "He Xiaopeng built XPeng like a technology company rather than a traditional carmaker, using software, AI and rapid iteration to improve the vehicle long after it leaves the factory."
+    thesis: "Xiaopeng built XPeng like a technology company rather than a traditional carmaker, using software, AI and rapid iteration to improve the vehicle long after it leaves the factory."
   },
   {
     first: "Dylan", last: "Field", company: "Figma",
     role: "Co-founder & CEO", founded: "2012", sector: "Digital Media",
     geo: "United States", accent: "#a259ff",
-    thesis: "Field transformed design from a standalone desktop tool into a collaborative, cloud-based platform. By enabling designers, engineers and product managers to collaborate in real time, Figma has become a critical infrastructure for modern software development."
+    thesis: "Dylan transformed design from a standalone desktop tool into a collaborative, cloud-based platform. By enabling designers, engineers and product managers to collaborate in real time, Figma has become a critical infrastructure for modern software development."
   },
   {
     first: "Peter", last: "Beck", company: "Rocket Lab",
     role: "Founder & CEO", founded: "2006", sector: "Access to Space",
     geo: "New Zealand / USA", accent: "#e63312",
-    thesis: "Beck turned a rocket built in a garage into a reliable launch service, then expanded into the satellites and systems needed to run complete space missions."
+    thesis: "Peter turned a rocket built in a garage into a reliable launch service, then expanded into the satellites and systems needed to run complete space missions."
   },
   {
     first: "Yosuke", last: "Tsuji", company: "Money Forward",
     role: "Founder & CEO", founded: "2012", sector: "FinTech",
     geo: "Japan", accent: "#0099a8",
-    thesis: "Tsuji is digitising one of the world’s least digitised business economies. He created a cloud platform that is transforming how Japanese businesses manage accounting, payroll and payments."
+    thesis: "Yosuke is digitising one of the world’s least digitised business economies. He created a cloud platform that is transforming how Japanese businesses manage accounting, payroll and payments."
   },
   {
     first: "Mikheil", last: "Lomtadze", company: "Kaspi",
     role: "Co-founder & CEO", founded: "2006", sector: "Ecommerce",
     geo: "Kazakhstan", accent: "#f14635",
-    thesis: "Lomtadze transformed a regional bank into Kazakhstan’s leading super app, integrating payments, shopping and financial services to create one of the country’s most deeply embedded digital platforms used by millions every day."
+    thesis: "Mikheil transformed a regional bank into Kazakhstan’s leading super app, integrating payments, shopping and financial services to create one of the country’s most deeply embedded digital platforms used by millions every day."
   }
 ];
 

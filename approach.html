@@ -6,12 +6,9 @@
   <title>Investment Principles &amp; Process — Ziller Funds Management</title>
   <meta name="description" content="The Ziller approach: the investment principles that shape every position, and the disciplined six-step process from screening to active portfolio review." />
   <link rel="icon" type="image/svg+xml" href="assets/ziller-mark.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="preload" as="font" type="font/ttf" href="assets/fonts/riccione-extralight.ttf" crossorigin>
   <link rel="preload" as="font" type="font/ttf" href="assets/fonts/riccione-extralight-italic.ttf" crossorigin>
-  <link rel="preload" as="font" type="font/otf" href="assets/fonts/formata-light.otf" crossorigin>
+  <link rel="preload" as="font" type="font/ttf" href="assets/fonts/manrope-variable.ttf" crossorigin>
   <link rel="stylesheet" href="styles.css" />
   <script>document.documentElement.classList.add('js');</script>
 </head>
@@ -386,6 +383,46 @@
       var clamp01 = function (v) { return Math.max(0, Math.min(1, v)); };
       var smooth = function (t) { return t * t * (3 - 2 * t); };
 
+      // ── Survivor bloom ──────────────────────────────────────────────
+      // The 17 chosen dots glow like stars. Two things make that read as
+      // LIGHT rather than as the flat disc an earlier pass rightly rejected:
+      // the falloff is a gradient (a hot warm core into a wide terracotta
+      // halo, no edge anywhere), and it is composited with 'lighter', so a
+      // bloom ADDS to the navy beneath it the way light does instead of
+      // painting over it. Where two stars nearly touch in the gathered row
+      // their halos brighten each other rather than stacking as opaque pucks.
+      //
+      // Pre-rendered once into an offscreen canvas because render() runs
+      // synchronously on every scroll event (there is no rAF throttle — see
+      // the note on the scroll handler): 17 drawImage calls per event are
+      // nothing, whereas building 17 radial gradients, or paying for
+      // shadowBlur, on every event would not be.
+      var GLOW_PX = 128;          // sprite is square; the bloom fills it
+      var GLOW_SCALE = 5.2;       // halo radius / dot radius, scattered state
+      var GLOW_TIGHTEN = 2.0;     // how much of that is handed back at the gather
+      var glowSprite = (function () {
+        var c = document.createElement('canvas');
+        c.width = c.height = GLOW_PX;
+        var gc = c.getContext('2d');
+        var mid = GLOW_PX / 2;
+        var grad = gc.createRadialGradient(mid, mid, 0, mid, mid, mid);
+        // The inner stops are near-flat, which is what gives each star a
+        // DEFINED point at 1x rather than a fuzzy blob; everything past 20% is
+        // halo. The centre is held at 255,170,120 rather than anything paler
+        // because these blooms composite ADDITIVELY — the navy underneath is
+        // added on top, so a whiter centre clips all three channels, the star
+        // goes white and the terracotta is thrown away. This lands warm amber.
+        grad.addColorStop(0.00, 'rgba(255,170,120,1)');
+        grad.addColorStop(0.09, 'rgba(252,150,100,0.95)');
+        grad.addColorStop(0.20, 'rgba(224,112,68,0.55)');
+        grad.addColorStop(0.42, 'rgba(200,88,52,0.20)');
+        grad.addColorStop(0.70, 'rgba(194,83,50,0.07)');   // brand terracotta
+        grad.addColorStop(1.00, 'rgba(194,83,50,0)');
+        gc.fillStyle = grad;
+        gc.fillRect(0, 0, GLOW_PX, GLOW_PX);
+        return c;
+      })();
+
       // Landing-row position in canvas space: the 15 survivors settle just
       // beneath the composition (count + filter columns), close to the rest.
       // The centre group's box is layout-stable (the caption transforms are
@@ -483,36 +520,52 @@
         var gap = Math.min(20, (g.fw * 0.4) / (SURVIVORS - 1));
         var rowX0 = g.cx - (gap * (SURVIVORS - 1)) / 2;
 
+        // ── Pass 1: the field being culled ──
+        // Drawn first and on its own so the stars in pass 2 sit over it, and
+        // so the additive blend mode is set once rather than per dot.
         for (var i = 0; i < dots.length; i++) {
           var d = dots[i];
-          var x, y, r = d.r, alpha;
-          if (d.survivor) {
-            // The chosen 15 are visibly distinct from the START — brighter and
-            // larger, so the eye tracks them persisting while the field thins;
-            // the story reads throughout the scroll, not just at the final
-            // gather. Crisp points only — no halo (a flat disc read as cheap).
-            alpha = 0.9 + 0.1 * conv;
-            x = d.x + (rowX0 + d.slot * gap - d.x) * conv;
-            y = d.y + (g.rowY - d.y) * conv;
-            r = 2.0 + (2.9 - 2.0) * conv;
-          } else {
-            // fade out strictly in place at this dot's own moment within its
-            // wave — no movement at all, or the dots read as page scroll
-            var win = WINDOWS[d.stage - 1];
-            var at = win[0] + d.jitter * (win[1] - win[0] - FADE);
-            var t = smooth(clamp01((p - at) / FADE));
-            alpha = 0.58 * (1 - t);
-            if (alpha <= 0.004) continue;
-            x = d.x;
-            y = d.y;
-          }
+          if (d.survivor) continue;
+          // fade out strictly in place at this dot's own moment within its
+          // wave — no movement at all, or the dots read as page scroll
+          var win = WINDOWS[d.stage - 1];
+          var at = win[0] + d.jitter * (win[1] - win[0] - FADE);
+          var t = smooth(clamp01((p - at) / FADE));
+          var fade = 0.58 * (1 - t);
+          if (fade <= 0.004) continue;
           ctx.beginPath();
-          ctx.arc(x, y, r, 0, Math.PI * 2);
-          ctx.fillStyle = d.survivor
-            ? 'rgba(255,255,255,' + alpha.toFixed(3) + ')'
-            : 'rgba(168,178,194,' + alpha.toFixed(3) + ')';
+          ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(168,178,194,' + fade.toFixed(3) + ')';
           ctx.fill();
         }
+
+        // ── Pass 2: the 17 survivors, as stars ──
+        // Visibly distinct from the START — brighter and larger — so the eye
+        // tracks them persisting while the field thins; the story reads
+        // throughout the scroll, not just at the final gather. Each is a single
+        // bloom sprite whose near-flat inner stops hold a definite point at the
+        // centre, so no second core layer is needed (one stacked additively on
+        // top of the bloom clipped the centre to white).
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        for (var s = 0; s < dots.length; s++) {
+          var v = dots[s];
+          if (!v.survivor) continue;
+          var lum = 0.9 + 0.1 * conv;
+          var sx = v.x + (rowX0 + v.slot * gap - v.x) * conv;
+          var sy = v.y + (g.rowY - v.y) * conv;
+          var sr = 2.0 + (2.9 - 2.0) * conv;
+          // The halo tightens as the survivors gather. Scattered across the sky
+          // a wide bloom is what gives the field depth, but in the final row
+          // they sit only ~20px apart, where a 5.2x halo overlaps into one
+          // continuous glowing strip — that read as an LED strip, not as 17
+          // stars. Tapering to 3.2x keeps each one a separate point of light.
+          var halo = sr * (GLOW_SCALE - GLOW_TIGHTEN * conv);
+          ctx.globalAlpha = lum;
+          ctx.drawImage(glowSprite, sx - halo, sy - halo, halo * 2, halo * 2);
+        }
+        ctx.globalAlpha = 1;
+        ctx.restore();
 
         // Countdown — shares the dot-cull windows so the number and the field
         // thin together, but the numeric weights come from COUNTS (the dot
