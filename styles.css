@@ -17,7 +17,7 @@
      the whole 200-800 axis, so weights are now REAL: the old Formata face was a
      single Light .otf declared 100-900, which (with font-synthesis: none below)
      rendered every weight identically light. Weight values across the sheet were
-     retuned when this landed — see the sans weight scale note in :root. */
+     retuned when this landed â see the sans weight scale note in :root. */
   font-family: "Manrope";
   src: url("assets/fonts/manrope-variable.ttf") format("truetype");
   font-weight: 200 800;
@@ -34,9 +34,9 @@
   --line: #d8dde3;
   --accent: #506e88;
   --accent-deep: #39536c;
-  /* Brand secondary, used as an ACCENT MARK only — the short eyebrow dashes,
+  /* Brand secondary, used as an ACCENT MARK only â the short eyebrow dashes,
      pull-quote rules, list numerals, the ticker bar and the discipline ticks,
-     plus the Frontline Obsession panel and the surviving constellation dots.
+     plus the Owners Mindset panel and the surviving constellation dots.
      Never running body text on the light page: it is 4.2:1 there, under AA. */
   --terracotta: #c25332;
   --dark: #171f2f;
@@ -46,17 +46,17 @@
   --serif: "Riccione Serial", "Cormorant Garamond", "Times New Roman", serif;
   --sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  /* Uppercase label scale — the site has two small-caps idioms, and they had
+  /* Uppercase label scale â the site has two small-caps idioms, and they had
      drifted to nine different tracking values. These two tokens are the whole
      scale: use --track-eyebrow for a section eyebrow (the label above a section
      title, always 13px), and --track-label for micro labels (tags, roles,
-     dates, kickers, captions — size varies with context, tracking does not).
+     dates, kickers, captions â size varies with context, tracking does not).
      Dense fund-data labels and table headers stay tighter on purpose. */
   --track-eyebrow: .14em;
   --track-label: .10em;
   /* Running copy. The old .015em existed to open up Formata Light, which set
      unusually tight. Manrope is a wider, more generously spaced face and needs
-     no such compensation — at .015em it read loose. Set on body so it inherits
+     no such compensation â at .015em it read loose. Set on body so it inherits
      everywhere; the serif headings override it back to their own tracking. */
   --track-body: normal;
 
@@ -83,9 +83,9 @@ body {
 
 img, svg { display: block; max-width: 100%; }
 
-/* ── Quotes authored in WordPress ─────────────────────────
+/* ââ Quotes authored in WordPress âââââââââââââââââââââââââ
    The editor emits a bare <blockquote> whose class names are machine
-   generated (cvGsUA, a_GcMg …), so the element itself is the only stable
+   generated (cvGsUA, a_GcMg â¦), so the element itself is the only stable
    hook. These values mirror .essay-inline-quote, the house treatment.
    The hand-built quote classes are class selectors and so outrank this;
    .essay-epigraph and .hero-quote additionally reset the rule and padding,
@@ -139,10 +139,10 @@ a:hover { color: var(--accent-deep); }
   padding: 0 var(--gutter);
 }
 
-/* ─── TOPBAR — slim utility strip above the header. In normal flow (not
-   sticky), so it scrolls away while .site-header sticks to the top. ── */
+/* âââ TOPBAR â slim utility strip above the header. In normal flow (not
+   sticky), so it scrolls away while .site-header sticks to the top. ââ */
 .topbar {
-  /* Discreet paper-grey utility strip — quiet chrome, not a brand moment. */
+  /* Discreet paper-grey utility strip â quiet chrome, not a brand moment. */
   background: var(--bg-elev);
   color: var(--ink-mute);
   border-bottom: 1px solid var(--line);
@@ -167,23 +167,23 @@ a:hover { color: var(--accent-deep); }
 .topbar-link:hover { opacity: 1; }
 /* On over-hero pages the header is navy. Give the topbar a DEEPER navy than the
    --dark header (#171f2f) plus a subtle hairline, so it reads as a distinct
-   utility strip — the navy sibling of the grey version, which sits a shade
+   utility strip â the navy sibling of the grey version, which sits a shade
    deeper than the light page. Light-header pages keep the paper-grey above. */
 body.over-hero .topbar {
   background: #10182a;
   color: var(--on-dark);
   border-bottom-color: rgba(255, 255, 255, .1);
 }
-/* Topbar on the HOME page only — static home is .page-home, WP front page gets
+/* Topbar on the HOME page only â static home is .page-home, WP front page gets
    .home from body_class(). (Remove this rule to show it site-wide again.) */
 body:not(.page-home):not(.home) .topbar { display: none; }
 /* The topbar (~35px) sits in flow above the sticky 100vh hero, pushing its
-   bottom — the "click a founder" hint — off the screen edge. Trim the pinned
+   bottom â the "click a founder" hint â off the screen edge. Trim the pinned
    hero by the topbar height on home so the composition fits the viewport again. */
 body.page-home .coverflow-pin,
 body.home .coverflow-pin { height: calc(100vh - 35px); }
 
-/* ─── HEADER ───────────────────────────────────────────── */
+/* âââ HEADER âââââââââââââââââââââââââââââââââââââââââââââ */
 .site-header {
   /* z-index 60: above the hero video (50) so the sticky header stays on
      top as the video scrolls up; still below the founder modal (100) */
@@ -249,7 +249,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 .menu-toggle {
   display: none;
   background: none; border: 0; cursor: pointer;
-  /* inherit so the bars (background: currentColor) follow the header colour —
+  /* inherit so the bars (background: currentColor) follow the header colour â
      ink on light pages, white on over-hero (navy) pages. Buttons don't inherit
      colour by default, which left the bars UA-black and near-invisible on navy. */
   color: inherit;
@@ -261,7 +261,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   display: block; width: 24px; height: 2px; background: currentColor;
 }
 
-/* ─── HERO ─────────────────────────────────────────────── */
+/* âââ HERO âââââââââââââââââââââââââââââââââââââââââââââââ */
 .hero {
   position: relative;
   background: var(--dark);
@@ -270,7 +270,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   text-align: center;
   overflow: hidden;
 }
-/* Vignette in the two BOTTOM corners/sides — the navy centre around the
+/* Vignette in the two BOTTOM corners/sides â the navy centre around the
    hero quote keeps the original scheme; moving radially outward toward the
    bottom sides it falls off smoothly into the deep #070a14 black (the tone
    from the liked "Black deep blue" version). A mid-stop softens the blend;
@@ -341,7 +341,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   to { opacity: .22; }
 }
 
-/* Hero glow — a soft luminous depth, like light alive beneath the surface. */
+/* Hero glow â a soft luminous depth, like light alive beneath the surface. */
 .hero-glow {
   position: absolute;
   inset: 0;
@@ -377,6 +377,10 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   color: var(--ink-mute);
   margin: 0 0 36px;
 }
+/* "The founders we back" only. Scoped to .coverflow-head so the other four
+   .section-eyebrow instances (two more on the home page, plus fund and
+   contact) keep --ink-mute. */
+.coverflow-head .section-eyebrow { color: var(--terracotta); }
 .section-eyebrow.centered { text-align: center; }
 .section-eyebrow.light { color: var(--on-dark-mute); }
 
@@ -488,7 +492,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   text-align: center;
 }
 
-/* ─── ABOUT ────────────────────────────────────────────── */
+/* âââ ABOUT ââââââââââââââââââââââââââââââââââââââââââââââ */
 .about {
   padding: clamp(96px, 14vh, 160px) 0;
 }
@@ -543,7 +547,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   line-height: 1.5;
 }
 
-/* ─── SECTION TITLES ───────────────────────────────────── */
+/* âââ SECTION TITLES âââââââââââââââââââââââââââââââââââââ */
 .section-title {
   font-family: var(--serif);
   font-weight: 500;
@@ -556,11 +560,11 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 .section-title.centered { text-align: center; }
 .section-title.light { color: var(--on-dark); }
 
-/* ─── LINE-BREAK POLISH ────────────────────────────────
+/* âââ LINE-BREAK POLISH ââââââââââââââââââââââââââââââââ
    Display type is set large against narrow columns, so headings regularly
    dropped a single short word onto a last line ("Essays from the / desk.").
    `balance` evens the line lengths instead, which kills the orphan without
-   anyone choosing break points by hand — and it respects explicit <br/>, so
+   anyone choosing break points by hand â and it respects explicit <br/>, so
    the deliberate breaks on the home hero and fund title still hold. Ignored
    by browsers that don't support it, which simply get today's behaviour. */
 .section-title,
@@ -592,13 +596,13 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   text-wrap: balance;
 }
 
-/* A figure and its unit are one token — "120.5" and "%" must never split
+/* A figure and its unit are one token â "120.5" and "%" must never split
    across lines. The compound figure ("23.0 vs 4.8 years") is genuinely
    multi-part prose, so it keeps normal wrapping. */
 .odd-figure { white-space: nowrap; }
 .odd-figure-compound { white-space: normal; }
 
-/* ─── OUR APPROACH (numbered titles) ───────────────────── */
+/* âââ OUR APPROACH (numbered titles) âââââââââââââââââââââ */
 .pillars {
   padding: clamp(96px, 14vh, 160px) 0 clamp(112px, 16vh, 180px);
   background: var(--bg-elev);
@@ -638,7 +642,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   letter-spacing: normal;
 }
 
-/* ─── WHAT FOUNDERS DO DIFFERENTLY ─────────────────────── */
+/* âââ WHAT FOUNDERS DO DIFFERENTLY âââââââââââââââââââââââ */
 .advantage {
   padding: clamp(80px, 12vh, 140px) 0 clamp(96px, 14vh, 160px);
   background: var(--bg);
@@ -667,19 +671,24 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   overflow: hidden;
   transition: transform .5s cubic-bezier(.2,.7,.2,1);
 }
+/* The original pale grey, kept on purpose. Brand Ice Blue #E8EAF1 was tried
+   here and is within one unit per channel of this, so it changed nothing
+   visible and only added a token. A pale ground, so this card takes INK text:
+   13.7:1, with the shared .82/.72 opacities clearing AA at 8.1:1 and 5.9:1, so
+   unlike the terracotta card below it needs no opacity override. */
 .advantage-card:nth-child(1) {
+  background: #e7eaf0;
+  color: var(--ink);
+}
+.advantage-card:nth-child(2) {
   background: var(--terracotta);
   color: var(--on-dark);
 }
 /* White on terracotta is 4.6:1, so this card cannot carry the shared .82 body
    and .72 numeral opacities (they land at 3.7:1 and 3.1:1). Full strength here;
-   the other two cards sit on steel and navy and keep the recessive treatment. */
-.advantage-card:nth-child(1) p { opacity: 1; }
-.advantage-card:nth-child(1) .advantage-num { opacity: 1; }
-.advantage-card:nth-child(2) {
-  background: #4a6580;
-  color: var(--on-dark);
-}
+   the cards either side sit on Ice Blue and navy and keep the recessive .82/.72. */
+.advantage-card:nth-child(2) p { opacity: 1; }
+.advantage-card:nth-child(2) .advantage-num { opacity: 1; }
 .advantage-card:nth-child(3) {
   background: var(--dark);
   color: var(--on-dark);
@@ -731,7 +740,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   transform: scaleX(1);
 }
 
-/* ─── THE FOUNDER-LED ADVANTAGE (stacked rows) ─────────── */
+/* âââ THE FOUNDER-LED ADVANTAGE (stacked rows) âââââââââââ */
 .odds {
   --odds-grey: #b8c2d0;
   position: relative;
@@ -779,7 +788,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   color: rgba(255,255,255,.72);
 }
 
-/* ─── Founder performance chart ─────────────────────── */
+/* âââ Founder performance chart âââââââââââââââââââââââ */
 .founder-chart-wrap {
   max-width: 1080px;
   margin: 0 auto clamp(48px, 7vh, 80px);
@@ -816,7 +825,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   justify-content: center;
   text-align: center;
 }
-/* Partial divider — ~70% wide, anchored right */
+/* Partial divider â ~70% wide, anchored right */
 .odd::before {
   content: "";
   position: absolute;
@@ -883,7 +892,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 @media (max-width: 1439px) { .odd-figure-compound { font-size: .85em; } }
 @media (max-width: 1200px) { .odd-figure-compound { font-size: .65em; } }
 @media (max-width:  980px) { .odd-figure-compound { font-size: 1em; } }
-/* units inherit the standard .odd-unit .5em — only the opacity differs */
+/* units inherit the standard .odd-unit .5em â only the opacity differs */
 .odd-figure-compound .odd-unit {
   opacity: .65;
 }
@@ -893,7 +902,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   top: 50%;
   transform: translateY(-50%);
   margin: 0;
-  /* One shared measure for all four rows — no per-caption special cases.
+  /* One shared measure for all four rows â no per-caption special cases.
      Fluid: wide screens fit the shorter captions ("Ziller outperformance
      since inception^", "20-year return of founder-led stocks") on one line;
      tightens on narrower desktops, where a wider caption would run into the
@@ -912,24 +921,24 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 .odd.active .odd-text { color: var(--on-dark); }
 /* Narrow-desktop band: the row hasn't room for wider captions next to the
    large figures (verified collisions at 1024/1116 with the fluid measure), so
-   pin the box to the old-safe 260px — the 14px text simply wraps to more
-   lines there — and drop the tenure caption's semantic break, whose 290px
+   pin the box to the old-safe 260px â the 14px text simply wraps to more
+   lines there â and drop the tenure caption's semantic break, whose 290px
    first half no longer fits on one line. */
 @media (min-width: 981px) and (max-width: 1250px) {
   .odd-text { max-width: 260px; }
   .odd-text br { display: none; }
 }
-/* Stacked mobile layout: caption columns are ~130px — the forced break just
+/* Stacked mobile layout: caption columns are ~130px â the forced break just
    adds a line, and 14px uppercase gets too ragged; original 12px + natural
    wrapping. */
 @media (max-width: 980px) {
   .odd-text br { display: none; }
   .odd-text { font-size: 12px; }
 }
-/* Parenthetical asides inside a stat caption — e.g. "(3.3% alpha pa …)*" —
+/* Parenthetical asides inside a stat caption â e.g. "(3.3% alpha pa â¦)*" â
    sit quieter than the caption itself. Opacity (not a fixed colour) so the
    note stays proportionally dimmer through the active-state colour change. */
-.odd-text-note { opacity: .55; display: block; }  /* own line — never splits the main clause */
+.odd-text-note { opacity: .55; display: block; }  /* own line â never splits the main clause */
 .odds-footnotes {
   max-width: 1280px;
   margin: clamp(48px, 7vh, 80px) auto 0;
@@ -943,7 +952,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   max-width: 720px;
 }
 
-/* ─── INSIGHTS ─────────────────────────────────────────── */
+/* âââ INSIGHTS âââââââââââââââââââââââââââââââââââââââââââ */
 .insights {
   padding: clamp(96px, 14vh, 160px) 0;
   background: var(--bg-elev);
@@ -951,8 +960,8 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 }
 .insights-inner {
   display: grid;
-  /* minmax(0,…) not 1fr: a closed band's single-line (nowrap) title has a wide
-     min-content, and a plain 1fr track can't shrink below that — it would
+  /* minmax(0,â¦) not 1fr: a closed band's single-line (nowrap) title has a wide
+     min-content, and a plain 1fr track can't shrink below that â it would
      inflate the stack column at rest and snap back on hover (when the title
      wraps). minmax(0,1fr) keeps both columns exactly equal regardless. */
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -960,7 +969,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   align-items: center;
 }
 .insights-text .section-title { margin-bottom: 28px; }
-/* :not(.section-eyebrow) — the eyebrow is a <p> too, and this body-copy rule
+/* :not(.section-eyebrow) â the eyebrow is a <p> too, and this body-copy rule
    was outranking .section-eyebrow on it: 18px instead of 13px, so its
    tracking came out at 2.52px against the 1.82px every other eyebrow uses. */
 .insights-text > p:not(.section-eyebrow) {
@@ -971,11 +980,11 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   line-height: 1.6;
 }
 
-/* ── The stack — three essays as one interactive column. The in-focus essay
+/* ââ The stack â three essays as one interactive column. The in-focus essay
    opens to show its photograph; the others tuck beneath it as slim bands that
    lap the sheet above. Hovering (or tabbing to) a band opens it and closes the
-   rest — pure CSS, animated flex-grow. The DATE shows on every band; the tag
-   (dot + label) and title appear only on the in-focus card. ── */
+   rest â pure CSS, animated flex-grow. The DATE shows on every band; the tag
+   (dot + label) and title appear only on the in-focus card. ââ */
 .insights-stack {
   --stack-h: min(640px, 76vh);
   display: flex;
@@ -995,7 +1004,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   isolation: isolate;
 }
 /* Scoped under .insights-stack so this transition list outranks the generic
-   .reveal one — opacity/transform stay listed for the entrance animation. */
+   .reveal one â opacity/transform stay listed for the entrance animation. */
 .insights-stack .insight-tile {
   transition:
     flex-grow .65s cubic-bezier(.3, .7, .2, 1),
@@ -1018,11 +1027,11 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 .insights-stack:focus-within .insight-tile { flex-grow: 1; }
 .insights-stack .insight-tile:hover,
 .insights-stack .insight-tile:focus-visible { flex-grow: 3.4; }
-/* photo layer — a fixed-size image anchored to the tile top. Its height is set
+/* photo layer â a fixed-size image anchored to the tile top. Its height is set
    just above the OPEN tile height (not the whole 640px column): tall enough to
-   fill an open panel, but no taller — so the box stays close to landscape and
+   fill an open panel, but no taller â so the box stays close to landscape and
    `cover` crops these landscape photos only lightly (you see most of the
-   original picture, not a tight zoom). Fixed height ⇒ no rescale-on-open; the
+   original picture, not a tight zoom). Fixed height â no rescale-on-open; the
    band simply clips more of the same image when closed. */
 .insight-tile::before {
   content: '';
@@ -1036,7 +1045,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   background-size: cover;
   background-position: var(--pos, center);
 }
-/* legibility scrims — bottom ramp for the title, plus a whisper of ink at the
+/* legibility scrims â bottom ramp for the title, plus a whisper of ink at the
    top so the date (and the in-focus tag) stay readable on a bright band. */
 .insight-tile::after {
   content: '';
@@ -1066,17 +1075,19 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--terracotta);
   box-shadow: 0 0 0 3px rgba(255,255,255,.14);
 }
-/* Attention pulse — ONLY the latest (lead) essay: two staggered bright rings
+/* Attention pulse â ONLY the latest (lead) essay: two staggered bright rings
    ping outward from a brighter, glowing dot. Shared keyframe, reused for the
    latest card on the Insights archive. */
 .insight-tile--lead .insight-kicker-dot {
   width: 8px;
   height: 8px;
-  background: #9cc0e0;
-  box-shadow: 0 0 8px 1px rgba(156, 192, 224, .6);
+  /* A lifted terracotta, not the flat token: the lead dot sits on a dark
+     photo and has to carry a glow. #C25332 alone reads muddy there. */
+  background: #E07A55;
+  box-shadow: 0 0 8px 1px rgba(224, 122, 85, .6);
 }
 .insight-tile--lead .insight-kicker-dot::before,
 .insight-tile--lead .insight-kicker-dot::after {
@@ -1084,7 +1095,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  box-shadow: 0 0 0 2px #9cc0e0;
+  box-shadow: 0 0 0 2px #E07A55;
   animation: insight-dot-pulse 2s cubic-bezier(.3, 0, .5, 1) infinite;
 }
 .insight-tile--lead .insight-kicker-dot::before { animation-delay: -1s; }
@@ -1125,7 +1136,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   letter-spacing: normal;
   color: #fff;
 }
-/* Focus hierarchy — a closed band shows exactly ONE quiet line: its title,
+/* Focus hierarchy â a closed band shows exactly ONE quiet line: its title,
    ghosted and clipped to a single ellipsized line at 75% size, with the small
    date opposite. The tag (dot + label) belongs to the in-focus card only and
    fades in as its panel opens; the title blooms to full size and wraps freely.
@@ -1162,9 +1173,9 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 .insights-stack .insight-tile:hover .insight-title,
 .insights-stack .insight-tile:focus-visible .insight-title { opacity: 1; transform: scale(1); white-space: normal; }
 
-/* Staggered entrance — reveal hooks assigned in script.js. Cards drop in from
+/* Staggered entrance â reveal hooks assigned in script.js. Cards drop in from
    ABOVE (translateY negative), so each one appears to emerge from beneath the
-   bottom of the card above it. The stagger runs top→bottom, so the stack
+   bottom of the card above it. The stagger runs topâbottom, so the stack
    unfurls downward. (Overrides the generic .reveal translateY(20px) rise.) */
 .insight-tile.reveal { transform: translateY(-32px); }
 .insight-tile.reveal.in { transform: translateY(0); }
@@ -1177,7 +1188,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
       opacity .9s cubic-bezier(.2, .7, .2, 1),
       transform .9s cubic-bezier(.2, .7, .2, 1);
   }
-  /* no ping; labels change brightness only — titles keep one size */
+  /* no ping; labels change brightness only â titles keep one size */
   .insight-tile--lead .insight-kicker-dot::before,
   .insight-tile--lead .insight-kicker-dot::after,
   .ins-card.is-latest .ins-card-dot::before,
@@ -1189,7 +1200,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   .insights-stack:focus-within .insight-title { transform: none; }
 }
 
-/* ─── CONTACT ──────────────────────────────────────────── */
+/* âââ CONTACT ââââââââââââââââââââââââââââââââââââââââââââ */
 .contact {
   padding: clamp(96px, 16vh, 180px) 0;
   text-align: center;
@@ -1221,7 +1232,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 }
 .contact-email:hover { color: var(--ink); border-color: var(--ink); }
 
-/* ─── FOOTER ───────────────────────────────────────────── */
+/* âââ FOOTER âââââââââââââââââââââââââââââââââââââââââââââ */
 .site-footer {
   background: var(--dark);
   color: var(--on-dark);
@@ -1302,14 +1313,14 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 .footer-bottom p { margin: 0; }
 .footer-bottom a:hover { color: var(--on-dark); }
 
-/* ─── FOUNDERS COVERFLOW ───────────────────────────────── */
+/* âââ FOUNDERS COVERFLOW âââââââââââââââââââââââââââââââââ */
 .page-home .hero-founders {
   margin-top: -93px;
 }
 .coverflow {
   position: relative;
   background: var(--bg);
-  /* Carousel is navigated by hover, not scroll — so it's a single full
+  /* Carousel is navigated by hover, not scroll â so it's a single full
      screen rather than a tall scroll runway. */
   height: 100vh;
   /* Contain only the cards' sideways spill. `clip` on the x-axis (vs an
@@ -1324,7 +1335,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   top: 0;
   height: 100vh;
   /* No overflow clip here: clipping all four sides sliced the decorative hero
-     diamonds flat at the pin's bottom edge — the hard line at the "About the
+     diamonds flat at the pin's bottom edge â the hard line at the "About the
      Fund" seam. The cards' sideways spill is instead contained horizontally by
      `.coverflow { overflow-x: clip }`, which lets the diamonds bleed past the
      bottom edge and flow into the next section. */
@@ -1362,13 +1373,13 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   position: relative;
   width: 100%;
   min-height: 0;
-  /* Entrance: the card stack fades in (opacity only — transform is reserved
+  /* Entrance: the card stack fades in (opacity only â transform is reserved
      for the static nudge below + the per-card JS transforms). The fade is
      gated on the `cards-ready` class JS adds once the cards are built, so an
      empty stage never flashes. */
   opacity: 0;
   /* Small downward nudge; biased so the cards sit a touch closer to the headline
-     (less space above) than to the name/role below — the cards are the focal point. */
+     (less space above) than to the name/role below â the cards are the focal point. */
   transform: translateY(19px);
   perspective: 1600px;
   perspective-origin: 50% 50%;
@@ -1461,8 +1472,8 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   transform: none;
 }
 /* While the founder panel is open, the stage glides behind the dimmed
-   backdrop (panel PREV/NEXT sync). Keep the card tag — and its navy bottom
-   gradient — from fading in mid-glide, where it reads as a stray flash of
+   backdrop (panel PREV/NEXT sync). Keep the card tag â and its navy bottom
+   gradient â from fading in mid-glide, where it reads as a stray flash of
    navy glow; it fades back in once the panel closes. */
 body.panel-open .cover-card.active .cover-card-tag {
   opacity: 0;
@@ -1547,7 +1558,7 @@ body.panel-open .cover-card.active .cover-card-tag {
   transform: translateY(calc(-3vh + 32px));
 }
 
-/* ─── COVERFLOW: staggered entrance for the trailing elements ───
+/* âââ COVERFLOW: staggered entrance for the trailing elements âââ
    The heading reveals via the scroll observer (.coverflow-head.reveal) and the
    cards fan out via JS; the meta, progress and hint then fade up in sequence so
    the whole hero composition settles from the top down. */
@@ -1574,23 +1585,23 @@ body.panel-open .cover-card.active .cover-card-tag {
   .coverflow-hint { opacity: 1; animation: none; }
 }
 
-/* ─── COVERFLOW: tighter on smaller screens ────────────── */
+/* âââ COVERFLOW: tighter on smaller screens ââââââââââââââ */
 @media (max-width: 900px) {
   .cover-card { width: 200px; height: 280px; margin-left: -100px; margin-top: -140px; }
   .cover-card-fallback { font-size: 64px; }
 }
 @media (max-width: 560px) {
-  /* Phones: the lead card carries the section — let it fill ~62% of the viewport
+  /* Phones: the lead card carries the section â let it fill ~62% of the viewport
      (was 160px / 43%, which read as a thumbnail). */
   .cover-card { width: 232px; height: 315px; margin-left: -116px; margin-top: -158px; }
   .cover-card-fallback { font-size: 64px; }
   .coverflow-inner { padding-top: 88px; }
   /* The in-photo name/company tag wraps illegibly at phone card sizes, and the
-     caption right below the carousel already carries it — let the photo breathe. */
+     caption right below the carousel already carries it â let the photo breathe. */
   .cover-card-tag { display: none; }
 }
 
-/* ─── FOUNDER PANEL (MODAL) ────────────────────────────── */
+/* âââ FOUNDER PANEL (MODAL) ââââââââââââââââââââââââââââââ */
 .founder-panel {
   position: fixed;
   inset: 0;
@@ -1639,7 +1650,7 @@ body.panel-open .cover-card.active .cover-card-tag {
 .founder-panel-photo {
   --accent: var(--accent-deep);
   /* Explicit height (derived from the drawer width) instead of relying on
-     aspect-ratio — an aspect-ratio-only flex item collapses to 0 once a
+     aspect-ratio â an aspect-ratio-only flex item collapses to 0 once a
      sibling (the body) is allowed to flex-grow. */
   aspect-ratio: 16 / 10;
   height: calc(min(560px, 100vw) * 0.625);
@@ -1707,7 +1718,7 @@ img.panel-scene.cover-fade {
   /* height is set per-company in script.js (LOGO_HEIGHTS) */
 }
 /* Second logo (Tesla + SpaceX) is `hidden` for single-company founders. The
-   display:block above outweighs the UA [hidden] rule, so hide it explicitly —
+   display:block above outweighs the UA [hidden] rule, so hide it explicitly â
    otherwise it keeps a flex slot (and the last logo) on every other card. */
 .founder-panel-body .panel-logo[hidden] { display: none; }
 
@@ -1715,13 +1726,13 @@ img.panel-scene.cover-fade {
   padding: 36px 48px 40px;
   /* Shrinkable (1 1 auto + min-height 0) so the drawer never overflows: the
      thesis scrolls internally instead (see below), which keeps the PREV/NEXT
-     row pinned to the drawer bottom — level for every founder. */
+     row pinned to the drawer bottom â level for every founder. */
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
   flex-direction: column;
 }
-/* .founder-panel-eyebrow removed — company is now conveyed by the logo only */
+/* .founder-panel-eyebrow removed â company is now conveyed by the logo only */
 .founder-panel-name {
   font-family: var(--serif);
   font-weight: 500;
@@ -1807,7 +1818,7 @@ img.panel-scene.cover-fade {
 }
 
 /* Short viewports (most laptops with browser chrome): compress the drawer's
-   fixed-height rows so name→stats→thesis→nav all fit above the fold and the
+   fixed-height rows so nameâstatsâthesisânav all fit above the fold and the
    PREV/NEXT row stays pinned (and level) at the drawer bottom. */
 @media (max-height: 800px) {
   .founder-panel-photo {
@@ -1824,7 +1835,7 @@ img.panel-scene.cover-fade {
 
 body.panel-open { overflow: hidden; }
 
-/* ─── MOBILE NAV OPEN ──────────────────────────────────── */
+/* âââ MOBILE NAV OPEN ââââââââââââââââââââââââââââââââââââ */
 body.nav-open .primary-nav,
 body.nav-open .header-cta {
   display: flex;
@@ -1840,7 +1851,7 @@ body.nav-open .header-cta {
 body.nav-open .header-cta {
   /* Sits below the nav panel (24px pad + 5 links x 25px + 4 gaps x 18px + 24px
      pad = 245px). margin-top pulls it up ~2px to OVERLAP the nav panel so the
-     (often dark) page behind can't peek through the seam as a thin line — that
+     (often dark) page behind can't peek through the seam as a thin line â that
      sliver was the "slit". A single border-top is the links|button divider. */
   top: calc(100% + 246px);
   margin-top: -2px;
@@ -1850,7 +1861,7 @@ body.nav-open .header-cta {
 }
 
 /* On dark-hero (over-hero) pages the header is navy by design; make the open
-   mobile menu match it — navy dropdown panels so the (white) nav links and the
+   mobile menu match it â navy dropdown panels so the (white) nav links and the
    white-outline Invest Now button stay legible, instead of the default light
    panels where white text vanished. Light-header pages keep the light menu. */
 body.nav-open.over-hero .primary-nav,
@@ -1862,7 +1873,7 @@ body.nav-open.over-hero .header-cta {
   border-bottom-color: rgba(255, 255, 255, .14);
 }
 
-/* ─── RESPONSIVE ───────────────────────────────────────── */
+/* âââ RESPONSIVE âââââââââââââââââââââââââââââââââââââââââ */
 @media (max-width: 1180px) {
   .founders-grid { grid-template-columns: repeat(4, 1fr); }
 }
@@ -1897,14 +1908,14 @@ body.nav-open.over-hero .header-cta {
   }
   /* single column: the image stack drops below the intro text */
   .insights-inner { grid-template-columns: 1fr; gap: 56px; }
-  /* no hover on touch — the accordion becomes plain stacked cards, newest
+  /* no hover on touch â the accordion becomes plain stacked cards, newest
      first, with tag + date + title all shown (nothing to hover into focus) */
   .insights-stack { display: grid; gap: 16px; height: auto; }
   .insight-tile { min-height: 0; aspect-ratio: 2 / 1; }
   .insight-tile--lead { aspect-ratio: 3 / 2; }
   .insight-tile + .insight-tile { margin-top: 0; }
   .insight-tile:not(:last-child) { box-shadow: none; }
-  /* full-bleed photo again — static cards don't open, so no curtain needed */
+  /* full-bleed photo again â static cards don't open, so no curtain needed */
   .insight-tile::before { bottom: 0; height: auto; }
   .insight-kicker,
   .insight-when,
@@ -1949,7 +1960,7 @@ body.nav-open.over-hero .header-cta {
   .pillar-icon { margin-bottom: 20px; }
 }
 
-/* ─── REVEAL ANIMATION ─────────────────────────────────── */
+/* âââ REVEAL ANIMATION âââââââââââââââââââââââââââââââââââ */
 .reveal {
   opacity: 0;
   transform: translateY(20px);
@@ -1970,13 +1981,13 @@ body.nav-open.over-hero .header-cta {
   html { scroll-behavior: auto; }
 }
 
-/* ════════════════════════════════════════════════════════
+/* ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
    FUND PAGE
    Dedicated /fund.html page. Editorial / institutional design,
    navy accents, numbered sections, dash mark motifs.
-   ════════════════════════════════════════════════════════ */
+   ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
 
-/* The fund page never sits over the dark hero — keep the header
+/* The fund page never sits over the dark hero â keep the header
    in its default (light, opaque) state regardless of scroll. */
 .page-fund .site-header {
   background: rgba(246, 247, 249, 0.92);
@@ -1990,7 +2001,7 @@ body.nav-open.over-hero .header-cta {
   color: var(--ink);
 }
 
-/* ─── Shared: section eyebrow + slash mark ─────────────── */
+/* âââ Shared: section eyebrow + slash mark âââââââââââââââ */
 .fund-section-eyebrow {
   /* Matches .invest-eyebrow exactly (gap/margin/dash) so the eyebrow + dash
      motif reads identically on the Fund and Invest heroes. */
@@ -2059,7 +2070,7 @@ body.nav-open.over-hero .header-cta {
   color: var(--ink);
 }
 
-/* ─── Hero ─────────────────────────────────────────────── */
+/* âââ Hero âââââââââââââââââââââââââââââââââââââââââââââââ */
 .fund-hero {
   padding: clamp(112px, 16vh, 180px) 0 clamp(64px, 9vh, 112px);
   border-bottom: 1px solid var(--line);
@@ -2074,8 +2085,8 @@ body.nav-open.over-hero .header-cta {
   display: grid;
   /* 1.6fr, not 1.45fr: "Ziller Global Fund" is one unbreakable phrase and at
      1.45fr it filled 95% of the column (584px of 613px). With only ~5% spare,
-     any small shift — a scrollbar, browser zoom, the fallback face showing
-     before Riccione loads — tipped "Fund" onto its own line. The extra column
+     any small shift â a scrollbar, browser zoom, the fallback face showing
+     before Riccione loads â tipped "Fund" onto its own line. The extra column
      width buys real headroom; the ticker card gives up ~6% and is unaffected. */
   grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
   gap: clamp(40px, 6vw, 96px);
@@ -2087,12 +2098,12 @@ body.nav-open.over-hero .header-cta {
   font-weight: 500;
   /* Tuned so "Ziller Global Fund" keeps >=11% clearance at every width. The old
      clamp(40px, 6vw, 76px) left 8-9% on desktop and exactly 0% at 375px, where
-     the phrase measured 308px in a 308px column — one pixel from breaking. */
+     the phrase measured 308px in a 308px column â one pixel from breaking. */
   font-size: clamp(34px, 5.4vw, 72px);
   line-height: 1.06;
   /* The fund name is a single unbreakable phrase. <br/> still forces the break
      before "Active ETF"; this only stops SOFT wrapping. Safe because of the
-     clearance above — but if the fund is ever renamed to something longer,
+     clearance above â but if the fund is ever renamed to something longer,
      retune the clamp, or this overflows instead of wrapping. */
   white-space: nowrap;
   letter-spacing: normal;
@@ -2116,7 +2127,7 @@ body.nav-open.over-hero .header-cta {
   color: var(--ink-soft);
 }
 
-/* Navy ticker card — sits on the right of the hero */
+/* Navy ticker card â sits on the right of the hero */
 .fund-ticker-card {
   position: relative;
   background: var(--dark);
@@ -2162,7 +2173,7 @@ body.nav-open.over-hero .header-cta {
   border-top: 1px solid rgba(255,255,255,.14);
   display: grid;
   /* Content-sized, not equal thirds. Equal thirds pinned each column to 95px,
-     which was enough for Formata Light but not for Manrope — "Global Growth"
+     which was enough for Formata Light but not for Manrope â "Global Growth"
      wrapped to two lines. max-content lets the wider pair take the room it
      needs while the row still spans the card. */
   grid-template-columns: repeat(3, max-content);
@@ -2187,7 +2198,7 @@ body.nav-open.over-hero .header-cta {
   letter-spacing: 0;
 }
 
-/* ─── Generic section ──────────────────────────────────── */
+/* âââ Generic section ââââââââââââââââââââââââââââââââââââ */
 .fund-section {
   padding: clamp(72px, 11vh, 128px) 0;
   border-bottom: 1px solid var(--line);
@@ -2207,7 +2218,7 @@ body.nav-open.over-hero .header-cta {
 }
 .fund-col-label .fund-section-num { margin-bottom: 10px; }
 
-/* Navy band variant — full-bleed dark background for selected sections */
+/* Navy band variant â full-bleed dark background for selected sections */
 .fund-section-band {
   background: var(--dark);
   color: var(--on-dark);
@@ -2241,7 +2252,7 @@ body.nav-open.over-hero .header-cta {
   font-style: italic;
 }
 
-/* ─── Video ────────────────────────────────────────────── */
+/* âââ Video ââââââââââââââââââââââââââââââââââââââââââââââ */
 .fund-video-wrap {
   position: relative;
   width: 100%;
@@ -2259,7 +2270,7 @@ body.nav-open.over-hero .header-cta {
   border: 0;
 }
 
-/* ─── Documents — navy band, hover-flip tiles ──────────── */
+/* âââ Documents â navy band, hover-flip tiles ââââââââââââ */
 .fund-docs {
   list-style: none;
   margin: 0;
@@ -2329,7 +2340,7 @@ body.nav-open.over-hero .header-cta {
   transform: translate(3px, -3px);
 }
 
-/* ─── Key facts (editorial snapshot) ───────────────────── */
+/* âââ Key facts (editorial snapshot) âââââââââââââââââââââ */
 .fund-kf-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -2424,7 +2435,7 @@ body.nav-open.over-hero .header-cta {
   color: var(--ink-mute);
 }
 
-/* ─── Fund Data — tabs + cells (light surface) ─────────── */
+/* âââ Fund Data â tabs + cells (light surface) âââââââââââ */
 .fund-tabs {
   background: #fff;
   border: 1px solid var(--line);
@@ -2500,7 +2511,7 @@ body.nav-open.over-hero .header-cta {
   border: 1px solid var(--line);
   border-radius: 2px;
   font-size: 9px;
-  /* inherits text-transform:uppercase from .fund-data-label — same label scale */
+  /* inherits text-transform:uppercase from .fund-data-label â same label scale */
   letter-spacing: var(--track-label);
   color: var(--ink-mute);
 }
@@ -2541,7 +2552,7 @@ body.nav-open.over-hero .header-cta {
   background: #fff;
 }
 
-/* ─── Daily MPI — clean two-column card ────────────────── */
+/* âââ Daily MPI â clean two-column card ââââââââââââââââââ */
 .fund-mpi {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2593,7 +2604,7 @@ body.nav-open.over-hero .header-cta {
   color: var(--ink-soft);
 }
 
-/* ─── Historical NAV card ──────────────────────────────── */
+/* âââ Historical NAV card ââââââââââââââââââââââââââââââââ */
 .fund-nav-card {
   background: #fff;
   border: 1px solid var(--line);
@@ -2645,7 +2656,7 @@ body.nav-open.over-hero .header-cta {
   padding: 24px clamp(20px, 3vw, 28px) 28px;
 }
 
-/* ─── ASX Announcements iframe card ────────────────────── */
+/* âââ ASX Announcements iframe card ââââââââââââââââââââââ */
 .fund-iframe-card {
   background: #fff;
   border: 1px solid var(--line);
@@ -2660,7 +2671,7 @@ body.nav-open.over-hero .header-cta {
   background: #fff;
 }
 
-/* ─── Collapsible sections (details/summary dropdowns) ─── */
+/* âââ Collapsible sections (details/summary dropdowns) âââ */
 .fund-accordion-head {
   display: flex;
   align-items: center;
@@ -2697,14 +2708,14 @@ body.nav-open.over-hero .header-cta {
   .fund-accordion-icon { transition: none; }
 }
 
-/* ─── Disabled (placeholder) button ────────────────────── */
+/* âââ Disabled (placeholder) button ââââââââââââââââââââââ */
 .btn.fund-disabled {
   opacity: .5;
   cursor: not-allowed;
   pointer-events: none;
 }
 
-/* ─── Homepage about-section CTA pointing to /fund.html ── */
+/* âââ Homepage about-section CTA pointing to /fund.html ââ */
 /* This CTA carries .btn .btn-outline in the markup, so its padding, type scale,
    border weight and hover all come from the shared button styles and cannot
    drift from the other outline buttons. The ONE deliberate exception is the
@@ -2719,7 +2730,7 @@ body.nav-open.over-hero .header-cta {
 }
 /* Keyboard focus keeps the fill this button already had. The other outline
    buttons show only the UA focus ring, so this is an extra affordance rather
-   than a visual divergence — the fill is exactly .btn-outline:hover. */
+   than a visual divergence â the fill is exactly .btn-outline:hover. */
 .about-cta:focus-visible {
   background: var(--ink);
   color: var(--bg);
@@ -2729,7 +2740,7 @@ body.nav-open.over-hero .header-cta {
 .about-cta:hover .about-cta-arrow,
 .about-cta:focus-visible .about-cta-arrow { transform: translateX(3px); }
 
-/* ─── Fund page responsive ─────────────────────────────── */
+/* âââ Fund page responsive âââââââââââââââââââââââââââââââ */
 @media (max-width: 900px) {
   .fund-hero-grid { grid-template-columns: 1fr; gap: 40px; }
   .fund-ticker-card { min-height: 240px; }
@@ -2767,30 +2778,30 @@ body.nav-open.over-hero .header-cta {
 }
 @media (max-width: 640px) {
   .fund-table th, .fund-table td { padding: 14px 18px; font-size: 14px; }
-  /* One centred row per card — number, title, PDF chip on the right — same as
+  /* One centred row per card â number, title, PDF chip on the right â same as
      desktop. (Previously the chip was reflowed onto its own second row via
      grid-column:2, which left the cards tall and baggy with the chip floating
-     bottom-right.) The fixed number width aligns every title to the same x —
+     bottom-right.) The fixed number width aligns every title to the same x â
      the italic 01/02/03/04 glyphs vary slightly in width. */
   .fund-doc {
     grid-template-columns: 30px 1fr auto;
     gap: 16px;
     padding: 20px 18px;
     /* Uniform height (~+30% over the natural ~80px): the two long titles wrap
-       to 2 lines and made those cards 5px taller — a fixed floor evens all
+       to 2 lines and made those cards 5px taller â a fixed floor evens all
        four out, content stays vertically centred. */
     min-height: 104px;
   }
 }
 
-/* ════════════════════════════════════════════════════════════
-   APPROACH PAGE — Principles & Process
+/* ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+   APPROACH PAGE â Principles & Process
    - Single-column hero (no aside card)
    - Principles emphasise title + body; the numeral is a small mark
    - Process is an interactive two-column funnel: a sticky SVG funnel
      diagram on the left syncs with stage descriptions on the right
      (hover or scroll highlights the matching segment + card).
-   ════════════════════════════════════════════════════════════ */
+   ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
 
 .js [data-reveal] {
   opacity: 0;
@@ -2804,7 +2815,7 @@ body.nav-open.over-hero .header-cta {
 }
 
 /* The intro video reveals from a blur, but the generic [data-reveal].is-visible
-   rule above only restores opacity/transform — so the blur(10px) on .hero-video
+   rule above only restores opacity/transform â so the blur(10px) on .hero-video
    never clears. Reset (and transition) the filter here too. */
 .js .hero-video {
   transition: opacity .7s cubic-bezier(.2,.7,.2,1) var(--d, 0s),
@@ -2816,7 +2827,7 @@ body.nav-open.over-hero .header-cta {
   .hero-video { filter: none !important; }
 }
 
-/* ── Hero (navy, single line, compact) ────────────────────── */
+/* ââ Hero (navy, single line, compact) ââââââââââââââââââââââ */
 .approach-hero {
   background: var(--dark);
   color: var(--on-dark);
@@ -2852,7 +2863,7 @@ body.nav-open.over-hero .header-cta {
   color: var(--on-dark);
 }
 
-/* ── Principles — pillar style ── */
+/* ââ Principles â pillar style ââ */
 
 .principles-head {
   flex-direction: column;
@@ -2889,7 +2900,7 @@ body.nav-open.over-hero .header-cta {
 }
 .principle.is-visible { opacity: 1; transform: translateY(0); }
 
-/* Focus effect — dim siblings on hover */
+/* Focus effect â dim siblings on hover */
 .principles-grid:hover .principle { border-color: rgba(23, 31, 47, .15); }
 .principles-grid:hover .principle:hover { border-color: var(--ink); }
 
@@ -2941,7 +2952,7 @@ body.nav-open.over-hero .header-cta {
   .principles-grid { grid-template-columns: 1fr; }
 }
 
-/* ── Funnel: pinned + scroll-driven card stack ──────────────
+/* ââ Funnel: pinned + scroll-driven card stack ââââââââââââââ
    Three trapezoid rows stacked vertically to form a funnel.
    Each row clips to its own trapezoid shape (forming the funnel
    profile when stacked). On scroll, each row reveals additively:
@@ -2978,14 +2989,14 @@ body.nav-open.over-hero .header-cta {
   align-items: center;
   text-align: center;
 }
-/* Central group — count + active filter caption; auto margins centre it
+/* Central group â count + active filter caption; auto margins centre it
    in the space above the bottom caption */
 .funnel-center {
   margin: auto 0;
   width: 100%;
 }
 
-/* The investable-universe dot field behind the funnel — full-bleed:
+/* The investable-universe dot field behind the funnel â full-bleed:
    spans the viewport width (sized by JS), centred on the pinned column */
 .funnel-dots {
   position: absolute;
@@ -3011,7 +3022,7 @@ body.nav-open.over-hero .header-cta {
 /* Eyebrow above the countdown */
 .funnel-eyebrow { margin-bottom: clamp(14px, 2.5vh, 24px); }
 
-/* The countdown — large, with a small unit label beside it. The unit
+/* The countdown â large, with a small unit label beside it. The unit
    sits in a zero-width anchor so flex centring sees only the number:
    the digits stay dead-centre at every value, and the label simply
    follows the number's right edge as it narrows. */
@@ -3047,7 +3058,7 @@ body.nav-open.over-hero .header-cta {
   color: var(--on-dark-mute);
 }
 
-/* The three filters side by side beneath the count — each column fades
+/* The three filters side by side beneath the count â each column fades
    in as its wave of dots is culled, and stays */
 .funnel-stage {
   width: 100%;
@@ -3088,7 +3099,7 @@ body.nav-open.over-hero .header-cta {
   color: var(--on-dark-mute);
 }
 
-/* ── Portfolio Discipline — just heading + 3 cards (no tag/lead) ── */
+/* ââ Portfolio Discipline â just heading + 3 cards (no tag/lead) ââ */
 .discipline {
   margin-top: clamp(64px, 9vh, 104px);
   padding-top: clamp(40px, 6vh, 64px);
@@ -3140,7 +3151,7 @@ body.nav-open.over-hero .header-cta {
   color: var(--on-dark-mute);
 }
 
-/* ── Approach intro — dark band with positioning headline ── */
+/* ââ Approach intro â dark band with positioning headline ââ */
 .approach-intro {
   background: var(--dark);
   color: var(--on-dark);
@@ -3168,7 +3179,7 @@ body.nav-open.over-hero .header-cta {
   display: inline-flex;
   align-items: center;
   /* Same eyebrow+dash geometry as .invest-eyebrow / .fund-section-eyebrow
-     (16px gap, 48px dash) — dark-theme colours, compositional margin kept. */
+     (16px gap, 48px dash) â dark-theme colours, compositional margin kept. */
   gap: 16px;
   margin: 0 0 clamp(36px, 5vh, 56px);
   font-family: var(--sans);
@@ -3196,7 +3207,7 @@ body.nav-open.over-hero .header-cta {
   color: var(--on-dark);
 }
 
-/* ── Team — restrained portrait, sits at top of page ─────── */
+/* ââ Team â restrained portrait, sits at top of page âââââââ */
 .approach-team {
   border-bottom: 0;
   padding-bottom: clamp(20px, 3vh, 36px);
@@ -3227,7 +3238,7 @@ body.nav-open.over-hero .header-cta {
 }
 
 
-/* ── CTA ─────────────────────────────────────────────────── */
+/* ââ CTA âââââââââââââââââââââââââââââââââââââââââââââââââââ */
 .approach-cta {
   max-width: 760px;
   margin: 0 auto;
@@ -3244,9 +3255,9 @@ body.nav-open.over-hero .header-cta {
 }
 .approach-cta-actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
 
-/* ── Responsive ──────────────────────────────────────────── */
+/* ââ Responsive ââââââââââââââââââââââââââââââââââââââââââââ */
 @media (max-width: 720px) {
-  /* Mobile: no pin — static scene showing the final state; the three
+  /* Mobile: no pin â static scene showing the final state; the three
      filters become simple stacked cards */
   .funnel-scroll-track { height: auto; }
   .funnel-pin { position: static; height: auto; display: block; }
@@ -3267,11 +3278,11 @@ body.nav-open.over-hero .header-cta {
   .discipline-grid { grid-template-columns: 1fr; gap: 28px; }
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
    INSIGHTS PAGE
-   ═══════════════════════════════════════════════════════════ */
+   âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
 
-/* ── Intro — pinned dark banner with curtain scroll ─────── */
+/* ââ Intro â pinned dark banner with curtain scroll âââââââ */
 .insights-intro {
   position: sticky;
   top: 0;
@@ -3328,7 +3339,7 @@ body.nav-open.over-hero .header-cta {
   margin: 0 auto;
 }
 
-/* ── Intro entrance — approach + insights pages ────────── */
+/* ââ Intro entrance â approach + insights pages ââââââââââ */
 @keyframes intro-rise {
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -3360,9 +3371,9 @@ body.nav-open.over-hero .header-cta {
   }
 }
 
-/* ════════════════════════════════════════════════════════
-   INVEST PAGE — compact header + tabbed "ways to invest"
-   ════════════════════════════════════════════════════════ */
+/* ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+   INVEST PAGE â compact header + tabbed "ways to invest"
+   ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
 
 /* Compact light page header (no full-screen dark banner) */
 .invest-hero { padding: clamp(56px, 9vh, 104px) 0 clamp(24px, 4vh, 40px); }
@@ -3395,7 +3406,7 @@ body.nav-open.over-hero .header-cta {
   color: var(--ink);
 }
 
-/* ── Tabbed ways to invest ─────────────────────────────── */
+/* ââ Tabbed ways to invest âââââââââââââââââââââââââââââââ */
 .invest-tabs-section { padding-bottom: clamp(56px, 9vh, 112px); }
 .invest-tabs {
   display: grid;
@@ -3465,7 +3476,7 @@ body.nav-open.over-hero .header-cta {
   text-transform: uppercase;
   color: var(--accent-deep);
 }
-/* The ASX code is a real ticker — give it a pronounced badge */
+/* The ASX code is a real ticker â give it a pronounced badge */
 .invest-panel-ticker--code {
   display: inline-block;
   margin: 0 0 18px;
@@ -3579,7 +3590,7 @@ body.nav-open.over-hero .header-cta {
   text-align: center;
 }
 
-/* ── Need help investing ───────────────────────────────── */
+/* ââ Need help investing âââââââââââââââââââââââââââââââââ */
 .invest-help-inner { text-align: center; max-width: 640px; margin: 0 auto; }
 .invest-help-title {
   margin: 0 0 16px;
@@ -3606,7 +3617,7 @@ body.nav-open.over-hero .header-cta {
 }
 .invest-help-email:hover { color: var(--accent-deep); border-color: var(--accent); }
 
-/* Team page — member profiles */
+/* Team page â member profiles */
 .team-group { margin-top: clamp(48px, 7vh, 88px); }
 .team-group:first-of-type { margin-top: 0; }
 .team-group-title {
@@ -3643,7 +3654,7 @@ body.nav-open.over-hero .header-cta {
 }
 /* The original photo (with its scenic background) sits behind, static. */
 .team-photo-bg { z-index: 0; }
-/* Navy diagonal — over the scenic background, behind the figure; sweeps in on hover. */
+/* Navy diagonal â over the scenic background, behind the figure; sweeps in on hover. */
 .team-photo::after {
   content: "";
   position: absolute;
@@ -3710,7 +3721,7 @@ body.nav-open.over-hero .header-cta {
 /* Bio lives hidden in the card as the data source; shown in the pop-out modal. */
 .team-bio { display: none; }
 
-/* ── Team bio pop-out modal ─────────────────────────────── */
+/* ââ Team bio pop-out modal âââââââââââââââââââââââââââââââ */
 .team-modal {
   position: fixed;
   inset: 0;
@@ -3810,7 +3821,7 @@ body.modal-open { overflow: hidden; }
   .invest-panel.is-active {
     /* minmax(0,1fr), not bare 1fr: a plain 1fr track has a min-content floor,
        and the platforms grid (auto-fill against its 460px max-width) resolves
-       4 tiles wide — blowing the column out past the viewport so the last
+       4 tiles wide â blowing the column out past the viewport so the last
        tiles bled off-screen. Zeroing the floor lets it wrap to fit. */
     grid-template-columns: minmax(0, 1fr);
     min-height: 0;
@@ -3832,7 +3843,7 @@ body.modal-open { overflow: hidden; }
   .invest-tab.is-active { box-shadow: inset 3px 0 0 var(--accent-deep); }
 }
 
-/* ── Featured essay — hero card ────────────────────────── */
+/* ââ Featured essay â hero card ââââââââââââââââââââââââââ */
 .ins-featured {
   padding: clamp(72px, 10vh, 120px) 0 clamp(48px, 6vh, 80px);
 }
@@ -3911,7 +3922,7 @@ body.modal-open { overflow: hidden; }
 }
 .ins-read-link:hover span { transform: translateX(4px); }
 
-/* ── Archive — segmented tabs + overlay-card grid ──────── */
+/* ââ Archive â segmented tabs + overlay-card grid ââââââââ */
 .ins-archive {
   padding: clamp(64px, 9vh, 110px) 0 clamp(72px, 10vh, 120px);
 }
@@ -3920,7 +3931,7 @@ body.modal-open { overflow: hidden; }
   max-width: 1480px;
 }
 
-/* Filter tabs — understated underline labels */
+/* Filter tabs â understated underline labels */
 .ins-tabs {
   display: flex;
   justify-content: center;
@@ -3965,7 +3976,7 @@ body.modal-open { overflow: hidden; }
 }
 /* Landscape Media / Videos & Webinars go 2-up so the wide thumbnails read large;
    portrait Articles stay 3-up. Driven by data-filter (set by applyFilter).
-   Desktop only — below 900px the base grid already steps to 2- then 1-column. */
+   Desktop only â below 900px the base grid already steps to 2- then 1-column. */
 @media (min-width: 901px) {
   .ins-grid[data-filter="media"],
   .ins-grid[data-filter="videos-webinars"] {
@@ -3986,7 +3997,7 @@ body.modal-open { overflow: hidden; }
   text-decoration: none;
 }
 
-/* Media tile — image or type, title overlaid */
+/* Media tile â image or type, title overlaid */
 .ins-card-media {
   position: relative;
   aspect-ratio: 4 / 5;
@@ -4000,7 +4011,7 @@ body.modal-open { overflow: hidden; }
   isolation: isolate;
 }
 /* Media and Videos & Webinars thumbnails are landscape, so give those cards a
-   16:9 tile instead of the portrait 4:5 used for Articles — the source images
+   16:9 tile instead of the portrait 4:5 used for Articles â the source images
    fill it without side-cropping. Each Insights tab shows a single category, so
    the grid stays uniform within a view. */
 .ins-card[data-category="media"] .ins-card-media,
@@ -4061,7 +4072,7 @@ body.modal-open { overflow: hidden; }
 .ins-card-link { transition: transform .4s cubic-bezier(.2,.7,.2,1); }
 .ins-card:hover .ins-card-link { transform: translateY(-4px); }
 
-/* Kicker — category eyebrow with dot, top-left */
+/* Kicker â category eyebrow with dot, top-left */
 .ins-card-kicker {
   position: absolute;
   top: 18px;
@@ -4081,12 +4092,12 @@ body.modal-open { overflow: hidden; }
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--terracotta);
   box-shadow: 0 0 0 3px rgba(255,255,255,.14);
 }
-/* Attention pulse — the newest essay CURRENTLY IN VIEW. Two staggered rings +
+/* Attention pulse â the newest essay CURRENTLY IN VIEW. Two staggered rings +
    a brighter, glowing core; shares the home page's keyframe.
-   Not :first-child — the grid is filtered by category (applyFilter hides the
+   Not :first-child â the grid is filtered by category (applyFilter hides the
    non-matching cards with display:none), so the structurally-first card is
    often hidden and its pulse invisible. applyFilter tags the first VISIBLE card
    with .is-latest instead, and re-tags on every tab change.
@@ -4095,8 +4106,8 @@ body.modal-open { overflow: hidden; }
 html:not(.js) .ins-card:first-child .ins-card-dot {
   width: 8px;
   height: 8px;
-  background: #9cc0e0;
-  box-shadow: 0 0 8px 1px rgba(156, 192, 224, .6);
+  background: #E07A55;
+  box-shadow: 0 0 8px 1px rgba(224, 122, 85, .6);
 }
 .ins-card.is-latest .ins-card-dot::before,
 .ins-card.is-latest .ins-card-dot::after,
@@ -4106,13 +4117,13 @@ html:not(.js) .ins-card:first-child .ins-card-dot::after {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  box-shadow: 0 0 0 2px #9cc0e0;
+  box-shadow: 0 0 0 2px #E07A55;
   animation: insight-dot-pulse 2s cubic-bezier(.3, 0, .5, 1) infinite;
 }
 .ins-card.is-latest .ins-card-dot::before,
 html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s; }
 
-/* Caption — title + byline, bottom */
+/* Caption â title + byline, bottom */
 .ins-card-cap {
   position: relative;
   z-index: 2;
@@ -4138,10 +4149,10 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 }
 .ins-card:hover .ins-card-title { color: #eaf0f6; }
 
-/* ── Subscribe CTA ─────────────────────────────────────── */
+/* ââ Subscribe CTA âââââââââââââââââââââââââââââââââââââââ */
 .ins-subscribe {
   padding: clamp(72px, 10vh, 120px) 0;
-  /* no band of its own — sits on the page's white background */
+  /* no band of its own â sits on the page's white background */
 }
 .ins-subscribe-inner {
   max-width: 580px;
@@ -4193,7 +4204,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .ins-subscribe-input::placeholder { color: var(--ink-mute); }
 .ins-subscribe-input:focus { border-color: var(--accent-deep); }
 
-/* ── Insights page responsive ──────────────────────────── */
+/* ââ Insights page responsive ââââââââââââââââââââââââââââ */
 @media (max-width: 900px) {
   .ins-grid { grid-template-columns: repeat(2, 1fr); }
   .ins-subscribe-form { flex-direction: column; }
@@ -4206,13 +4217,13 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   .ins-card-media { aspect-ratio: 4 / 3; }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   ESSAY / ARTICLE PAGE — editorial print layout
-   ═══════════════════════════════════════════════════════════ */
+/* âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+   ESSAY / ARTICLE PAGE â editorial print layout
+   âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
 
 .page-essay { background: var(--bg); }
 
-/* ── Back link ─────────────────────────────────────────── */
+/* ââ Back link âââââââââââââââââââââââââââââââââââââââââââ */
 .essay-back-wrap {
   padding: clamp(20px, 3vh, 32px) 0 clamp(18px, 2.5vh, 28px);
 }
@@ -4228,7 +4239,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 }
 .essay-back:hover { color: var(--accent-deep); }
 
-/* ── The Portrait — grand, commanding centrepiece ──────── */
+/* ââ The Portrait â grand, commanding centrepiece ââââââââ */
 .essay-portrait {
   margin: 0 auto;
   padding: 0 var(--gutter);
@@ -4243,7 +4254,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   margin: 0 auto;
 }
 
-/* ── Decorative rule ───────────────────────────────────── */
+/* ââ Decorative rule âââââââââââââââââââââââââââââââââââââ */
 .essay-rule {
   border: none;
   height: 1px;
@@ -4251,7 +4262,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   margin: 0;
 }
 
-/* ── Header — title block ──────────────────────────────── */
+/* ââ Header â title block ââââââââââââââââââââââââââââââââ */
 .essay-container {
   max-width: 820px;
   margin: 0 auto;
@@ -4304,7 +4315,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   letter-spacing: normal;
 }
 
-/* ── Body — editorial typography ───────────────────────── */
+/* ââ Body â editorial typography âââââââââââââââââââââââââ */
 .essay-body {
   padding: clamp(48px, 6vh, 72px) 0 clamp(56px, 8vh, 96px);
 }
@@ -4360,10 +4371,10 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   text-align: center;
 }
 
-/* Disclaimer — 3x clearance between the article's last element and the rule.
+/* Disclaimer â 3x clearance between the article's last element and the rule.
    NOTE: the selector needs `.essay-body p`-beating specificity or that rule's
    margin shorthand (0 0 26px) zeroes this margin-top (that's why the old
-   36-52px clamp never actually applied — the visible gap was just the previous
+   36-52px clamp never actually applied â the visible gap was just the previous
    paragraph's 26px bottom margin). */
 .essay-disclaimer,
 .essay-body p.essay-disclaimer {
@@ -4376,7 +4387,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   color: var(--ink-mute) !important;
 }
 
-/* ── Essay footer ──────────────────────────────────────── */
+/* ââ Essay footer ââââââââââââââââââââââââââââââââââââââââ */
 .essay-foot {
   padding: clamp(40px, 5vh, 60px) 0 clamp(48px, 6vh, 72px);
   border-top: 1px solid #cdc8bf;
@@ -4406,13 +4417,13 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   letter-spacing: normal;
 }
 
-/* ── Essay responsive ──────────────────────────────────── */
+/* ââ Essay responsive ââââââââââââââââââââââââââââââââââââ */
 @media (max-width: 560px) {
   .essay-inline-quote { margin-left: 0; margin-right: 0; }
   .essay-foot .essay-container { flex-direction: column; align-items: flex-start; }
 }
 
-/* ── Entrance animation ────────────────────────────────── */
+/* ââ Entrance animation ââââââââââââââââââââââââââââââââââ */
 @keyframes essay-portrait-in {
   from { opacity: 0; transform: scale(1.04); }
   to   { opacity: 1; transform: scale(1); }
@@ -4452,7 +4463,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   }
 }
 
-/* ── Scroll-cover: the hero owns the first screen, the article rises over it ── */
+/* ââ Scroll-cover: the hero owns the first screen, the article rises over it ââ */
 /* Float the back-link over the hero so the image centres in the full space
    below the header rather than being pushed down by it. */
 .page-essay .essay { position: relative; }
@@ -4470,7 +4481,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .page-essay .essay-portrait {
   position: sticky;
   top: 92px;            /* sit just below the sticky site header */
-  z-index: 0;           /* below the fixed back link (z1) — being later in the DOM it
+  z-index: 0;           /* below the fixed back link (z1) â being later in the DOM it
                            otherwise paints over it and swallows its clicks; the rising
                            article (z2) still covers both */
   min-height: calc(100vh - 92px);   /* reserve the whole first screen */
@@ -4503,11 +4514,11 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   }
 }
 
-/* ── Short deep-navy gradient at the foot of the large dark sections ──
+/* ââ Short deep-navy gradient at the foot of the large dark sections ââ
    Layered over the flat --dark fill: a brief fade into the site's deep
    blue (#070a14) across the bottom ~120px, leaving the rest of the panel
    unchanged. Sits in the background layer, so it never dims the text on
-   top. (.hero is excluded — it already has its own bottom-corner vignette.) */
+   top. (.hero is excluded â it already has its own bottom-corner vignette.) */
 .odds,
 .fund-section-band,
 .approach-hero,
@@ -4516,7 +4527,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   background: linear-gradient(to top, rgba(7, 10, 20, 0.5) 0%, rgba(7, 10, 20, 0) 120px), var(--dark);
 }
 
-/* Investable-universe (funnel) section only — also fade in from the TOP, with
+/* Investable-universe (funnel) section only â also fade in from the TOP, with
    a longer reach down the section, over the shared short bottom gradient. */
 .fund-section-band[aria-label="Investment Process"] {
   background:
@@ -4528,8 +4539,8 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   padding-bottom: clamp(112px, 17vh, 200px);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   FOUNDER-LED ADVANTAGE — adviser landing page
+/* âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+   FOUNDER-LED ADVANTAGE â adviser landing page
    (.page-founder-led-advantage)
 
    A pinned dark hero with a CSS ripple, which the rest of the page
@@ -4538,39 +4549,68 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    white / paper / dark. A fixed numeral spine tracks progress.
 
    House rules followed here: SERIF is for headings and the one big
-   figure only — everything else is the sans at the site's body sizes
-   (16–18px / 1.6–1.65 / --ink-soft). Colours come from the palette
+   figure only â everything else is the sans at the site's body sizes
+   (16â18px / 1.6â1.65 / --ink-soft). Colours come from the palette
    tokens, and panels take the site's 3px radius.
 
-   All classes are .fla-* prefixed — the home page owns .advantage-*
+   All classes are .fla-* prefixed â the home page owns .advantage-*
    for its own Founder-led Advantage band; the two must not collide.
-   ═══════════════════════════════════════════════════════════ */
+   âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
 
-/* ── Hero: pinned, dark, rippling ────────────────────────── */
+/* ââ Hero: pinned, dark, rippling ââââââââââââââââââââââââââ */
 .fla-hero {
   /* The topbar + header (93px) sit above this in flow, so a full 100vh box
      overhangs the fold and the centred content reads low. Subtract the chrome. */
   --fla-chrome: 93px;
   position: sticky; top: 0; z-index: 0;
-  height: calc(100vh - var(--fla-chrome)); min-height: 540px;
-  /* The box starts below the chrome, so centring inside it still reads low
-     against the viewport. Reserving the chrome again at the foot lifts the
-     content by half of it, putting it on the viewport's optical centre. */
-  padding-bottom: var(--fla-chrome);
+  /* A BAND at the photograph's own 2029:775, not a full-viewport hero. This is
+     what the Figma does, and it is what makes the image work: at 100vh the box
+     is about 1.8:1 against the image's 2.6:1, so `cover` had to over-scale and
+     the ripples spread across the left third and ran under the copy. At the
+     image's own ratio the whole frame shows uncropped - empty gradient left,
+     drop right - and the text has clear ground to sit on. Capped at the
+     viewport so a short window cannot push the band past the fold; if that cap
+     bites, `cover` crops the sides rather than distorting the picture. */
+  /* 3:1 rather than the picture's own 2029:775 (2.62:1): the full frame read too
+     tall. `cover` therefore crops 62px vertically and, with the bottom anchor
+     below, all of it comes off the TOP â empty gradient, so the drop and its
+     rings are untouched.
+     Showing the whole frame WAS tried, by setting this to 2029 / 775, and
+     reverted: it is the only way to keep the top, but it puts the band back to
+     489px, which is the height that read too tall. One line change if wanted. */
+  aspect-ratio: 3 / 1;
+  height: auto;
+  min-height: 360px;
+  max-height: calc(100vh - var(--fla-chrome));
   display: grid; align-items: center;
   overflow: hidden; isolation: isolate;
-  background: var(--dark); color: var(--on-dark);
+  /* The droplet photograph, full-bleed, placed as the Figma has it. The image
+     is a 2029x775 panorama whose own composition does the work: the drop sits
+     about 75% across and the left third is an empty gradient, so `right center`
+     with `cover` keeps the drop right of centre at any viewport while the title
+     sits over the clear area. The flat colour beneath is sampled from the
+     image's pale left edge, so there is no dark flash before it loads. */
+  /* Anchored to the BOTTOM, not the centre: the picture is pushed as far up as
+     it goes, so its bottom edge lands exactly on the band's bottom edge and the
+     whole 62px of crop comes off the top. */
+  background: #d7dfe9 url("assets/scenes/droplet.png") right bottom / cover no-repeat;
+  color: var(--ink);
 }
 .fla-hero-inner { position: relative; z-index: 2; }
+/* Only the LEDE is held inside the photograph's clear left region. It is body
+   copy over a busy picture, so it has to stay on the calm part. The title is
+   large enough to stay legible further across (see the contrast note on
+   .fla-hero-title) and is governed by nowrap plus its vw size instead. */
+.fla-hero-lede { max-width: min(46%, 560px); }
 
-/* ── Entrance ────────────────────────────────────────────────
+/* ââ Entrance ââââââââââââââââââââââââââââââââââââââââââââââââ
    The device the home hero uses: the glow blooms open first,
    then the type arrives on a short stagger, reusing that hero's
    own `hero-fade-up` keyframe so the two pages move alike. Every
    element that starts at opacity 0 here has to be handed back its
    opacity in the reduced-motion block, or killing the animation
    leaves it invisible.
-   ────────────────────────────────────────────────────────── */
+   ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
 .fla-hero-title, .fla-hero-lede {
   opacity: 0;
   animation: hero-fade-up .85s ease-out forwards;
@@ -4578,23 +4618,52 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .fla-hero-title { animation-delay: .70s; }
 .fla-hero-lede  { animation-delay: .95s; }
 
-/* Sized so "The Founder-led" always holds one line — the break is explicit,
+/* Sized so "The Founder-led" always holds one line â the break is explicit,
    so the title reads as exactly two lines at every width. */
 .fla-hero-title {
   font-family: var(--serif); font-weight: 500; font-style: italic;
-  /* One line, at 80% of the size this was originally calibrated to
-     (7.4vw / 96px) — still comfortably inside the 1240px container. */
-  font-size: min(7.08vw, 92px);
-  line-height: 1.04; letter-spacing: normal;
-  margin: 0 0 clamp(22px, 3.2vh, 34px);
+  /* Down from min(7.08vw, 92px): that was calibrated for a full-viewport hero
+     with the whole container to run across. In the Figma's band it has only the
+     image's clear left region, and at 92px the title crossed the ripples. This
+     holds "The Founder-led Advantage" on one line inside that region. */
+  /* Up from clamp(26px, 2.86vw, 41px). At this size the title no longer holds
+     one line inside the image's clear left region, and wraps to two â which is
+     fine, and is how the hero read before the photograph went in. What it must
+     not do is exceed that region, and the max-width on .fla-hero-inner > *
+     keeps both lines inside it. */
+  /* EXACTLY two lines, broken at "The Founder-led / Advantage" by a <br> in the
+     markup. The nowrap below stays and is not redundant: <br> forces a break
+     regardless of it, so the two together mean the title can never reflow to a
+     third line, nor collapse back to one, at any width above the breakpoint.
+     Breaking it also pulls the title back INSIDE the photograph's clear left
+     region, which the one-line version had outgrown. The longest line, "The
+     Founder-led", sets 6.86x its font-size â about 395px at this size against a
+     clear region of roughly 570px â so the contrast question the one-line
+     version raised no longer applies at all.
+     Headroom, measured: two lines fit up to about 83px before the longest one
+     reaches the rings. It is at 57.6px.
+     Released in the 980px breakpoint below, where the layout stacks and the
+     clamp floor would otherwise be wide enough to overflow a phone. */
+  font-size: clamp(29px, 4.5vw, 62px);
+  white-space: nowrap;
+  line-height: 1.08; letter-spacing: normal;
+  margin: 0 0 clamp(16px, 2.2vh, 26px);
 }
 .fla-hero-lede {
-  margin: 0; max-width: 60ch;
-  font-size: clamp(20px, 1.68vw, 25px); line-height: 1.64;
-  color: rgba(255, 255, 255, .74);
+  margin: 0;
+  font-size: clamp(16px, 1.35vw, 19px); line-height: 1.6;
+  /* Ink now the ground is the pale photograph rather than navy. Over the
+     image's left third this measures about 9:1. */
+  color: var(--ink-soft);
 }
 
-/* ── The ripple ──────────────────────────────────────────────
+/* The drawn ripple below is SUPERSEDED by the photograph on .fla-hero. Its
+   markup and rules are kept rather than deleted so restoring it is one line:
+   delete this display:none. Everything from here to the end of the ripple
+   block is dormant while the photo is in place. */
+.fla-stage { display: none; }
+
+/* ââ The ripple ââââââââââââââââââââââââââââââââââââââââââââââ
    Drawn, not rendered: hairline outlines only. Earlier passes
    modelled the material (Fresnel body, caustic, specular, a lit
    pool) and every one of them read as illustration. There is
@@ -4604,12 +4673,12 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    one pair and the pool, the fall lane and the glow all follow.
 
    Timings are percentages of --cycle. The landing is at 26%, so
-   the ring delays below all start from 0.26 × 9s = 2.34s. Change
+   the ring delays below all start from 0.26 Ã 9s = 2.34s. Change
    --cycle and those delays need re-deriving.
 
    Pure CSS, so it runs with JS off; the page script only drifts
    the ambient glow with the pointer.
-   ────────────────────────────────────────────────────────── */
+   ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
 .fla-stage {
   position: absolute; inset: 0; z-index: 1; pointer-events: none;
   --fx: 71%;                          /* impact point within the hero */
@@ -4635,7 +4704,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   border-radius: 50%;
   background: radial-gradient(circle, rgba(100, 122, 154, .30) 0%, rgba(88, 106, 134, .13) 36%, transparent 66%);
   transition: transform 1.6s cubic-bezier(.2, .7, .2, 1);
-  /* opacity only — the page script owns this element's transform for the
+  /* opacity only â the page script owns this element's transform for the
      pointer drift, and a `forwards` animation on transform would win the
      cascade against the inline style and freeze it */
   opacity: 0;
@@ -4643,7 +4712,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 }
 @keyframes fla-glow-in { to { opacity: 1; } }
 /* A tighter lift centred on the impact point, flattened to the pool's own
-   proportions. It is atmosphere, not a surface — the linework has to sit in
+   proportions. It is atmosphere, not a surface â the linework has to sit in
    something, but anything with a readable edge would put the rendered look
    straight back. Pairs with the broad --glow above: ambient, then a core. */
 .fla-sheen {
@@ -4665,7 +4734,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 }
 .fla-drop-defs { position: absolute; width: 0; height: 0; }
 
-/* ── The surface ─────────────────────────────────────────── */
+/* ââ The surface âââââââââââââââââââââââââââââââââââââââââââ */
 .fla-pool {
   position: absolute; left: var(--fx); top: var(--fy);
   width: var(--pool); height: calc(var(--pool) * .42);
@@ -4680,7 +4749,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   stroke: rgb(var(--fla-ink));
   stroke-width: 1;
   vector-effect: non-scaling-stroke;   /* one weight at every radius */
-  /* SVG elements default to transform-origin: 0 0, not 50% 50% like HTML —
+  /* SVG elements default to transform-origin: 0 0, not 50% 50% like HTML â
      without this the rings expand from the corner instead of concentrically */
   transform-box: fill-box; transform-origin: 50% 50%;
   opacity: 0; transform: scale(.04);
@@ -4703,7 +4772,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   100% { opacity: 0; transform: scale(var(--wmax, 1)); }
 }
 
-/* ── The fall lane: upright in screen space, over the pool ── */
+/* ââ The fall lane: upright in screen space, over the pool ââ */
 .fla-fall { position: absolute; left: var(--fx); top: var(--fy); width: 0; height: 0; z-index: 2; }
 .fla-fall > * {
   position: absolute; left: 0; top: 0;
@@ -4725,7 +4794,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
              fla-drop-fade var(--cycle) linear infinite;
 }
 /* The reflection rising to meet the drop. Its translateY values are the
-   drop's exactly — the flip turns a fall into a rise from below the
+   drop's exactly â the flip turns a fall into a rise from below the
    surface. Softened just enough that it reads as reflected rather than as
    a second object; it never gets as strong as the line above it. */
 .fla-mirror {
@@ -4737,11 +4806,11 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   animation: fla-mirror var(--cycle) linear infinite,
              fla-mirror-fade var(--cycle) linear infinite;
 }
-/* The Worthington jet — the column the landing throws back up. The same
+/* The Worthington jet â the column the landing throws back up. The same
    outline drawn tall, with its base masked so the line dissolves into the
    surface instead of closing into a bulb. */
 .fla-column {
-  stroke-width: 1.23;                 /* ÷ scaleX(.81) */
+  stroke-width: 1.23;                 /* Ã· scaleX(.81) */
   -webkit-mask-image: linear-gradient(180deg, #000 0 52%, transparent 88%);
           mask-image: linear-gradient(180deg, #000 0 52%, transparent 88%);
   opacity: 0;
@@ -4749,15 +4818,15 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
              fla-column-fade var(--cycle) linear infinite;
 }
 .fla-bead {
-  stroke-width: 1.54;                 /* ÷ scaleX(.65) */
+  stroke-width: 1.54;                 /* Ã· scaleX(.65) */
   opacity: 0;
   animation: fla-bead var(--cycle) linear infinite,
              fla-bead-fade var(--cycle) linear infinite;
 }
 
-/* ── Motion ──────────────────────────────────────────────────
+/* ââ Motion ââââââââââââââââââââââââââââââââââââââââââââââââââ
    Gravity is a quadratic, and a quadratic converts to a cubic
-   Bézier exactly with its control points at 1/3 and 2/3 — so
+   BÃ©zier exactly with its control points at 1/3 and 2/3 â so
    `cubic-bezier(.333, 0, .667, .333)` IS free-fall and
    `cubic-bezier(.333, .667, .667, 1)` is its mirror. Easing the
    motion this way beats approximating the curve with a run of
@@ -4767,7 +4836,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    Opacity rides its own animation on each element, so adding a
    fade step can never split a motion interval and break the
    easing above it.
-   ────────────────────────────────────────────────────────── */
+   ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
 @keyframes fla-drop {
   0%     { transform: translateY(calc(var(--fall) * -1)) scale(.95, 1.04);
            animation-timing-function: cubic-bezier(.333, 0, .667, .333); }
@@ -4845,7 +4914,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 @media (prefers-reduced-motion: reduce) {
   .fla-waves ellipse, .fla-drop, .fla-mirror,
   .fla-column, .fla-bead { animation: none; }
-  /* the entrance sets these to opacity 0 and animates them back — killing
+  /* the entrance sets these to opacity 0 and animates them back â killing
      the animation without restoring it would leave the hero blank */
   .fla-hero-title, .fla-hero-lede, .fla-glow, .fla-sheen {
     animation: none; opacity: 1;
@@ -4864,11 +4933,14 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   .fla-bead { opacity: 1; transform: translateY(calc(var(--droph) * -2.6)) scale(.65, .71); }
 }
 
-/* ── The curtain: everything below scrolls over the pinned hero ── */
+/* ââ The curtain: everything below scrolls over the pinned hero ââ */
 .fla-curtain { position: relative; z-index: 1; }
 
-/* ── Acts ────────────────────────────────────────────────── */
-.fla-act { padding: clamp(72px, 11vh, 132px) 0; }
+/* ââ Acts ââââââââââââââââââââââââââââââââââââââââââââââââââ */
+/* Up about a third from clamp(72px, 11vh, 132px). The Figma carries noticeably
+   more whitespace between its sections than the build did, and this is the one
+   value that sets it for every act at once. Two acts take more still, below. */
+.fla-act { padding: clamp(92px, 13.5vh, 160px) 0; }
 .fla-act--white { background: #fff; }
 .fla-act--paper { background: var(--bg); }
 .fla-act--dark { background: var(--dark); color: var(--on-dark); }
@@ -4888,11 +4960,11 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 }
 .fla-h2--light { color: var(--on-dark); }
 
-/* Lead sentence of an act: the sans at the site's lede size — readable first,
+/* Lead sentence of an act: the sans at the site's lede size â readable first,
    distinguished from body copy by size and ink, not by a second typeface. */
 .fla-say {
   margin: 0 0 clamp(22px, 3.2vh, 36px);
-  max-width: 62ch;
+  max-width: 72ch;
   font-size: clamp(22px, 1.8vw, 26px);
   line-height: 1.6;
   color: var(--ink);
@@ -4902,18 +4974,35 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    breaking on the measure, not on the container. */
 .fla-say--centre { max-width: 62ch; margin-left: auto; margin-right: auto; text-align: center; }
 
-/* One column at a readable measure — two columns of uneven length read ragged. */
-.fla-cols { max-width: 68ch; display: grid; gap: 18px; }
+/* One column at a readable measure â two columns of uneven length read ragged. */
+/* Centred block for the one act that uses it. The measure went out to 80ch
+   chasing the Figma's wide column, but at 22px that ran the lines to ~880px â
+   well past the 45-75 character range where long paragraphs stay easy to read,
+   and the eye kept losing its place on the return sweep. 68ch at 20px lands
+   around 700px, which reads cleanly and still sits wider than the container's
+   old left-hugging column. The PARAGRAPHS stay left-aligned on purpose: these
+   run three and four lines, and centred body copy gives every line a different
+   starting edge, which is the single worst thing for finding the next line. */
+.fla-cols {
+  max-width: 68ch;
+  margin-left: auto; margin-right: auto;
+  display: grid; gap: 18px;
+}
 .fla-cols p, .fla-etf-copy p, .fla-spec-copy p, .fla-outperf-copy p {
   margin: 0 0 22px; font-size: 22px; line-height: 1.66; color: var(--ink-soft);
 }
 .fla-cols p:last-child, .fla-etf-copy p:last-child, .fla-spec-copy p:last-child { margin-bottom: 0; }
+/* One step down from the shared 22px, with a little more leading: this is the
+   page's longest run of continuous prose, so it carries the most from the
+   extra breathing room. Split out of the shared rule above so the ETF,
+   specialist and outperformance copy keep their own size. */
+.fla-cols p { font-size: 20px; line-height: 1.7; }
 .fla-outperf-copy p { color: rgba(255, 255, 255, .72); }
 
 
-/* ── 02 Outperformance — stat + copy left, chart right ── */
+/* ââ 02 Outperformance â stat + copy left, chart right ââ */
 /* Copy left, chart right. The chart takes the larger share so it reads big,
-   and its right edge lands on the container margin — in line with the video and
+   and its right edge lands on the container margin â in line with the video and
    platform tiles further down the page. */
 .fla-outperf-grid {
   display: grid;
@@ -4927,26 +5016,52 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .fla-outperf-copy p.fla-stat,
 .fla-stat {
   margin: 0 0 clamp(20px, 3vh, 30px);
-  font-size: clamp(22px, 1.74vw, 25px); line-height: 1.5;
-  color: #fff;
+  /* Up a step from 22px so the terracotta figure below clears AA: at 24px+
+     normal weight this counts as large text, where 3:1 is the bar and
+     terracotta on navy measures 3.6:1. At 22px it would have needed 4.5:1
+     and failed. The size also suits the line carrying the page's main claim. */
+  font-size: clamp(24px, 1.95vw, 29px); line-height: 1.45;
+  /* The whole line is terracotta, not just the figure. It only clears AA
+     because the size above makes this LARGE text (>=24px), where 3:1 is the
+     bar and terracotta on navy is 3.6:1. Do not shrink this line without
+     taking the colour back off it. */
+  color: var(--terracotta);
 }
-/* set at the body size like the rest of the line — the weight alone
+/* set at the body size like the rest of the line â the weight alone
    carries the emphasis */
+/* The ONE terracotta moment on this page. It marks the single number the whole
+   argument rests on - the 3.3% alpha - so the accent points at the primary
+   claim rather than at utility links like "our team", which were terracotta
+   for a while and simply pulled the eye to the least important thing on the
+   page. Only the figure is accented; the rest of the line stays white. */
 .fla-stat-fig { font-weight: 500; letter-spacing: 0; }
+/* Footnote markers. These are navigation, not content, so they are set small
+   and inherit their sentence's colour - on the navy stat line that means the
+   terracotta, which is what the user asked for. Noted for whoever reads this:
+   terracotta on navy is 3.6:1, fine for the large stat line itself but under
+   the 4.5:1 that small text wants, and a .52em superscript is small text. It
+   is a deliberate call on a footnote marker, not an oversight.
+   A fixed 12px rather than an em fraction: at .72em the marker on the 25px stat
+   line rendered 18px and competed with the sentence it hangs off, and at .52em
+   the one in the 19px proof column fell to 9.9px, too small to tap. 12px reads
+   as a marker in both places and is consistent between them. */
 .fla-ref { color: inherit; }
-.fla-ref sup { font-size: .72em; margin-left: .2em; }
-.fla-ref:hover { color: #fff; }
-.fla-outperf-copy { max-width: 42ch; }
+.fla-ref sup { font-size: 12px; margin-left: .14em; }
+/* Hover was white everywhere, which made the marker on the WHITE proof column
+   vanish on hover. Scoped: white only where the ground is navy. */
+.fla-stat .fla-ref:hover { color: #fff; }
+.fla-ref:hover { color: var(--accent-deep); }
+.fla-outperf-copy { max-width: 52ch; }
 .fla-outperf .btn-outline { margin-top: 6px; color: var(--on-dark); border-color: rgba(255,255,255,.34); }
 .fla-outperf .btn-outline:hover { background: #fff; border-color: #fff; color: var(--dark); }
 .fla-outperf-chart .founder-chart-wrap { max-width: none; margin: 0 0 14px; }
 .fla-outperf-chart .founder-chart { height: clamp(300px, 42vh, 480px); }
 .fla-fine { margin: 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.44); }
 
-/* ── 03 Specialist — copy + video, then the holdings ── */
+/* ââ 03 Specialist â copy + video, then the holdings ââ */
 /* At 52 characters this is by far the longest heading on the page. Two things
    were breaking it onto a second line: the shared 34ch measure, and the 53px
-   size cap — at 53px the text runs ~1188px against the container's 1112px of
+   size cap â at 53px the text runs ~1188px against the container's 1112px of
    content width. Measure removed so the container governs, and the cap set to
    48px, which lands it at ~1076px. One line from ~820px up; below that it
    wraps, as 52 characters must. */
@@ -4960,14 +5075,14 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 }
 
 /* The heading is above the grid (full container width), so this row carries
-   only the blurb and the clip — which lets the video track take the larger
+   only the blurb and the clip â which lets the video track take the larger
    share without squeezing the heading into four lines. */
 /* Clip left, blurb right. Done with `order` rather than by moving the figure
-   in the markup, so that when the row stacks the copy still comes first —
-   see the reset in the ≤980 block. */
+   in the markup, so that when the row stacks the copy still comes first â
+   see the reset in the â¤980 block. */
 .fla-spec-grid { display: grid; grid-template-columns: 1.18fr 0.82fr; gap: clamp(28px, 4vw, 68px); align-items: stretch; }
 .fla-spec-grid .fla-video { order: -1; }
-/* Only give the clip the lion's share once there is width to spare — below
+/* Only give the clip the lion's share once there is width to spare â below
    this the blurb's column falls under ~35 characters and stops reading. */
 @media (min-width: 1200px) {
   .fla-spec-grid { grid-template-columns: 1.32fr 0.68fr; }
@@ -4991,7 +5106,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   box-shadow: 0 24px 50px -28px rgba(10, 18, 32, .45);
 }
 /* cover, not contain: the clip is 1280x720 and the frame is pinned to 16:9,
-   so nothing is cropped either way — but `contain` leaves the element's
+   so nothing is cropped either way â but `contain` leaves the element's
    painted edge a fraction of a pixel short at non-integer widths, and the
    frame's dark gradient shows through it as a hairline down each side. */
 .fla-video-el { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -5017,12 +5132,12 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .fla-play svg { width: 24px; height: 24px; margin-left: 3px; }
 .fla-video-frame:hover .fla-play { transform: translate(-50%, -50%) scale(1.07); background: rgba(12, 18, 30, .58); border-color: #fff; }
 /* driven by the media's own play/pause events, so it is right however
-   playback started or stopped — including the scroll-past pause */
+   playback started or stopped â including the scroll-past pause */
 .fla-video.is-playing .fla-play { opacity: 0; transform: translate(-50%, -50%) scale(.9); }
 @media (prefers-reduced-motion: reduce) { .fla-play::before { animation: none; } }
 
 /* Holdings. Each cell is bordered in its own right and the row is gapped, so a
-   part-filled last row simply has fewer tiles — no empty grey cell. */
+   part-filled last row simply has fewer tiles â no empty grey cell. */
 /* the hint now carries the clearance from the video figure above, so the
    grid only needs the small gap under the hint itself */
 .fla-holdings {
@@ -5049,11 +5164,11 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 }
 .fla-holdings li:hover { border-color: var(--accent); }
 .fla-holdings li:hover img { filter: none; opacity: 1; }
-/* same mark as the home carousel's "Click a founder…" line, since it is
+/* same mark as the home carousel's "Click a founderâ¦" line, since it is
    telling you the same thing about the same cards */
 .fla-holdings-hint {
   text-align: center;
-  /* the gap off the video figure above — the grid's own top margin is small
+  /* the gap off the video figure above â the grid's own top margin is small
      so this number is the whole separation between the two blocks */
   margin: clamp(76px, 10vh, 120px) 0 0;
   font-size: 13px; font-weight: 500;
@@ -5062,7 +5177,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   color: var(--ink-mute);
 }
 
-/* ── 04 Reasons — small index marks, not decorative numerals ── */
+/* ââ 04 Reasons â small index marks, not decorative numerals ââ */
 .fla-reasons {
   list-style: none; padding: 0;
   margin: clamp(48px, 7vh, 84px) 0 0;          /* clears the heading */
@@ -5071,7 +5186,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   row-gap: clamp(48px, 7vh, 76px);             /* when they stack */
 }
 .fla-reasons li { border-top: 1px solid var(--line); padding-top: clamp(30px, 4.2vh, 42px); padding-bottom: clamp(10px, 2vh, 20px); }
-.fla-tick { display: block; width: 26px; height: 26px; margin-bottom: clamp(24px, 3.4vh, 34px); color: var(--accent); }
+.fla-tick { display: block; width: 26px; height: 26px; margin-bottom: clamp(24px, 3.4vh, 34px); color: var(--terracotta); }
 .fla-tick svg { display: block; width: 100%; height: 100%; }
 /* the tick draws itself in as the column arrives */
 .fla-tick svg path { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset .9s cubic-bezier(.4, 0, .25, 1) .15s; }
@@ -5079,26 +5194,46 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 @media (prefers-reduced-motion: reduce) {
   .fla-tick svg path { stroke-dasharray: none; stroke-dashoffset: 0; transition: none; }
 }
-.fla-reasons p { margin: 0; font-size: 22px; line-height: 1.82; color: var(--ink-soft); }
+/* Deliberately identical to .fla-proof p â the two three-across sections read
+   as one family, so their body copy shares a size, leading and ink. Keep them
+   in step if either is retuned. */
+.fla-reasons p { margin: 0; font-size: 17px; line-height: 1.62; color: var(--ink-soft); }
 
-/* ── Statement CTA bands ── */
+/* ââ Statement CTA bands ââ */
+/* The same photograph as the hero. Full-bleed `cover` rather than the image
+   sized down and anchored right, because the picture's left edge carries a
+   strong VERTICAL gradient â #dee9f4 at the top through #a1beda at the middle
+   to #cdcfd9 at the foot â and no single base colour can meet that without a
+   visible seam. Covering the whole band sidesteps it. The band keeps its
+   padding-driven height, so the picture is cropped to a horizontal slice
+   through the drop, which is what the Figma shows in these bands. */
+/* Both CTA bands are navy, as they were before the droplet photograph was tried
+   here. The picture, the gradient base under it, the masked ::before that
+   blended the two, the min-height that gave it room and the --navy modifier
+   that undid all of it for one band are gone rather than left dormant â the
+   droplet now lives on the hero only. */
 .fla-say-band { background: var(--dark); color: var(--on-dark); padding: clamp(56px, 8.5vh, 104px) 0; }
 .fla-say-band--paper { background: var(--bg-elev); }
+/* One child now: the sentence carries its own underlined inline link where a
+   "Contact us" button used to sit beside it, per the Figma. The flex row is
+   kept so the band still centres vertically, and so a second element could
+   return without churn. */
 .fla-say-band-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 30px; }
 .fla-say-band p {
   margin: 0; max-width: 52ch;
   font-size: clamp(22px, 1.8vw, 26px); line-height: 1.55;
 }
 .fla-say-band--paper p { color: var(--ink); }
-.fla-say-band .btn-outline { color: var(--on-dark); border-color: rgba(255,255,255,.34); }
-.fla-say-band .btn-outline:hover { background: #fff; border-color: #fff; color: var(--dark); }
 
-/* ── 05 Proof panels — palette tones, icons draw themselves in ── */
-/* Three plain columns on the act's own background — hairline rules rather than
+/* ââ 05 Proof panels â palette tones, icons draw themselves in ââ */
+/* Three plain columns on the act's own background â hairline rules rather than
    coloured cells, matching the reasons list. */
 .fla-proofs {
   display: grid; grid-template-columns: repeat(3, 1fr);
-  column-gap: clamp(34px, 4.6vw, 76px);
+  /* Tighter than the 34-76px it was: the type in these columns went up a step,
+     and a narrow column plus larger type is what turns three lines into six.
+     The gap gives that width back. */
+  column-gap: clamp(26px, 2.9vw, 44px);
   row-gap: clamp(48px, 7vh, 76px);            /* when they stack */
   margin-top: clamp(58px, 8.5vh, 100px);      /* clears the lede above */
 }
@@ -5115,14 +5250,88 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .fla-proof[data-reveal].is-visible::before { transform: scaleX(1); }
 .fla-proof-icon { display: block; margin-bottom: clamp(26px, 3.6vh, 36px); }
 .fla-proof-icon img { display: block; width: 52px; height: 52px; object-fit: contain; object-position: left center; }
-.fla-proof h3 { font-family: var(--serif); font-weight: 500; font-size: clamp(29px, 2.64vw, 40px); line-height: 1.2; letter-spacing: normal; color: var(--ink); margin: 0 0 22px; }
-.fla-proof p { margin: 0; font-size: 20px; line-height: 1.82; color: var(--ink-soft); }
+.fla-proof h3 { font-family: var(--serif); font-weight: 500; font-size: clamp(25px, 2.3vw, 34px); line-height: 1.22; letter-spacing: normal; color: var(--ink); margin: 0 0 20px; }
+
+/* âââ Figma alignment pass âââââââââââââââââââââââââââââââââââââââââââââââ
+   Scoped by section id so the other acts keep the page's left-ragged
+   editorial setting - only these three centre in the design. */
+#fla-why .fla-h2,
+#fla-advisers .fla-h2,
+#fla-proof .fla-h2,
+#fla-etf .fla-h2 { max-width: none; text-align: center; }
+
+/* The proof act centres throughout: lede, icons, headings and body. */
+#fla-proof .fla-say { max-width: 66ch; margin-left: auto; margin-right: auto; text-align: center; font-size: clamp(17px, 1.45vw, 20px); line-height: 1.65; }
+#fla-proof .fla-proof { text-align: center; }
+#fla-proof .fla-proof-icon img { margin: 0 auto; object-position: center; }
+
+/* Advisers: the tick sits BESIDE its text in a ring, not above it, and the
+   rule over each column goes - the design has neither. */
+/* The two acts that open with a centred heading over a single block get a step
+   beyond the new base â they are the quietest sections on the page and the
+   extra room is what makes the centring read as deliberate. */
+#fla-why { padding-top: clamp(112px, 16vh, 196px); padding-bottom: clamp(112px, 16vh, 196px); }
+
+/* More air than the other acts get, top and bottom: this section is three
+   short columns with a lot of white around them, and at the shared
+   clamp(72px, 11vh, 132px) it read as crowded against the bands either side. */
+/* Top trimmed back below the shared act padding while the foot keeps the extra
+   air: the specialist act above already ends on 108px of its own, so the two
+   were stacking into a ~236px gap and this section read as adrift from it. */
+#fla-advisers { padding-top: clamp(76px, 11vh, 132px); padding-bottom: clamp(112px, 16vh, 196px); }
+
+/* Horizontal three-across, as the Figma has it. This was briefly stacked into
+   one wide column for line length and the user put it back: matching the design
+   is the rule, so the fix for the short lines is SIZE, not layout. At 16px in a
+   ~295px column the lines land near 37 characters - short of the 45-75 ideal,
+   but that is what a three-up grid at this container width can give, and the
+   design sets this copy small for the same reason. Do not restack it. */
+#fla-advisers .fla-reasons {
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: clamp(26px, 3vw, 48px);
+}
+#fla-advisers .fla-reasons li {
+  border-top: 0; padding-top: 0;
+  display: grid; grid-template-columns: auto 1fr;
+  column-gap: 14px; align-items: start;
+}
+#fla-advisers .fla-tick {
+  width: 34px; height: 34px; margin-bottom: 0; padding: 7px;
+  border: 1px solid var(--line); border-radius: 50%;
+}
+@media (max-width: 760px) {
+  #fla-advisers .fla-reasons li { column-gap: 14px; }
+}
+.fla-proof p { margin: 0; font-size: 17px; line-height: 1.62; color: var(--ink-soft); }
+
+/* The three proof columns share row lines â icon, heading, body â so the body
+   copy starts on the same line in all three even though "Research-backed
+   thesis" is one line while the other two headings wrap to two.
+   Subgrid rather than a min-height on the heading: min-height would hold only
+   while the longest heading happens to be exactly two lines, and would break
+   again at any width where one wraps to three.
+   row-gap is zeroed here because the container's gap exists for the STACKED
+   layout; with three explicit rows it would otherwise open up between the icon,
+   the heading and the body. Their spacing comes from their own margins.
+   Scoped above 980px, below which the columns stack one per row and there is
+   nothing to align, and behind @supports so unsupporting browsers simply keep
+   today's behaviour rather than getting a half-applied grid. */
+@media (min-width: 981px) {
+  @supports (grid-template-rows: subgrid) {
+    .fla-proofs { grid-template-rows: auto auto auto; row-gap: 0; }
+    .fla-proof {
+      display: grid;
+      grid-row: span 3;
+      grid-template-rows: subgrid;
+    }
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .fla-proof::before { transition: none; }
 }
 
-/* ── 06 ETF ── */
-/* Inline text link — underlined in the accent, thickening on hover. */
+/* ââ 06 ETF ââ */
+/* Inline text link â underlined in the accent, thickening on hover. */
 .fla-inline {
   color: inherit;
   text-decoration: underline;
@@ -5132,19 +5341,21 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   transition: text-decoration-thickness .2s ease, color .2s ease;
 }
 .fla-inline:hover { text-decoration-thickness: 2px; }
-.fla-outperf .fla-inline, .fla-say-band:not(.fla-say-band--paper) .fla-inline {
-  text-decoration-color: rgba(255, 255, 255, .55);
-}
-.fla-outperf .fla-inline:hover, .fla-say-band:not(.fla-say-band--paper) .fla-inline:hover { color: #fff; }
+/* The dark grounds: the outperformance section and both CTA bands. The base
+   steel underline would be too dim on navy, so it goes white here. */
+.fla-outperf .fla-inline,
+.fla-say-band .fla-inline { text-decoration-color: rgba(255, 255, 255, .55); }
+.fla-outperf .fla-inline:hover,
+.fla-say-band .fla-inline:hover { color: #fff; }
 
-/* Arrow list — a circled arrow set against the first line of each point. */
+/* Arrow list â a circled arrow set against the first line of each point. */
 .fla-arrows { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(30px, 4.4vh, 46px); }
 .fla-arrows li { display: grid; grid-template-columns: 38px 1fr; gap: clamp(15px, 1.5vw, 22px); align-items: start; }
 .fla-arrow { display: block; width: 38px; height: 38px; margin-top: -4px; color: var(--accent); }
 .fla-arrow svg { display: block; width: 100%; height: 100%; }
 .fla-arrows p { margin: 0; font-size: 22px; line-height: 1.66; color: var(--ink-soft); }
 
-/* The two-column grid is gone — the pointers sit on their own measure and
+/* The two-column grid is gone â the pointers sit on their own measure and
    the platforms run the full container underneath them. */
 /* A margin-top on .fla-etf-copy would collapse against the heading's
    margin-bottom and do nothing, so the gap to the first pointer is set here. */
@@ -5161,35 +5372,81 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .fla-plats { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px; }
 .fla-plats li { background: #fff; border: 1px solid var(--line); border-radius: 3px; display: grid; place-items: center; min-height: 92px; }
 .fla-plats li > a { display: grid; place-items: center; width: 100%; height: 100%; padding: 26px 14px; }
-/* Full colour, matching .invest-platforms — no grayscale filter and no
+/* Full colour, matching .invest-platforms â no grayscale filter and no
    resting opacity, so the hover no longer has anything to reveal. */
 .fla-plats img { max-width: 100%; max-height: 34px; width: auto; height: auto; object-fit: contain; }
 .fla-plats li { transition: border-color .3s ease; }
 .fla-plats li:hover { border-color: var(--accent); }
 
-/* ── PDS ── */
-.fla-pds { background: var(--dark); color: var(--on-dark); padding: clamp(60px, 9vh, 112px) 0; text-align: center; }
+/* ââ PDS ââ */
+.fla-pds { background: var(--dark); color: var(--on-dark); padding: clamp(78px, 11.5vh, 140px) 0; text-align: center; }
 .fla-pds .fla-say { color: #fff; }
+/* PDS and TMD read as links by COLOUR, not by rule: the underline is removed
+   outright rather than recoloured, so the two devices do not double up.
+   --accent is the steel blue of the "Invest now" button's hover fill, chosen
+   deliberately to match it.
+   KNOWN TRADE-OFF, recorded rather than silently accepted: --accent measures
+   only 3.1:1 against this navy, and at 23px this copy needs 4.5:1 — it is just
+   under the 24px that would let it settle for the 3:1 large-text bar. It was
+   #9cc0e0 (8.7:1) before, and the user asked for this shade instead.
+   If it should pass, either nudge .fla-pds .fla-say to 24px, which brings the
+   3:1 bar into play, or use #6d90ad — the same hue, one step lighter, 4.9:1.
+   The hover, which goes to white with an underline, is well clear either way
+   and gives a colour-only link its non-colour affordance. */
+.fla-pds .fla-inline {
+  color: var(--accent);
+  text-decoration: none;
+}
+.fla-pds .fla-inline:hover {
+  color: #fff;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 3px;
+}
 .fla-pds .btn-primary { background: #fff; color: var(--dark); border-color: #fff; }
 .fla-pds .btn-primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-/* ── 07 Ways to reach the team ── */
-.fla-ways { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(20px, 2.6vw, 44px); margin-top: clamp(32px, 5vh, 54px); }
-.fla-way { display: grid; justify-items: center; gap: 18px; text-align: center; border-top: 1px solid var(--line); padding-top: 26px; }
-.fla-way p { margin: 0; font-size: 14px; font-weight: 500; letter-spacing: var(--track-label); text-transform: uppercase; color: var(--ink-mute); }
-.fla-li { width: 50px; height: 50px; border-radius: 3px; display: grid; place-items: center; border: 1px solid var(--line); color: var(--accent-deep); transition: color .3s ease, background .3s ease, border-color .3s ease; }
-.fla-li svg { width: 22px; height: 22px; }
-.fla-li:hover { color: #fff; background: #0a66c2; border-color: #0a66c2; }
+/* ââ 07 Ways to reach the team ââ */
+/* ── "Speak with the team" ────────────────────────
+   This act closes the page and is the quietest thing on it, so it was carrying
+   far more weight than it earns at the shared heading and lede sizes. Scoped
+   here rather than on .fla-h2 / .fla-say, which set every other section.
+   The lede also gets a real measure: at the shared 72ch it ran past 1000px and
+   about 80 characters a line, and dropping the size without pulling the width
+   in would have made that worse rather than better. */
+#fla-team .fla-h2 { font-size: clamp(26px, 2.7vw, 38px); }
+#fla-team .fla-say {
+  max-width: 58ch;
+  font-size: clamp(16px, 1.35vw, 19px);
+  line-height: 1.6;
+}
 
-/* ── Footnote ── */
+.fla-ways { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(20px, 2.6vw, 44px); margin-top: clamp(32px, 5vh, 54px); }
+.fla-way { display: grid; justify-items: center; text-align: center; border-top: 1px solid var(--line); padding-top: 26px; }
+/* Subtle by design: these three are secondary to everything above them, so
+   they are underlined text rather than the filled buttons and bordered icon
+   box they used to be. The hairline underline only firms up on hover. */
+.fla-way-link {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-size: 16px; font-weight: 500; color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+  transition: text-decoration-color .2s ease, color .2s ease;
+}
+.fla-way-link:hover { color: var(--accent-deep); text-decoration-color: var(--accent-deep); }
+.fla-way-link svg { width: 15px; height: 15px; flex: none; }
+
+/* ââ Footnote ââ */
 .fla-notes { background: #fff; border-top: 1px solid var(--line); padding: clamp(30px, 4.4vh, 52px) 0 clamp(40px, 6vh, 68px); }
-/* Deliberately the quietest type on the page, but full container width —
+/* Deliberately the quietest type on the page, but full container width â
    a ch measure at 13px pulled it in to ~667px and left it stranded in a
    narrow column. Disclaimers run the page. */
 .fla-notes p { margin: 0; max-width: none; font-size: 13px; line-height: 1.62; color: var(--ink-mute); opacity: .82; }
 .fla-notes p span { font-weight: 500; margin-right: 3px; }
 
-/* ── Responsive ─────────────────────────────────────────── */
+/* ââ Responsive âââââââââââââââââââââââââââââââââââââââââââ */
 /* Narrow desktops: a 31/69 split leaves the outperformance copy too tight, so
    the chart moves under it while still running out to the right margin. */
 @media (max-width: 1120px) {
@@ -5200,10 +5457,10 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 @media (max-width: 980px) {
   /* relative, not static: the ripple layer is absolutely positioned against the
      hero, so the hero must stay its containing block or the oversized glow
-     escapes overflow:hidden and widens the page. Not sticky here — the curtain
+     escapes overflow:hidden and widens the page. Not sticky here â the curtain
      effect is desktop only. */
   /* The foot is deep enough to give the water a band of its own below the
-     copy — stacked, there is no column beside the text to put it in. */
+     copy â stacked, there is no column beside the text to put it in. */
   .fla-hero { height: auto; min-height: 0; position: relative; padding: clamp(88px, 15vh, 138px) 0 clamp(200px, 62vw, 280px); }
   .fla-stage {
     --fx: 50%; --fy: 87%;
@@ -5212,14 +5469,14 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
     --fall: 22vh;
   }
   .fla-glow { width: 130vmax; height: 130vmax; margin: -65vmax 0 0 -65vmax; }
-  /* below here a single line would be too small to carry the page — let it wrap */
-  .fla-hero-title { font-size: clamp(32px, 8.04vw, 52px); }
+  /* below here a single line would be too small to carry the page â let it wrap */
+  .fla-hero-title { font-size: clamp(32px, 8.04vw, 52px); white-space: normal; }
   .fla-spec-grid, .fla-outperf-grid { grid-template-columns: 1fr; }
-  /* stacked, so there is no left or right — keep the blurb above the clip */
+  /* stacked, so there is no left or right â keep the blurb above the clip */
   .fla-spec-grid .fla-video { order: 0; }
   .fla-outperf-copy { max-width: 62ch; }
   .fla-outperf-chart { margin-top: clamp(24px, 4vh, 40px); }
-  /* stacked, so there is no blurb alongside to match — back to a plain 16:9 */
+  /* stacked, so there is no blurb alongside to match â back to a plain 16:9 */
   .fla-video-frame { flex: 0 0 auto; aspect-ratio: 16 / 9; min-height: 0; }
   .fla-reasons, .fla-proofs, .fla-ways { grid-template-columns: 1fr; }
   .fla-plats { grid-template-columns: repeat(3, 1fr); }
@@ -5229,6 +5486,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   .fla-plats li > a { padding: 16px 12px; }
   .fla-plats img { max-height: 28px; }
   .fla-holdings li { flex-basis: 100px; }
+  .fla-ways { grid-template-columns: 1fr; }
 }
 @media (max-width: 560px) {
   .fla-plats { grid-template-columns: repeat(2, 1fr); }
