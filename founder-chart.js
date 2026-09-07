@@ -9,6 +9,11 @@
   var canvas = document.getElementById("founder-chart");
   if (!wrap || !canvas) return;
   var ctx = canvas.getContext("2d");
+  // Canvas font strings are JS, not CSS, so they do NOT inherit var(--sans).
+  // Kept as one constant: when the site sans changes, change it here too. This
+  // was missed in the Manrope swap and silently fell back to the browser's
+  // default sans (measured identical width to plain sans-serif).
+  var SANS = "Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
   var reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // 123 bi-monthly data points, Dec 2005 – Apr 2026 (raw dollar values, $100k start)
@@ -80,7 +85,7 @@
     // ── Horizontal grid lines + Y-axis labels ──
     ctx.textAlign = "right";
     ctx.textBaseline = "middle";
-    ctx.font = "11px 'Formata Light', sans-serif";
+    ctx.font = "11px " + SANS;
     for (var gi = 0; gi < GRID_STEPS.length; gi++) {
       var gy = yAt(GRID_STEPS[gi]);
       // Grid line
@@ -98,7 +103,7 @@
     // ── X-axis year labels ──
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
-    ctx.font = "11px 'Formata Light', sans-serif";
+    ctx.font = "11px " + SANS;
     ctx.fillStyle = "rgba(255,255,255,0.28)";
     // Tick density adapts to the plot width: every 2 years when each of the
     // 11 labels gets a comfortable ~46px slot, otherwise every 4 (6 labels,
@@ -181,7 +186,7 @@
       // label keeps its spacing if the size is tuned.
       var subSize = W < 500 ? 11 : 12;
       var subLead = Math.round(subSize * 1.4);
-      ctx.font = subSize + "px 'Formata Light', sans-serif";
+      ctx.font = subSize + "px " + SANS;
       ctx.textBaseline = "top";
       ctx.fillStyle = "rgba(255,255,255,0.55)";
       var subY = fEndY + 8;
@@ -203,7 +208,7 @@
       ctx.textBaseline = "bottom";
 
       // "All Stocks*" — same series-label size as "Founder-led Stocks" above
-      ctx.font = subSize + "px 'Formata Light', sans-serif";
+      ctx.font = subSize + "px " + SANS;
       ctx.textBaseline = "top";
       ctx.fillStyle = "rgba(168,178,194,0.54)";
       ctx.fillText("All Stocks", endX, mEndY + 6);
