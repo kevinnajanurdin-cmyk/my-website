@@ -14,6 +14,27 @@
   // was missed in the Manrope swap and silently fell back to the browser's
   // default sans (measured identical width to plain sans-serif).
   var SANS = "Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+  // Brand Ivory. The founder-led series — its line, the wash beneath it, and
+  // its 10x figure and label — is the ONE thing on this chart that carries it;
+  // the MSCI series stays the cool grey it was. That warm/cool split is the
+  // point: the series the fund backs reads warm, the market reads neutral, and
+  // no legend is needed to tell them apart. Ivory only works because this
+  // chart sits on the navy — 11.5:1 there, against 1.3:1 on the light page,
+  // which is why it appears nowhere else. It also stays clear of --sky, which
+  // already owns the prose accents on this page (the 3.3% line, the links).
+  var IVORY = "222,214,201";
+  // The benchmark series takes the tone of the "(3.3% alpha pa vs. all
+  // stocks)" note in the .odds band, which the user pointed at. That note is
+  // white at a low effective alpha over the navy, so its blue is the navy's
+  // OWN hue showing through, not a pigment: hsl ~215° at ~14% saturation.
+  // This is that hue and saturation, set at the lightness the series already
+  // had, so it composites to the same weight it has always carried.
+  // An earlier pass used a literal brand teal here (hsl 204°, 33%) and read
+  // too saturated beside it. Note the brand teal #3D5C73 cannot be used raw on
+  // this ground at all — 2.34:1, where the line all but vanishes.
+  // Distinct from --sky (#A8CFE5, hsl 202° 55% 78%), which is lighter and far
+  // more saturated and owns this page's prose accents.
+  var BENCH = "163,172,190";
   var reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // 123 bi-monthly data points, Dec 2005 – Apr 2026 (raw dollar values, $100k start)
@@ -140,19 +161,19 @@
     }
     ctx.closePath();
     var grad = ctx.createLinearGradient(0, chartT, 0, chartB);
-    grad.addColorStop(0, "rgba(255,255,255,0.07)");
-    grad.addColorStop(1, "rgba(255,255,255,0.01)");
+    grad.addColorStop(0, "rgba(" + IVORY + ",0.09)");
+    grad.addColorStop(1, "rgba(" + IVORY + ",0.015)");
     ctx.fillStyle = grad;
     ctx.fill();
 
     // ── MSCI line ──
-    ctx.strokeStyle = "rgba(168,178,194,0.68)";
+    ctx.strokeStyle = "rgba(" + BENCH + ",0.68)";
     ctx.lineWidth = 2;
     ctx.lineJoin = "round";
     drawLine(M);
 
     // ── Founder line ──
-    ctx.strokeStyle = "rgba(255,255,255,0.9)";
+    ctx.strokeStyle = "rgba(" + IVORY + ",0.92)";
     ctx.lineWidth = 2.5;
     drawLine(F);
 
@@ -170,13 +191,13 @@
       var bigSize = W < 500 ? 36 : 52;
       ctx.textAlign = "left";
       ctx.textBaseline = "bottom";
-      ctx.fillStyle = "rgba(255,255,255,0.95)";
+      ctx.fillStyle = "rgba(" + IVORY + ",0.95)";
       ctx.font = "italic " + bigSize + "px 'Riccione Serial', Georgia, serif";
       ctx.fillText("10", endX, fEndY + 4);
       var numW = ctx.measureText("10").width;
       var xSize = Math.round(bigSize * 0.5);
       ctx.font = xSize + "px 'Riccione Serial', Georgia, serif";
-      ctx.fillStyle = "rgba(255,255,255,0.7)";
+      ctx.fillStyle = "rgba(" + IVORY + ",0.72)";
       ctx.textBaseline = "middle";
       ctx.fillText("x", endX + numW + 2, fEndY + 4 - bigSize * 0.36);
       ctx.textBaseline = "bottom";
@@ -188,7 +209,7 @@
       var subLead = Math.round(subSize * 1.4);
       ctx.font = subSize + "px " + SANS;
       ctx.textBaseline = "top";
-      ctx.fillStyle = "rgba(255,255,255,0.55)";
+      ctx.fillStyle = "rgba(" + IVORY + ",0.62)";
       var subY = fEndY + 8;
       ctx.fillText("Founder-led", endX, subY);
       ctx.fillText("Stocks", endX, subY + subLead);
@@ -196,13 +217,13 @@
       // "5x" — number italic serif, "x" upright, muted
       var midSize = W < 500 ? 28 : 40;
       ctx.textBaseline = "bottom";
-      ctx.fillStyle = "rgba(168,178,194,0.72)";
+      ctx.fillStyle = "rgba(" + BENCH + ",0.72)";
       ctx.font = "italic " + midSize + "px 'Riccione Serial', Georgia, serif";
       ctx.fillText("5", endX, mEndY + 2);
       var numW5 = ctx.measureText("5").width;
       var xSize5 = Math.round(midSize * 0.5);
       ctx.font = xSize5 + "px 'Riccione Serial', Georgia, serif";
-      ctx.fillStyle = "rgba(168,178,194,0.58)";
+      ctx.fillStyle = "rgba(" + BENCH + ",0.58)";
       ctx.textBaseline = "middle";
       ctx.fillText("x", endX + numW5 + 1, mEndY + 2 - midSize * 0.36);
       ctx.textBaseline = "bottom";
@@ -210,7 +231,7 @@
       // "All Stocks*" — same series-label size as "Founder-led Stocks" above
       ctx.font = subSize + "px " + SANS;
       ctx.textBaseline = "top";
-      ctx.fillStyle = "rgba(168,178,194,0.54)";
+      ctx.fillStyle = "rgba(" + BENCH + ",0.54)";
       ctx.fillText("All Stocks", endX, mEndY + 6);
 
       ctx.globalAlpha = 1;

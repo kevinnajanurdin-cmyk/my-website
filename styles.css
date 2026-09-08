@@ -26,17 +26,36 @@
 }
 
 :root {
+  /* The page ground stays a cool near-white on purpose. Warming it too was
+     tried on 2026-09-08 and pulled back — at that lightness a warm tint reads
+     as a cream page rather than a decision, and it dragged the header with it.
+     White stays white; it is the GREYS below that carry the ivory. */
   --bg: #f6f7f9;
-  --bg-elev: #eceef2;
+  /* Warmed from the cool #eceef2 on 2026-09-08. Every elevated grey surface
+     reads from this — the insights band, founder panel, fund-table zebra
+     stripes, invest tabs — so they all warm together, on every page.
+     Dialled back the same day: the first warm value was #f0ece5, an 11-point
+     spread between the red and blue channels, which read as a cream panel on
+     the insights band. This halves the spread to 6 and holds the lightness, so
+     the band keeps the same separation from --bg and only the cast softens. */
+  --bg-elev: #efeee9;
   --ink: #171f2f;
   --ink-soft: #2a3a52;
   --ink-mute: #5b6577;
-  --line: #d8dde3;
+  /* Warmed from the cool #d8dde3 on 2026-09-08, to sit with --bg-elev, then
+     dialled back with it. The first warm value #dfd9ce carried a 17-point
+     red-to-blue spread — nearly three times the band it borders, and the
+     warmest thing on the page. This matches the band's spread of 6 and also
+     restores the lightness of the cool original, which #dfd9ce had dropped by
+     six points. Only surfaces that are DELIBERATELY ivory (the Frontline card)
+     carry a spread above that; incidental warmth stays at 6. */
+  --line: #e0ddda;
   --accent: #506e88;
   --accent-deep: #39536c;
   /* Brand secondary, used as an ACCENT MARK only — the short eyebrow dashes,
      pull-quote rules, list numerals, the ticker bar and the discipline ticks,
-     plus the Owners Mindset panel and the surviving constellation dots.
+     plus the surviving constellation dots. The Owners Mindset panel was
+     terracotta until 2026-09-08 and is now --accent-deep.
      Never running body text on the light page: it is 4.2:1 there, under AA. */
   --terracotta: #c25332;
   /* Brand Sky Blue. Removed once as a dead token after a 2026-09-04 palette
@@ -324,24 +343,38 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   transition: transform .6s cubic-bezier(.2,.7,.2,1);
   will-change: transform, opacity;
 }
+/* Warmed from cool blue-greys on 2026-09-08, with --bg-elev and --line.
+   These sit in .coverflow-pin, so despite the .hero- prefix their ground is
+   always the light page, never the dark .hero — and they bleed past the pin
+   onto the About section below (see the overflow note on .coverflow).
+   The tans are LIGHT on purpose. The shapes animate to opacity .22, so with
+   the gradient's own alpha the effective wash is under 10%; the first attempt
+   swapped R and B on the old blue-greys, and at that strength a dark brown
+   just greyed the wedge out (sampled 242,242,243 — neutral). A light tan
+   instead drops the blue channel far more than the red, which is what makes
+   the wash read ivory at this opacity rather than merely darker.
+   The alphas were briefly pushed to ~.95 to force that warmth through, which
+   bought the hue at the cost of making the wedges noticeably more present.
+   They are back near two thirds of that: enough tan to read warm, faint
+   enough that the shapes recede again. */
 .hero-shape-left {
   top: 20%;
   left: -14%;
   background: linear-gradient(330deg,
-    rgba(82, 112, 140, .34) 0%,
-    rgba(44, 60, 86, .16) 42%,
+    rgba(236, 204, 148, .62) 0%,
+    rgba(214, 176, 120, .30) 42%,
     transparent 68%);
   border-right: none;
-  border-left: 1px solid rgba(170, 186, 208, .15);
+  border-left: 1px solid rgba(214, 196, 168, .15);
 }
 .hero-shape-right {
   bottom: -28%;
   right: -28%;
   background: linear-gradient(330deg,
-    rgba(60, 86, 114, .46) 0%,
-    rgba(44, 60, 86, .24) 52%,
+    rgba(232, 198, 140, .64) 0%,
+    rgba(214, 176, 120, .34) 52%,
     transparent 88%);
-  border-left: 1px solid rgba(170, 186, 208, .14);
+  border-left: 1px solid rgba(214, 196, 168, .14);
 }
 @keyframes hero-shape-in {
   to { opacity: .22; }
@@ -518,7 +551,11 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
      Manrope. Riccione is a static ExtraLight declared 100-900 with
      font-synthesis:none, so this renders the same at any weight. */
   font-weight: 700;
-  color: var(--terracotta);
+  /* --accent-deep, not terracotta, from 2026-09-08. Ivory was asked for first
+     but is 1.3:1 on the light page — invisible. This is the same steel the
+     percent sign on the stat below it already uses, so the two read as a pair,
+     and it lifts the phrase from terracotta's 4.3:1 to 7.5:1. */
+  color: var(--accent-deep);
 }
 
 .about-stat {
@@ -677,24 +714,26 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   overflow: hidden;
   transition: transform .5s cubic-bezier(.2,.7,.2,1);
 }
-/* The original pale grey, kept on purpose. Brand Ice Blue #E8EAF1 was tried
-   here and is within one unit per channel of this, so it changed nothing
-   visible and only added a token. A pale ground, so this card takes INK text:
-   13.7:1, with the shared .82/.72 opacities clearing AA at 8.1:1 and 5.9:1, so
-   unlike the terracotta card below it needs no opacity override. */
+/* Warmed toward brand Ivory on 2026-09-08, from the cool #e7eaf0 it carried
+   before, along with --bg-elev and --line. (Brand Ice Blue #E8EAF1 was tried
+   here once and sat within one unit per channel of that old cool grey, so it
+   changed nothing visible.) The page ground deliberately did NOT warm with it
+   — see --bg. A pale ground, so this card takes INK text: 13.3:1, with the
+   shared .82/.72 opacities at 8.0:1 and 5.8:1, so it needs no opacity
+   override. Literal, not a token: the advantage row exists only on index. */
 .advantage-card:nth-child(1) {
-  background: #e7eaf0;
+  background: #ebe6dc;
   color: var(--ink);
 }
+/* --accent-deep, the same steel as the About italic and its percent sign.
+   Replaced terracotta (and a brief pass at Ivory) on 2026-09-08. A dark ground,
+   so white text: 8.0:1, with the shared .82 body / .72 numeral opacities at
+   6.0:1 and 5.1:1 — both clear of AA, which is why the opacity:1 overrides the
+   terracotta version needed are gone. The row now steps light → mid → dark. */
 .advantage-card:nth-child(2) {
-  background: var(--terracotta);
+  background: var(--accent-deep);
   color: var(--on-dark);
 }
-/* White on terracotta is 4.6:1, so this card cannot carry the shared .82 body
-   and .72 numeral opacities (they land at 3.7:1 and 3.1:1). Full strength here;
-   the cards either side sit on Ice Blue and navy and keep the recessive .82/.72. */
-.advantage-card:nth-child(2) p { opacity: 1; }
-.advantage-card:nth-child(2) .advantage-num { opacity: 1; }
 .advantage-card:nth-child(3) {
   background: var(--dark);
   color: var(--on-dark);
