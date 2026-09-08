@@ -39,6 +39,12 @@
      plus the Owners Mindset panel and the surviving constellation dots.
      Never running body text on the light page: it is 4.2:1 there, under AA. */
   --terracotta: #c25332;
+  /* Brand Sky Blue. Removed once as a dead token after a 2026-09-04 palette
+     rollout was reverted, back on 2026-09-08 for one job: the Founder-led
+     Advantage stat line. 9.99:1 on the navy, so unlike terracotta and the
+     steel accent it has real headroom there — but 1.54:1 on the light --bg,
+     which is invisible. DARK GROUNDS ONLY. */
+  --sky: #a8cfe5;
   --dark: #171f2f;
   --on-dark: #ffffff;
   --on-dark-mute: #a8b2c2;
@@ -4628,7 +4634,10 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 /* Sized so "The Founder-led" always holds one line — the break is explicit,
    so the title reads as exactly two lines at every width. */
 .fla-hero-title {
-  font-family: var(--serif); font-weight: 500; font-style: italic;
+  /* Roman, not italic: the user asked for "The Founder-led Advantage" to be set
+     upright. The size below was calibrated on the italic, which sets narrower —
+     re-measured after the switch and the line still clears the picture. */
+  font-family: var(--serif); font-weight: 500; font-style: normal;
   /* Down from min(7.08vw, 92px): that was calibrated for a full-viewport hero
      with the whole container to run across. In the Figma's band it has only the
      image's clear left region, and at 92px the title crossed the ripples. This
@@ -5030,31 +5039,31 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .fla-outperf-copy p.fla-stat,
 .fla-stat {
   margin: 0 0 clamp(20px, 3vh, 30px);
-  /* Up a step from 22px so the terracotta figure below clears AA: at 24px+
-     normal weight this counts as large text, where 3:1 is the bar and
-     terracotta on navy measures 3.6:1. At 22px it would have needed 4.5:1
-     and failed. The size also suits the line carrying the page's main claim. */
+  /* Kept at 24px+ so the coloured line counts as LARGE text, where 3:1 is the
+     AA bar rather than 4.5:1. The size also suits the line carrying the page's
+     main claim. */
   font-size: clamp(24px, 1.95vw, 29px); line-height: 1.45;
-  /* The whole line is terracotta, not just the figure. It only clears AA
-     because the size above makes this LARGE text (>=24px), where 3:1 is the
-     bar and terracotta on navy is 3.6:1. Do not shrink this line without
-     taking the colour back off it. */
-  color: var(--terracotta);
+  /* Brand Sky Blue, third and settled shade for this line (2026-09-08): the user
+     asked for terracotta -> "the teal" -> the steel --accent the PDS/TMD links
+     carry -> this. It is the only one of the four with contrast to spare —
+     9.99:1 against the navy, where terracotta was 3.59:1 and the steel 3.08:1,
+     both of which cleared AA only because this line is 24px or larger. This one
+     would pass at any size. */
+  color: var(--sky);
 }
 /* set at the body size like the rest of the line — the weight alone
    carries the emphasis */
-/* The ONE terracotta moment on this page. It marks the single number the whole
-   argument rests on - the 3.3% alpha - so the accent points at the primary
-   claim rather than at utility links like "our team", which were terracotta
-   for a while and simply pulled the eye to the least important thing on the
-   page. Only the figure is accented; the rest of the line stays white. */
+/* The accent moment in the argument itself. It marks the single number the
+   whole case rests on - the 3.3% alpha. Terracotta is reserved for the ACTIONS
+   on this page (the "our team" links in the CTA bands and the Invest now
+   button); the claim carries brand Sky Blue, so the two never sit on the same
+   job. */
 .fla-stat-fig { font-weight: 500; letter-spacing: 0; }
 /* Footnote markers. These are navigation, not content, so they are set small
    and inherit their sentence's colour - on the navy stat line that means the
-   terracotta, which is what the user asked for. Noted for whoever reads this:
-   terracotta on navy is 3.6:1, fine for the large stat line itself but under
-   the 4.5:1 that small text wants, and a .52em superscript is small text. It
-   is a deliberate call on a footnote marker, not an oversight.
+   sky blue, which is what the user asked for. That inheritance used to come with
+   a contrast caveat — the earlier terracotta and steel shades were both under
+   4.5:1, which a 12px marker wants — and sky at 9.99:1 has now resolved it.
    A fixed 12px rather than an em fraction: at .72em the marker on the 25px stat
    line rendered 18px and competed with the sentence it hangs off, and at .52em
    the one in the 19px proof column fell to 9.9px, too small to tap. 12px reads
@@ -5232,7 +5241,65 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    blended the two, the min-height that gave it room and the --navy modifier
    that undid all of it for one band are gone rather than left dormant — the
    droplet now lives on the hero only. */
-.fla-say-band { background: var(--dark); color: var(--on-dark); padding: clamp(56px, 8.5vh, 104px) 0; }
+/* Both CTA bands carry the droplet photograph. Getting it right took several
+   passes and the two failure modes are worth recording, because they pull in
+   opposite directions:
+   - `cover` on the band's own background CROPS BY HEIGHT. A band with no fixed
+     ratio lost ~240px off the top of the picture — exactly where the bead and
+     the head of the rebound column are — and the drop was cut in half.
+   - sizing the picture by the band's HEIGHT (a ::before at height:100%) keeps
+     the whole frame but draws it small, sitting inside the band with clear
+     margin above and below.
+   The settled answer sizes it by WIDTH and crops it by height, which is what
+   makes a picture fill a band without being cut:
+   - the band's ratio is pinned at 6:1 so its height is predictable;
+   - the picture sits in a ::before at 78% of the band's WIDTH. Cover then draws
+     it 78%-wide and about 40% taller than the band, so it fills the height and
+     is cropped top and bottom rather than at the sides. 78% rather than the
+     full width because at 100% (which is what a plain `cover` background gives)
+     the droplet reads too large for the band;
+   - `72%` is where that vertical window has to sit for the whole of the ink to
+     be inside it: the bead about a fifth of the way down, the outermost rings
+     running out at the bottom edge.
+   The picture is then narrower than the band, so its left edge has to meet a
+   CSS colour — see the fade on the ::before. */
+.fla-say-band {
+  position: relative; isolation: isolate; overflow: hidden;
+  /* width:100% makes the INLINE size definite so aspect-ratio derives the
+     HEIGHT from it — without it the band resolves height-first and pins its own
+     width. Same trap the hero hit; see .fla-hero. */
+  width: 100%;
+  aspect-ratio: 6 / 1;
+  height: auto;
+  /* Floor and cap: below ~1200px the ratio alone leaves too little room for two
+     lines of copy, above ~1800px the band would grow into a hero. */
+  min-height: 210px;
+  max-height: 320px;
+  /* The picture's own left-edge column, sampled down the SLICE OF IT THAT SHOWS
+     (image y 29%-89%, which is what the 72% window exposes), so the uncovered
+     left continues the photograph's gradient instead of sitting under a flat
+     tint. Approximate on purpose — the browser renders the PNG through a colour
+     profile, so raw pixel values never match exactly, and the fade below is what
+     actually hides the join. RE-SAMPLE IF THE RATIO OR THE 72% CHANGES: a
+     different window exposes a different part of that column. */
+  background: linear-gradient(180deg, #b6cde7 0%, #a6c1e0 19%, #9ab7d8 35%, #98b5d6 52%, #a5bedc 69%, #b5c9e0 85%, #bbc9dd 100%);
+  color: var(--ink);
+  padding: clamp(24px, 3.4vh, 44px) 0;
+  display: grid; align-items: center;
+}
+/* `z-index: -1` under the band's `isolation: isolate` puts the picture above the
+   band's own background but below the copy, with no z-index needed on the text.
+   The mask is the load-bearing line: a 26% fade dissolves the picture into the
+   gradient instead of meeting it at an edge, which is the only reliable way to
+   join a rendered image to a CSS colour. The fade sits entirely inside the
+   photograph's empty left region, so no ripple is touched. */
+.fla-say-band::before {
+  content: ""; position: absolute; inset: 0 0 0 auto; z-index: -1;
+  width: 78%;
+  background: url("assets/scenes/droplet.png") right 72% / cover no-repeat;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 26%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 26%);
+}
 .fla-say-band--paper { background: var(--bg-elev); }
 /* One child now: the sentence carries its own underlined inline link where a
    "Contact us" button used to sit beside it, per the Figma. The flex row is
@@ -5240,8 +5307,19 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    return without churn. */
 .fla-say-band-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 30px; }
 .fla-say-band p {
-  margin: 0; max-width: 52ch;
-  font-size: clamp(22px, 1.8vw, 26px); line-height: 1.55;
+  margin: 0;
+  /* Held inside the picture's clear left region so it never crosses the rings.
+     52%, not the 46% the hero uses: the ink in these bands does not begin until
+     about 65% across (the picture is inset to 78% and its own left half is
+     empty), so there is more clear ground here than on the hero — and the copy
+     needs it to hold two lines at the size below. 700px is what the LONGER of
+     the two sentences needs; at 640 it took a third line and broke "our team"
+     across it. */
+  max-width: min(56%, 700px);
+  /* Up from clamp(17px, 1.45vw, 21px), which the user called way too small. The
+     band is a call to action carrying one sentence; it was set smaller than the
+     body copy around it. */
+  font-size: clamp(20px, 1.8vw, 25px); line-height: 1.5;
 }
 .fla-say-band--paper p { color: var(--ink); }
 
@@ -5315,6 +5393,8 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   display: grid; grid-template-columns: auto 1fr;
   column-gap: 14px; align-items: start;
 }
+/* 34px, and it has been here before: it was taken up to 46px on 2026-09-08 and
+   the user reverted it the same day. Leave it. */
 #fla-advisers .fla-tick {
   width: 34px; height: 34px; margin-bottom: 0; padding: 7px;
   border: 1px solid var(--line); border-radius: 50%;
@@ -5368,12 +5448,28 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   transition: text-decoration-thickness .2s ease, color .2s ease;
 }
 .fla-inline:hover { text-decoration-thickness: 2px; }
-/* The dark grounds: the outperformance section and both CTA bands. The base
-   steel underline would be too dim on navy, so it goes white here. */
-.fla-outperf .fla-inline,
-.fla-say-band .fla-inline { text-decoration-color: rgba(255, 255, 255, .55); }
-.fla-outperf .fla-inline:hover,
-.fla-say-band .fla-inline:hover { color: #fff; }
+/* "our team" in terracotta on the pale photograph of the CTA bands. The white
+   underline these bands used belonged to the navy version they had before. */
+.fla-say-band .fla-inline {
+  color: var(--terracotta);
+  text-decoration-color: var(--terracotta);
+}
+.fla-say-band .fla-inline:hover { color: var(--ink); text-decoration-color: var(--ink); }
+/* The outperformance section is NAVY, so it takes the sky blue of the stat line
+   above it rather than the bands' terracotta — the user asked for the two to
+   match. It also fixes two things that came of sharing a rule with the pale
+   bands: terracotta on navy is 3.59:1, under AA for a 19px link, where sky is
+   9.99:1; and the shared hover went to --ink, which is all but invisible on
+   navy. White here instead. */
+.fla-outperf .fla-inline {
+  color: var(--sky);
+  text-decoration-color: var(--sky);
+}
+.fla-outperf .fla-inline:hover { color: #fff; text-decoration-color: #fff; }
+/* "our team" stays on ONE line. It is the two-word call to action these bands
+   end on, and wrapping it split the underline across two rows. Safe to pin:
+   the phrase is 8 characters against a 700px measure, so it cannot overflow. */
+.fla-say-band .fla-inline { white-space: nowrap; }
 
 /* Arrow list — a circled arrow set against the first line of each point. */
 .fla-arrows { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(30px, 4.4vh, 46px); }
@@ -5430,8 +5526,18 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   text-decoration-color: var(--accent);
   text-underline-offset: 3px;
 }
-.fla-pds .btn-primary { background: #fff; color: var(--dark); border-color: #fff; }
-.fla-pds .btn-primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+/* Terracotta, inverting on hover. White on terracotta is 4.6:1, which clears
+   AA for a normal-weight label at any size the button will take; the inverted
+   state is the same ratio the other way.
+   Bigger than the site-wide .btn's 15px, and scoped here rather than raised on
+   .btn: this is the ONE real button on the page and it closes it, where the
+   header CTA and the buttons on every other page are still 15px. The padding
+   goes up with the type so the label keeps its room inside the box. */
+.fla-pds .btn-primary {
+  background: var(--terracotta); color: #fff; border-color: var(--terracotta);
+  font-size: 18px; padding: 16px 34px;
+}
+.fla-pds .btn-primary:hover { background: #fff; color: var(--terracotta); border-color: #fff; }
 
 /* ── 07 Ways to reach the team ── */
 /* ── "Speak with the team" ────────────────────────
@@ -5506,6 +5612,37 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   /* stacked, so there is no blurb alongside to match — back to a plain 16:9 */
   .fla-video-frame { flex: 0 0 auto; aspect-ratio: 16 / 9; min-height: 0; }
   .fla-reasons, .fla-proofs, .fla-ways { grid-template-columns: 1fr; }
+  /* The band STACKS here: copy across the full width, picture as a strip
+     beneath it. The 5:1 ratio cannot survive a phone — at 390px it would make a
+     78px band — and side by side is worse: the copy would land on the rings,
+     because a portrait-ish box crops the picture's empty left away and brings
+     the ink to about 38% across. So the ratio is released, the picture comes off
+     the band's own background and into a ::before pinned to the bottom, and the
+     fade runs top-to-bottom into the flat ground the copy sits on. This block
+     also releases the copy's 46% measure, which otherwise leaves it in a
+     half-width column on a phone. */
+  .fla-say-band {
+    aspect-ratio: auto; height: auto; min-height: 0; max-height: none;
+    position: relative; isolation: isolate;
+    background: #dbe4ef;
+    padding-bottom: clamp(170px, 44vw, 260px);
+  }
+  .fla-say-band p { max-width: none; }
+  .fla-say-band::before {
+    content: ""; position: absolute; inset: auto 0 0 0; z-index: -1;
+    /* width MUST be reset. The desktop rule sets `width: 78%`, and a width plus
+       a left/right pair does not stretch — width wins and the box stays pinned
+       left, which left the strip 78% wide with bare ground beside it. */
+    width: 100%;
+    height: clamp(150px, 40vw, 240px);
+    /* 150%, not cover. At a phone's width `cover` draws the whole 2103px frame
+       into 390px and the droplet is a thumbnail; zooming to one and a half
+       screens brings it back to a legible size, and the crop still lands on the
+       picture's empty left. */
+    background: url("assets/scenes/droplet.png") right 72% / 150% auto no-repeat;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 34%);
+    mask-image: linear-gradient(180deg, transparent 0, #000 34%);
+  }
   .fla-plats { grid-template-columns: repeat(3, 1fr); }
   /* fewer columns means wider cells, so pull the tiles in rather than
      letting a 3-across grid become three big boxes */

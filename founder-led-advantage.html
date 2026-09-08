@@ -527,14 +527,15 @@
           vid.addEventListener('play', function () { fig.classList.add('is-playing'); });
           vid.addEventListener('pause', function () { fig.classList.remove('is-playing'); });
 
-          // ── Play while it is on screen, pause once it is not. Skipped
-          //    under reduced motion, where the frame click is the only way
-          //    to start it. ──
-          if (!reduce && 'IntersectionObserver' in window) {
+          // ── PAUSE once it leaves the screen. It no longer STARTS itself
+          //    when scrolled into view: the clip plays with sound, and a video
+          //    that begins talking on scroll is intrusive. Playback is now
+          //    started only by a click on the frame. The pause half is kept, so
+          //    scrolling away from a playing clip still stops it. ──
+          if ('IntersectionObserver' in window) {
             var seen = new IntersectionObserver(function (entries) {
               entries.forEach(function (en) {
-                if (en.isIntersecting) { playWithSound(); }
-                else if (!vid.paused) { vid.pause(); }
+                if (!en.isIntersecting && !vid.paused) { vid.pause(); }
               });
             }, { threshold: 0.5 });
             seen.observe(fig);
