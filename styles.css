@@ -5300,6 +5300,26 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 26%);
   mask-image: linear-gradient(90deg, transparent 0, #000 26%);
 }
+/* A soft wash that lifts the left of the band towards the page's own ground, so
+   the copy sits on light rather than on mid blue and the band opens out of the
+   white section above it instead of starting at a hard edge.
+   It has to be a SECOND pseudo-element rather than another background layer,
+   because it belongs on TOP of the picture: it reaches a little way across the
+   photograph's empty left, which is what makes the lift continuous instead of
+   stopping at the join. Both pseudos are z-index:-1, so they paint behind the
+   copy and, being equal, in source order — ::before then ::after — which is the
+   stacking this depends on.
+   It runs out at 56%: the ripples begin around 64% across, and the wash must be
+   fully clear of them or it fogs the picture. */
+.fla-say-band::after {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(90deg,
+    #f6f8fb 0%,
+    rgba(246, 248, 251, .94) 12%,
+    rgba(246, 248, 251, .74) 28%,
+    rgba(246, 248, 251, .38) 43%,
+    rgba(246, 248, 251, 0) 56%);
+}
 .fla-say-band--paper { background: var(--bg-elev); }
 /* One child now: the sentence carries its own underlined inline link where a
    "Contact us" button used to sit beside it, per the Figma. The flex row is
@@ -5643,6 +5663,10 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
     -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 34%);
     mask-image: linear-gradient(180deg, transparent 0, #000 34%);
   }
+  /* The left-hand wash goes with the side-by-side layout it was drawn for. Once
+     the picture is a strip UNDER the copy there is no left to lighten, and a
+     horizontal fade across a stacked band just reads as a smudge. */
+  .fla-say-band::after { content: none; }
   .fla-plats { grid-template-columns: repeat(3, 1fr); }
   /* fewer columns means wider cells, so pull the tiles in rather than
      letting a 3-across grid become three big boxes */
