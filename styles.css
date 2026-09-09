@@ -39,6 +39,28 @@
      the insights band. This halves the spread to 6 and holds the lightness, so
      the band keeps the same separation from --bg and only the cast softens. */
   --bg-elev: #efeee9;
+  /* The pre-ivory value of --bg-elev, kept as a token for the surfaces that
+     are deliberately EXCLUDED from the warm pass. The invest tab strip and its
+     panel are the only consumers — the user looked at that panel in ivory and
+     asked for it back. The topbar was tried here too and reverted to the warm
+     value, so do not add it. Use this rather than pasting #eceef2 inline, so
+     the exclusions stay findable and stay in step with each other. */
+  --bg-elev-cool: #eceef2;
+  /* Brand Ivory as raw CHANNELS, so it can be composed into rgba() at an
+     arbitrary alpha — a hex token cannot. For DARK grounds only: 11.5:1 on the
+     navy, 1.3:1 on the light page. Same value as the IVORY constant in
+     founder-chart.js; the two cannot share a definition, because canvas colours
+     are JS strings and never see the custom properties. Change both together. */
+  --ivory-rgb: 222, 214, 201;
+  /* Brand Sky Blue. NO CONSUMERS as of 2026-09-08: it was added that day for the
+     Founder-led Advantage stat line and the "team" link beside it, and both went
+     to ivory hours later. Normally a dead token would come straight back out —
+     the 2026-09-04 rollout's --sky and --ice did — but founder-chart.js still
+     reasons about this value in prose (it picks series colours that stay clear of
+     it), so deleting the token would strand those notes. Left in place
+     deliberately. 9.99:1 on the navy, 1.54:1 on the light --bg: dark grounds
+     only, if it is ever wanted again. */
+  --sky: #a8cfe5;
   --ink: #171f2f;
   --ink-soft: #2a3a52;
   --ink-mute: #5b6577;
@@ -58,12 +80,6 @@
      terracotta until 2026-09-08 and is now --accent-deep.
      Never running body text on the light page: it is 4.2:1 there, under AA. */
   --terracotta: #c25332;
-  /* Brand Sky Blue. Removed once as a dead token after a 2026-09-04 palette
-     rollout was reverted, back on 2026-09-08 for one job: the Founder-led
-     Advantage stat line. 9.99:1 on the navy, so unlike terracotta and the
-     steel accent it has real headroom there — but 1.54:1 on the light --bg,
-     which is invisible. DARK GROUNDS ONLY. */
-  --sky: #a8cfe5;
   --dark: #171f2f;
   --on-dark: #ffffff;
   --on-dark-mute: #a8b2c2;
@@ -167,7 +183,11 @@ a:hover { color: var(--accent-deep); }
 /* ─── TOPBAR — slim utility strip above the header. In normal flow (not
    sticky), so it scrolls away while .site-header sticks to the top. ── */
 .topbar {
-  /* Discreet paper-grey utility strip — quiet chrome, not a brand moment. */
+  /* Discreet paper-grey utility strip — quiet chrome, not a brand moment.
+     Stays on the WARM --bg-elev with the rest of the elevated greys. It was
+     briefly moved to --bg-elev-cool on 2026-09-09 and put straight back: keep
+     it reading from --bg-elev so it never drifts out of step with the header
+     and the bands below it. */
   background: var(--bg-elev);
   color: var(--ink-mute);
   border-bottom: 1px solid var(--line);
@@ -556,6 +576,36 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
      percent sign on the stat below it already uses, so the two read as a pair,
      and it lifts the phrase from terracotta's 4.3:1 to 7.5:1. */
   color: var(--accent-deep);
+  /* Terracotta mark under the phrase — the brand accent doing exactly the job
+     it is reserved for, a short mark rather than running text (4.3:1 on this
+     ground: fine for a mark, under AA for copy).
+     Drawn, not text-decoration: an underline can only be a rule of constant
+     weight, and a `stroke` would be no better. This is a FILLED path whose top
+     and bottom edges run at different amplitudes, so the mark tapers to ~0.7u
+     at each end and swells to ~1.7u through the middle — the pressure a nib
+     puts down. preserveAspectRatio='none' lets it stretch to whatever width
+     the phrase happens to be without the ends thickening.
+     ONE cubic per edge, both bending the same way, so the centreline rises
+     about two units monotonically across the span. An earlier version used two
+     opposing cubics per edge; that S-curve doubles back on itself and reads as
+     a shaky hand rather than a drawn line. Keep it to a single sweep.
+     Carried as a background rather than a pseudo-element so the markup and the
+     noscript fallback stay untouched, with box-decoration-break so a wrapped
+     phrase gets a fresh stroke per line rather than one stretched across both.
+     CAVEAT: a data URI cannot read a CSS custom property, so the terracotta is
+     baked in as a literal here. If --terracotta ever moves, this hex must be
+     changed by hand — it will not follow. */
+  text-decoration-line: none;
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 10' preserveAspectRatio='none'><path fill='%23c25332' d='M2,6.2 C90,4.4 200,3.6 298,4.2 L298,5.0 C200,5.4 90,6.6 2,6.9 Z'/></svg>");
+  background-repeat: no-repeat;
+  /* Wider than the phrase, pulled left by half the excess, so the stroke
+     overshoots slightly at both ends rather than stopping dead on the last
+     letter. Half the overshoot it first carried, and a finer stroke: at .26em
+     with a bigger overhang the mark read as a marker scrawl. */
+  background-position: -.08em 100%;
+  background-size: calc(100% + .16em) .22em;
+  -webkit-box-decoration-break: clone;
+          box-decoration-break: clone;
 }
 
 .about-stat {
@@ -2332,7 +2382,12 @@ body.nav-open.over-hero .header-cta {
   gap: 22px;
   padding: 28px 32px;
   background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.12);
+  /* Ivory edge at .45 — the third setting and the one that holds. .14 was the
+     same near-invisible hairline it replaced; full strength read as too bold,
+     four bright boxes competing with the copy inside them. Just under half
+     carries clearly on the navy without shouting. The fill stays white at .04;
+     at that strength a tint reads as nothing either way. */
+  border: 1px solid rgba(var(--ivory-rgb), .45);
   border-radius: 3px;
   text-decoration: none;
   color: var(--on-dark);
@@ -2367,7 +2422,13 @@ body.nav-open.over-hero .header-cta {
   justify-content: center;
   min-width: 48px;
   padding: 6px 10px;
-  border: 1px solid currentColor;
+  /* Same ivory as the card edge around it, rather than currentColor's white.
+     .62 not .45 on purpose: this chip carries opacity .72 on the element, which
+     multiplies into its border too, so .62 x .72 lands at ~.45 — the card's
+     value. Matching the declarations here would have rendered the chip's edge
+     a third fainter than the card's and the two would not have read as one
+     material. */
+  border: 1px solid rgba(var(--ivory-rgb), .62);
   border-radius: 2px;
   font-size: 10px;
   font-weight: 600;
@@ -2939,16 +3000,52 @@ body.nav-open.over-hero .header-cta {
   border-top: 1.5px solid var(--ink);
   opacity: 0;
   transform: translateY(16px);
+  /* Reveal only. The border-color leg of this transition went with the
+     sibling-dimming hover removed on 2026-09-09 — nothing animates the border
+     any more, so carrying the transition would be dead weight. */
   transition: opacity .7s ease calc(var(--d, 0s)),
-              transform .7s cubic-bezier(.2,.7,.2,1) calc(var(--d, 0s)),
-              border-color .4s ease 0s;
+              transform .7s cubic-bezier(.2,.7,.2,1) calc(var(--d, 0s));
 }
 .principle.is-visible { opacity: 1; transform: translateY(0); }
 
-/* Focus effect — dim siblings on hover */
-.principles-grid:hover .principle { border-color: rgba(23, 31, 47, .15); }
-.principles-grid:hover .principle:hover { border-color: var(--ink); }
+/* The grid had a hover effect that dimmed every card but the one under the
+   cursor. Removed 2026-09-09 at the user's request: the cards are a static
+   statement of principles, not a set of choices to pick between, so pointing
+   at one had no meaning to convey. */
 
+/* Ordinal bars. The card's own border-top is bar one; cards two and three
+   stack extra rules ABOVE it via pseudo-elements, so the number of marks reads
+   as the ordinal without a numeral. Upward, not downward: the border-top row
+   stays aligned across all three cards and the titles keep a common baseline,
+   where stacking downward would eat the padding above card three's title and
+   push it out of line with its siblings. Absolute, so they add no height and
+   the grid's row rhythm is untouched. */
+.principle:nth-child(2)::before,
+.principle:nth-child(3)::before,
+.principle:nth-child(3)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  /* Brand Ivory, at full strength. It sits 24/33/48 per channel off the page
+     ground — a low contrast RATIO, but the site's own --line hairlines run a
+     similar delta and read perfectly well, so a 1.5px rule in it carries. The
+     fade between bars is now carried by the two ivory values themselves rather
+     than by opacity, which is why the opacity pair that used to live here is
+     gone: two named colours say what the design is; two alphas over a third
+     colour only say it by accident. */
+  background: rgb(var(--ivory-rgb));
+}
+.principle:nth-child(2)::before,
+.principle:nth-child(3)::before { top: -14px; }
+/* The third bar is a lighter ivory — the same colour mixed back toward the
+   page, so it stays in the ivory family instead of drifting to a grey, and
+   follows --bg automatically if the ground is ever retuned. */
+.principle:nth-child(3)::after {
+  top: -28px;
+  background: color-mix(in srgb, rgb(var(--ivory-rgb)) 55%, var(--bg));
+}
 .principle-num { display: none; }
 
 .principle-content { max-width: 440px; }
@@ -2961,10 +3058,7 @@ body.nav-open.over-hero .header-cta {
   line-height: 1.2;
   letter-spacing: .002em;
   color: var(--ink);
-  transition: color .4s ease;
 }
-.principles-grid:hover .principle .principle-title { color: var(--ink-mute); }
-.principles-grid:hover .principle:hover .principle-title { color: var(--ink); }
 
 .principle-body {
   margin: 0;
@@ -2972,13 +3066,11 @@ body.nav-open.over-hero .header-cta {
   font-size: clamp(16px, 1.25vw, 18px);
   line-height: 1.65;
   color: var(--ink-soft);
-  opacity: 1;
-  transform: translateY(4px);
-  transition: opacity .4s ease, transform .4s ease;
-}
-.principle:hover .principle-body {
-  opacity: 1;
-  transform: translateY(0);
+  /* The 4px offset and its transition existed only so the body could settle
+     upward on hover; with the hover gone the body simply sits where it landed.
+     Left as `none` rather than translateY(0) so nothing here reads as a
+     starting position for an animation that no longer exists. */
+  transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3478,18 +3570,18 @@ body.nav-open.over-hero .header-cta {
 .invest-tab:last-child { border-right: 0; }
 .invest-tab:hover { background: var(--accent-deep); }
 .invest-tab.is-active {
-  background: var(--bg-elev);
+  background: var(--bg-elev-cool);
   color: var(--ink);
   cursor: default;
   box-shadow: inset 0 3px 0 var(--accent-deep);
 }
-.invest-tab.is-active:hover { background: var(--bg-elev); }
+.invest-tab.is-active:hover { background: var(--bg-elev-cool); }
 .invest-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
 .invest-panels {
   border: 1px solid var(--line);
   border-radius: 0 0 3px 3px;
-  background: var(--bg-elev);
+  background: var(--bg-elev-cool);
   box-shadow: 0 36px 70px -36px rgba(23, 31, 47, .35);
 }
 .invest-panel { display: none; }
@@ -5082,27 +5174,30 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
      AA bar rather than 4.5:1. The size also suits the line carrying the page's
      main claim. */
   font-size: clamp(24px, 1.95vw, 29px); line-height: 1.45;
-  /* Brand Sky Blue, third and settled shade for this line (2026-09-08): the user
+  /* Brand Ivory, fourth and settled shade for this line (2026-09-09): the user
      asked for terracotta -> "the teal" -> the steel --accent the PDS/TMD links
-     carry -> this. It is the only one of the four with contrast to spare —
-     9.99:1 against the navy, where terracotta was 3.59:1 and the steel 3.08:1,
-     both of which cleared AA only because this line is 24px or larger. This one
-     would pass at any size. */
-  color: var(--sky);
+     carry -> brand Sky Blue -> this. It measures 11.44:1 against the navy, more
+     even than the sky it replaces (9.99:1), so like that shade it would pass at
+     any size — unlike the terracotta (3.59:1) and steel (3.08:1) attempts,
+     which cleared AA only because this line is 24px or larger.
+     Composed from --ivory-rgb rather than a hex, because that token is channels
+     only; it is a DARK-GROUND colour and must not be reused on the light page,
+     where it is 1.3:1. */
+  color: rgb(var(--ivory-rgb));
 }
 /* set at the body size like the rest of the line — the weight alone
    carries the emphasis */
 /* The accent moment in the argument itself. It marks the single number the
    whole case rests on - the 3.3% alpha. Terracotta is reserved for the ACTIONS
    on this page (the "our team" links in the CTA bands and the Invest now
-   button); the claim carries brand Sky Blue, so the two never sit on the same
+   button); the claim carries brand Ivory, so the two never sit on the same
    job. */
 .fla-stat-fig { font-weight: 500; letter-spacing: 0; }
 /* Footnote markers. These are navigation, not content, so they are set small
    and inherit their sentence's colour - on the navy stat line that means the
-   sky blue, which is what the user asked for. That inheritance used to come with
+   ivory, which is what the user asked for. That inheritance used to come with
    a contrast caveat — the earlier terracotta and steel shades were both under
-   4.5:1, which a 12px marker wants — and sky at 9.99:1 has now resolved it.
+   4.5:1, which a 12px marker wants — and ivory at 11.44:1 clears it outright.
    A fixed 12px rather than an em fraction: at .72em the marker on the 25px stat
    line rendered 18px and competed with the sentence it hangs off, and at .52em
    the one in the 19px proof column fell to 9.9px, too small to tap. 12px reads
@@ -5325,6 +5420,16 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   color: var(--ink);
   padding: clamp(24px, 3.4vh, 44px) 0;
   display: grid; align-items: center;
+  /* Channels rather than a hex, the same idiom as --ivory-rgb, because the wash
+     below composes this at five different alphas.
+     It is brand Ivory's HUE at near-white lightness, not brand Ivory itself:
+     222,214,201 as a wash would tint the left warm but also darken it, and what
+     the user liked here was the lightness. The red-to-blue spread is 12 —
+     double the 6 that :root holds incidental warmth to, because this is a
+     DELIBERATELY ivory surface, and it needs the extra to register at all
+     against a photograph this blue. The red-to-green and green-to-blue steps
+     are kept in brand Ivory's own 8:13 proportion so it warms the same way. */
+  --band-wash: 249, 244, 237;
 }
 /* `z-index: -1` under the band's `isolation: isolate` puts the picture above the
    band's own background but below the copy, with no z-index needed on the text.
@@ -5353,11 +5458,11 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .fla-say-band::after {
   content: ""; position: absolute; inset: 0; z-index: -1;
   background: linear-gradient(90deg,
-    #f6f8fb 0%,
-    rgba(246, 248, 251, .94) 12%,
-    rgba(246, 248, 251, .74) 28%,
-    rgba(246, 248, 251, .38) 43%,
-    rgba(246, 248, 251, 0) 56%);
+    rgb(var(--band-wash)) 0%,
+    rgba(var(--band-wash), .94) 12%,
+    rgba(var(--band-wash), .74) 28%,
+    rgba(var(--band-wash), .38) 43%,
+    rgba(var(--band-wash), 0) 56%);
 }
 .fla-say-band--paper { background: var(--bg-elev); }
 /* One child now: the sentence carries its own underlined inline link where a
@@ -5514,15 +5619,15 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   text-decoration-color: var(--terracotta);
 }
 .fla-say-band .fla-inline:hover { color: var(--ink); text-decoration-color: var(--ink); }
-/* The outperformance section is NAVY, so it takes the sky blue of the stat line
-   above it rather than the bands' terracotta — the user asked for the two to
-   match. It also fixes two things that came of sharing a rule with the pale
-   bands: terracotta on navy is 3.59:1, under AA for a 19px link, where sky is
-   9.99:1; and the shared hover went to --ink, which is all but invisible on
-   navy. White here instead. */
+/* The outperformance section is NAVY, so this link left the bands' terracotta
+   behind: that shared rule put a 3.59:1 colour on a 19px link and sent the
+   hover to --ink, which is all but invisible on navy. It went to the stat
+   line's sky blue on 2026-09-08 to match it, then to brand Ivory the same day,
+   following the stat line there — the two are meant to stay in step, so move
+   them together. Ivory is 11.44:1 here, well past AA for a link this size. */
 .fla-outperf .fla-inline {
-  color: var(--sky);
-  text-decoration-color: var(--sky);
+  color: rgb(var(--ivory-rgb));
+  text-decoration-color: rgb(var(--ivory-rgb));
 }
 .fla-outperf .fla-inline:hover { color: #fff; text-decoration-color: #fff; }
 /* "our team" stays on ONE line. It is the two-word call to action these bands
@@ -5585,18 +5690,24 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   text-decoration-color: var(--accent);
   text-underline-offset: 3px;
 }
-/* Terracotta, inverting on hover. White on terracotta is 4.6:1, which clears
-   AA for a normal-weight label at any size the button will take; the inverted
-   state is the same ratio the other way.
+/* Brand Ivory, inverting on hover — terracotta until 2026-09-08, when the user
+   asked for ivory here. Both states are 11.44:1 (ink on ivory, then ivory on the
+   band's navy), well past AA either way; the terracotta it replaced ran at
+   4.6:1, which passed but with nothing spare.
+   The hover drops the FILL rather than swapping to a second colour, so the
+   button turns into its own outline against the navy and the ivory stays the
+   only colour in play.
    Bigger than the site-wide .btn's 15px, and scoped here rather than raised on
    .btn: this is the ONE real button on the page and it closes it, where the
    header CTA and the buttons on every other page are still 15px. The padding
    goes up with the type so the label keeps its room inside the box. */
 .fla-pds .btn-primary {
-  background: var(--terracotta); color: #fff; border-color: var(--terracotta);
+  background: rgb(var(--ivory-rgb)); color: var(--dark); border-color: rgb(var(--ivory-rgb));
   font-size: 18px; padding: 16px 34px;
 }
-.fla-pds .btn-primary:hover { background: #fff; color: var(--terracotta); border-color: #fff; }
+.fla-pds .btn-primary:hover {
+  background: transparent; color: rgb(var(--ivory-rgb)); border-color: rgb(var(--ivory-rgb));
+}
 
 /* ── 07 Ways to reach the team ── */
 /* ── "Speak with the team" ────────────────────────
