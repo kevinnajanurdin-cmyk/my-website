@@ -41,16 +41,29 @@
   --bg-elev: #efeee9;
   /* The pre-ivory value of --bg-elev, kept as a token for the surfaces that
      are deliberately EXCLUDED from the warm pass. The invest tab strip and its
-     panel are the only consumers — the user looked at that panel in ivory and
-     asked for it back. The topbar was tried here too and reverted to the warm
-     value, so do not add it. Use this rather than pasting #eceef2 inline, so
-     the exclusions stay findable and stay in step with each other. */
+     panel are the current consumers — the user looked at that panel in ivory
+     and asked for the grey. The home topbar has been in and out of this list
+     and is presently on the warm value; see .topbar. Use this rather than
+     pasting #eceef2 inline, so the exclusions stay findable and stay in step
+     with each other, and so a future warm pass has one list to check. */
   --bg-elev-cool: #eceef2;
+  /* The flat studio backdrop BAKED INTO the founder portrait files, measured
+     off them rather than chosen: all 14 opaque JPGs in assets/founders carry
+     exactly this, edge to edge. Two portraits — elon.webp and mikheil.png —
+     are transparent cutouts instead and have no backdrop of their own, so the
+     card behind them must supply this same value or those two cards read as a
+     different colour from the other fourteen. That is what went wrong when the
+     card was left on the warm --bg-elev.
+     NOT a palette colour and deliberately not --bg-elev-cool, which is one
+     point off it: it is a property of the image files. RE-MEASURE if the
+     portraits are ever re-exported. */
+  --portrait-bd: #edeef2;
   /* Brand Ivory as raw CHANNELS, so it can be composed into rgba() at an
      arbitrary alpha — a hex token cannot. For DARK grounds only: 11.5:1 on the
-     navy, 1.3:1 on the light page. Same value as the IVORY constant in
-     founder-chart.js; the two cannot share a definition, because canvas colours
-     are JS strings and never see the custom properties. Change both together. */
+     navy, 1.3:1 on the light page. It NO LONGER has a twin in
+     founder-chart.js — that chart's founder-led series carried the same value
+     as an IVORY constant until 2026-09-09, when it went white; the pairing that
+     had to be kept in step is gone. Consumers are now CSS-only. */
   --ivory-rgb: 222, 214, 201;
   /* Brand Sky Blue. NO CONSUMERS as of 2026-09-08: it was added that day for the
      Founder-led Advantage stat line and the "team" link beside it, and both went
@@ -183,11 +196,12 @@ a:hover { color: var(--accent-deep); }
 /* ─── TOPBAR — slim utility strip above the header. In normal flow (not
    sticky), so it scrolls away while .site-header sticks to the top. ── */
 .topbar {
-  /* Discreet paper-grey utility strip — quiet chrome, not a brand moment.
-     Stays on the WARM --bg-elev with the rest of the elevated greys. It was
-     briefly moved to --bg-elev-cool on 2026-09-09 and put straight back: keep
-     it reading from --bg-elev so it never drifts out of step with the header
-     and the bands below it. */
+  /* Discreet utility strip — quiet chrome, not a brand moment.
+     Reads from the WARM --bg-elev, in step with the other elevated surfaces.
+     This value has gone back and forth with the cool --bg-elev-cool several
+     times (2026-09-09); it is currently ivory, and the cool token is still
+     there if it is swapped again. Change only this line — do not inline a hex,
+     and do not "harmonise" it with the header on your own. */
   background: var(--bg-elev);
   color: var(--ink-mute);
   border-bottom: 1px solid var(--line);
@@ -1498,7 +1512,11 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   height: var(--ch);
   margin-left: calc(var(--cw) / -2);
   margin-top: calc(var(--ch) / -2);
-  background: var(--bg-elev);
+  /* Matches the backdrop baked into the portrait files, NOT the page's warm
+     elevated grey. Only the two transparent cutouts (Elon, Mikheil) ever let
+     this show — the other fourteen JPGs cover the card edge to edge — so this
+     is purely about making those two match their neighbours. */
+  background: var(--portrait-bd);
   border-radius: 3px;
   overflow: hidden;
   cursor: pointer;
@@ -4438,9 +4456,24 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   margin: 0 auto clamp(36px, 5vh, 56px);
   padding: 0;
   border: none;
-  max-width: 560px;
+  /* Runs the FULL .essay-container measure, like the body copy and the two
+     hairlines that bracket this block. It used to be capped at 560px inside the
+     820px container, which left it centred as a BLOCK while its text stayed
+     left-aligned (the bare `blockquote` rule pins text-align: left, and a
+     direct rule beats the centring .essay-header inherits down). The result
+     was a quote whose left edge lined up with nothing — 130px in from the
+     hairline ends and the body copy below — and a stranded third line. The
+     house blockquote rule already states the intent: "flush left and runs the
+     full measure of the body it sits in". The cap was what contradicted it. */
+  max-width: none;
   position: relative;
 }
+/* Serif italic, like the title above it and the section heads below. A sans
+   (Manrope, upright) pass was tried on 2026-09-09 to break the register and
+   reverted the same day: the whole essay header reads as ONE serif-italic
+   voice, and that is the intent. If it is ever revisited, note that Manrope
+   cannot be italic here at all — its @font-face declares `font-style: normal`
+   only and `font-synthesis: none` on body suppresses synthetic oblique. */
 .essay-epigraph p {
   font-family: var(--serif);
   font-style: italic;
@@ -4459,6 +4492,9 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 
 .essay-body h2 {
   font-family: var(--serif);
+  /* Italic, kept. Briefly set upright on 2026-09-09 and put straight back — the
+     serif italic IS the section-head voice here, and the title and epigraph
+     share it. Do not "vary" one of the three; they are meant to match. */
   font-style: italic;
   font-weight: 500;
   font-size: clamp(22px, 2.6vw, 28px);
@@ -4637,7 +4673,12 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   background: var(--bg);
 }
 .page-essay .essay-header {
-  border-radius: 22px 22px 0 0;            /* rounded leading edge as it rises */
+  /* SQUARE leading edge. It carried `border-radius: 22px 22px 0 0` to read as a
+     card rising over the portrait, but the panel is full-bleed — so the corners
+     curved away from the viewport edges and left two notches of the page ground
+     showing at the top, which is what they looked like rather than a rounded
+     card. The shadow alone does the lifting-sheet job, and squarer edges are the
+     site's idiom anyway (see the buttons). */
   box-shadow: 0 -24px 60px -24px rgba(20, 30, 50, .22);
 }
 @media (max-width: 540px) {

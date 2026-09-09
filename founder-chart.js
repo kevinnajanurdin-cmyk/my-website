@@ -14,27 +14,52 @@
   // was missed in the Manrope swap and silently fell back to the browser's
   // default sans (measured identical width to plain sans-serif).
   var SANS = "Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
-  // Brand Ivory. The founder-led series — its line, the wash beneath it, and
-  // its 10x figure and label — is the ONE thing on this chart that carries it;
-  // the MSCI series stays the cool grey it was. That warm/cool split is the
-  // point: the series the fund backs reads warm, the market reads neutral, and
-  // no legend is needed to tell them apart. Ivory only works because this
-  // chart sits on the navy — 11.5:1 there, against 1.3:1 on the light page,
-  // which is why it appears nowhere else. It also stays clear of --sky, which
-  // already owns the prose accents on this page (the 3.3% line, the links).
-  var IVORY = "222,214,201";
-  // The benchmark series takes the tone of the "(3.3% alpha pa vs. all
-  // stocks)" note in the .odds band, which the user pointed at. That note is
-  // white at a low effective alpha over the navy, so its blue is the navy's
-  // OWN hue showing through, not a pigment: hsl ~215° at ~14% saturation.
-  // This is that hue and saturation, set at the lightness the series already
-  // had, so it composites to the same weight it has always carried.
-  // An earlier pass used a literal brand teal here (hsl 204°, 33%) and read
-  // too saturated beside it. Note the brand teal #3D5C73 cannot be used raw on
-  // this ground at all — 2.34:1, where the line all but vanishes.
-  // Distinct from --sky (#A8CFE5, hsl 202° 55% 78%), which is lighter and far
-  // more saturated and owns this page's prose accents.
-  var BENCH = "163,172,190";
+  // WHITE, for the founder-led series — its line, the wash beneath it, and its
+  // 10x figure and label. It carried brand Ivory ("222,214,201") until
+  // 2026-09-09, so the fund's series read warm against a neutral market; the
+  // user asked for white, so the chart is now monochrome and the two series
+  // separate by WEIGHT and stroke width instead of by hue.
+  // That makes the alpha ladder below load-bearing rather than decorative:
+  // with the hue gone it is the only thing telling the two series apart, so
+  // every FUND alpha must stay ABOVE BENCH_A (0.72). See FUND_LABEL_A.
+  var FUND = "255,255,255";
+  // Line and end figure. Composite to rgb(236,237,238) / 14.07:1 and
+  // rgb(243,244,245) / 14.97:1 on the navy, against the benchmark line's
+  // 9.06:1 — a 1.55:1 separation between the two lines, up from the 1.09:1 the
+  // ivory-vs-white pairing gave. Thinner than a hue difference, but real, and
+  // reinforced by 2.5px vs 2px and by the wash under this line only.
+  var FUND_A = 0.92;
+  var FUND_FIG_A = 0.95;
+  // The small "x" and the "Founder-led Stocks" label. RAISED from 0.72/0.62 to
+  // 0.80: at those old values, with ivory still in play, the "Founder-led
+  // Stocks" label (5.18:1) was already DIMMER than "All Stocks" (9.06:1) and
+  // only the warm hue disguised it. Once both are white that inversion is just
+  // wrong — the fund's own series cannot be the quieter one — so this sits at
+  // 10.91:1, clear of the benchmark's 9.06:1. Do not lower it below 0.72.
+  var FUND_LABEL_A = 0.80;
+  // The benchmark series is now EXACTLY the body copy beside the chart, which
+  // the user pointed at: `rgba(255,255,255,.72)` over the navy — .odds-body on
+  // home ("Founder-led companies have historically outperformed...") and
+  // `.fla-outperf-copy p` on the Advantage page, which carry the same value.
+  // So this is white, and BENCH_A below is that .72, composited by the canvas
+  // against the same navy the CSS composites against. Do not "approximate" it
+  // with an opaque hex: an earlier pass did exactly that (#a3acbe, a sampled
+  // hsl 215/14% mix) and it drifts the moment the band's navy is touched.
+  // At .72 it composites to rgb(190,192,197) / 9.06:1 on the navy, up from the
+  // 4.09:1 the old opaque grey gave. It is now the DIMMER of two white series
+  // — see the FUND block above, which is deliberately held above this value.
+  // If the market series ever reads as competing with the fund's, the lever is
+  // BENCH_A, not BENCH: BENCH is pinned to the body copy by the user.
+  // Upside of the same change: the 12px "All Stocks" label and the small "x"
+  // were 3.08:1 and 3.36:1, both under the 4.5:1 that small text wants. At .72
+  // they are 9.06:1, so the series labels now pass on their own.
+  var BENCH = "255,255,255";
+  // One alpha for the whole benchmark series — line, "5", "x" and label — so
+  // it reads as ONE object and matches the sentence exactly. It used to run a
+  // ladder (.68 line, .72 figure, .58 "x", .54 label) that was tuned to make an
+  // already-dim colour recede further; that laddering is what put the labels
+  // under AA, and it is pointless now the target is a single stated value.
+  var BENCH_A = 0.72;
   var reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // 123 bi-monthly data points, Dec 2005 – Apr 2026 (raw dollar values, $100k start)
@@ -161,19 +186,19 @@
     }
     ctx.closePath();
     var grad = ctx.createLinearGradient(0, chartT, 0, chartB);
-    grad.addColorStop(0, "rgba(" + IVORY + ",0.09)");
-    grad.addColorStop(1, "rgba(" + IVORY + ",0.015)");
+    grad.addColorStop(0, "rgba(" + FUND + ",0.09)");
+    grad.addColorStop(1, "rgba(" + FUND + ",0.015)");
     ctx.fillStyle = grad;
     ctx.fill();
 
     // ── MSCI line ──
-    ctx.strokeStyle = "rgba(" + BENCH + ",0.68)";
+    ctx.strokeStyle = "rgba(" + BENCH + "," + BENCH_A + ")";
     ctx.lineWidth = 2;
     ctx.lineJoin = "round";
     drawLine(M);
 
     // ── Founder line ──
-    ctx.strokeStyle = "rgba(" + IVORY + ",0.92)";
+    ctx.strokeStyle = "rgba(" + FUND + "," + FUND_A + ")";
     ctx.lineWidth = 2.5;
     drawLine(F);
 
@@ -191,13 +216,13 @@
       var bigSize = W < 500 ? 36 : 52;
       ctx.textAlign = "left";
       ctx.textBaseline = "bottom";
-      ctx.fillStyle = "rgba(" + IVORY + ",0.95)";
+      ctx.fillStyle = "rgba(" + FUND + "," + FUND_FIG_A + ")";
       ctx.font = "italic " + bigSize + "px 'Riccione Serial', Georgia, serif";
       ctx.fillText("10", endX, fEndY + 4);
       var numW = ctx.measureText("10").width;
       var xSize = Math.round(bigSize * 0.5);
       ctx.font = xSize + "px 'Riccione Serial', Georgia, serif";
-      ctx.fillStyle = "rgba(" + IVORY + ",0.72)";
+      ctx.fillStyle = "rgba(" + FUND + "," + FUND_LABEL_A + ")";
       ctx.textBaseline = "middle";
       ctx.fillText("x", endX + numW + 2, fEndY + 4 - bigSize * 0.36);
       ctx.textBaseline = "bottom";
@@ -209,7 +234,7 @@
       var subLead = Math.round(subSize * 1.4);
       ctx.font = subSize + "px " + SANS;
       ctx.textBaseline = "top";
-      ctx.fillStyle = "rgba(" + IVORY + ",0.62)";
+      ctx.fillStyle = "rgba(" + FUND + "," + FUND_LABEL_A + ")";
       var subY = fEndY + 8;
       ctx.fillText("Founder-led", endX, subY);
       ctx.fillText("Stocks", endX, subY + subLead);
@@ -217,13 +242,13 @@
       // "5x" — number italic serif, "x" upright, muted
       var midSize = W < 500 ? 28 : 40;
       ctx.textBaseline = "bottom";
-      ctx.fillStyle = "rgba(" + BENCH + ",0.72)";
+      ctx.fillStyle = "rgba(" + BENCH + "," + BENCH_A + ")";
       ctx.font = "italic " + midSize + "px 'Riccione Serial', Georgia, serif";
       ctx.fillText("5", endX, mEndY + 2);
       var numW5 = ctx.measureText("5").width;
       var xSize5 = Math.round(midSize * 0.5);
       ctx.font = xSize5 + "px 'Riccione Serial', Georgia, serif";
-      ctx.fillStyle = "rgba(" + BENCH + ",0.58)";
+      ctx.fillStyle = "rgba(" + BENCH + "," + BENCH_A + ")";
       ctx.textBaseline = "middle";
       ctx.fillText("x", endX + numW5 + 1, mEndY + 2 - midSize * 0.36);
       ctx.textBaseline = "bottom";
@@ -231,7 +256,7 @@
       // "All Stocks*" — same series-label size as "Founder-led Stocks" above
       ctx.font = subSize + "px " + SANS;
       ctx.textBaseline = "top";
-      ctx.fillStyle = "rgba(" + BENCH + ",0.54)";
+      ctx.fillStyle = "rgba(" + BENCH + "," + BENCH_A + ")";
       ctx.fillText("All Stocks", endX, mEndY + 6);
 
       ctx.globalAlpha = 1;
