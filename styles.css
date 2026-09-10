@@ -94,7 +94,16 @@
      Never running body text on the light page: it is 4.2:1 there, under AA. */
   --terracotta: #c25332;
   --dark: #171f2f;
-  --on-dark: #ffffff;
+  /* Text on dark grounds is the PAGE GROUND, not pure white (2026-09-10). The
+     user picked this shade off a swatch; it is exactly --bg, so the two sides
+     of the site now mirror each other — the colour the light pages are made of
+     is the colour the dark pages are written in, and there is one fewer white
+     in the system. Pure white was reading harsh against the navy on the
+     approach funnel and the Portfolio Discipline block.
+     Costs nothing in contrast: 15.38:1 on --dark, against white's 15.90:1.
+     Foreground only — all 43 consumers are colour, none is a background — so
+     nothing that should stay pure white is touched by this. */
+  --on-dark: var(--bg);
   --on-dark-mute: #a8b2c2;
 
   --serif: "Riccione Serial", "Cormorant Garamond", "Times New Roman", serif;
