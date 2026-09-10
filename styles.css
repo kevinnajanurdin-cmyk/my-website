@@ -3024,6 +3024,13 @@ body.nav-open.over-hero .header-cta {
   position: relative;
   text-align: left;
   padding-top: clamp(28px, 4vw, 40px);
+  /* One bar per card, navy, on the page's own white ground. Three variants
+     were tried and dropped on 2026-09-10: an ordinal tally of one, two and
+     three rules; the bar in ivory; and an ivory ground behind the section. The
+     tally added a device without adding meaning, since the cards are read side
+     by side and already carry their order in the copy, and ivory left the bar
+     too faint to do its job. This section stays the white full-screen moment
+     between the two navy bands — see the note below. */
   border-top: 1.5px solid var(--ink);
   opacity: 0;
   transform: translateY(16px);
@@ -3040,39 +3047,6 @@ body.nav-open.over-hero .header-cta {
    statement of principles, not a set of choices to pick between, so pointing
    at one had no meaning to convey. */
 
-/* Ordinal bars. The card's own border-top is bar one; cards two and three
-   stack extra rules ABOVE it via pseudo-elements, so the number of marks reads
-   as the ordinal without a numeral. Upward, not downward: the border-top row
-   stays aligned across all three cards and the titles keep a common baseline,
-   where stacking downward would eat the padding above card three's title and
-   push it out of line with its siblings. Absolute, so they add no height and
-   the grid's row rhythm is untouched. */
-.principle:nth-child(2)::before,
-.principle:nth-child(3)::before,
-.principle:nth-child(3)::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 1.5px;
-  /* Brand Ivory, at full strength. It sits 24/33/48 per channel off the page
-     ground — a low contrast RATIO, but the site's own --line hairlines run a
-     similar delta and read perfectly well, so a 1.5px rule in it carries. The
-     fade between bars is now carried by the two ivory values themselves rather
-     than by opacity, which is why the opacity pair that used to live here is
-     gone: two named colours say what the design is; two alphas over a third
-     colour only say it by accident. */
-  background: rgb(var(--ivory-rgb));
-}
-.principle:nth-child(2)::before,
-.principle:nth-child(3)::before { top: -14px; }
-/* The third bar is a lighter ivory — the same colour mixed back toward the
-   page, so it stays in the ivory family instead of drifting to a grey, and
-   follows --bg automatically if the ground is ever retuned. */
-.principle:nth-child(3)::after {
-  top: -28px;
-  background: color-mix(in srgb, rgb(var(--ivory-rgb)) 55%, var(--bg));
-}
 .principle-num { display: none; }
 
 .principle-content { max-width: 440px; }
