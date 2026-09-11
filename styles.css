@@ -637,7 +637,15 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   border-top: 1px solid var(--line);
   display: flex;
   align-items: baseline;
-  gap: 36px;
+  /* Row gap first, column gap second. The 36px was a single value doing both
+     jobs: on desktop the figure and its label share one line so only the
+     COLUMN gap is ever used, but on a phone the label wraps beneath the
+     numeral and that same 36px became the vertical space, which read as a
+     disconnect between the figure and the thing it measures. Splitting the
+     shorthand tightens the stacked case to 14px and leaves the side-by-side
+     case untouched — no media query needed, because a single flex line simply
+     never consults the row gap. */
+  gap: 14px 36px;
   flex-wrap: wrap;
 }
 .stat-number {
@@ -2497,8 +2505,13 @@ body.nav-open.over-hero .header-cta {
   display: flex;
   align-items: baseline;
 }
+/* The en dash between 15 and 25 was terracotta until 2026-09-11; it now takes
+   the navy of the figure either side of it. Done by INHERITING rather than
+   restating var(--ink): the dash is part of the number, not an accent on it,
+   so it should follow .fund-kf-figure wherever that goes rather than be a
+   second copy of the value that can drift. Margin stays — the en dash sits
+   tight against the digits without it. */
 .fund-kf-dash {
-  color: var(--terracotta);
   margin: 0 2px;
 }
 .fund-kf-unit {
