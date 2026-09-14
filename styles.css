@@ -2554,6 +2554,18 @@ body.nav-open.over-hero .header-cta {
   text-transform: uppercase;
   color: var(--ink-mute);
 }
+/* Section footnote — the same idiom as .odds-footnote on the home band
+   (marker in the label, small italic note at the section end), restated for
+   the light page: the odds version is white-alpha on navy and would vanish
+   here. First consumer is the Beta^ marker. */
+.fund-kf-footnote {
+  margin: clamp(28px, 4vh, 44px) 0 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink-mute);
+  font-style: italic;
+}
+
 .fund-kf-detail dd {
   margin: 0;
   font-family: var(--sans);
@@ -3267,9 +3279,15 @@ body.nav-open.over-hero .header-cta {
 }
 .discipline-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  /* Back to three cards on 2026-09-15 (Risk Discipline joined Portfolio
+     Management and Capital Recycling), matching the "3 cards" this block's
+     header comment always promised. auto-fit rather than repeat(3): between
+     the desktop width and the 720px stack, three fixed columns fall under
+     ~220px and the copy shreds to three words a line — auto-fit lets the
+     third card wrap to its own row through that band instead. */
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: clamp(28px, 3.5vw, 64px);
-  max-width: 760px;
+  max-width: 1140px;
 }
 .discipline-card {
   position: relative;

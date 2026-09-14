@@ -32,13 +32,13 @@ const founders = [
   },
   {
     first: "David", last: "Nyland", company: "Lumine",
-    role: "President & CEO", founded: "2023", sector: "Vertical Market Software",
+    role: "Co-founder & CEO", founded: "2014", sector: "Vertical Market Software",
     geo: "Canada", accent: "#1d3e75",
     thesis: "David is applying the Constellation Software playbook to communications and media, acquiring niche software businesses and compounding value through disciplined capital allocation and decentralised management."
   },
   {
     first: "Ken", last: "Xie", company: "Fortinet",
-    role: "Founder, Chair & CEO", founded: "2000", sector: "Cyber Security",
+    role: "Co-founder, Chair & CEO", founded: "2000", sector: "Cyber Security",
     geo: "United States", accent: "#ee3124",
     thesis: "Ken built one of the world’s leading cybersecurity platforms by combining proprietary hardware and software, creating a differentiated architecture that enables faster, lower-cost network security at scale."
   },
@@ -77,13 +77,13 @@ const founders = [
     first: "Alex", last: "Karp", company: "Palantir",
     role: "Co-founder & CEO", founded: "2003", sector: "AI Platforms",
     geo: "United States", accent: "#0a1a2f",
-    thesis: "Alex built Palantir to turn a company’s scattered data into a working model of its operations, allowing employees to understand what is happening, decide what to do and act through one system."
+    thesis: "Alex built Palantir to turn a company’s scattered data into a living model of its operations — one system where employees and agents can see what’s happening, decide what to do, and act."
   },
   {
     first: "Brian", last: "Armstrong", company: "Coinbase",
     role: "Co-founder & CEO", founded: "2012", sector: "FinTech",
     geo: "United States", accent: "#0052ff",
-    thesis: "Brian chose regulation when much of crypto ran offshore, giving institutions the custody, compliance and infrastructure needed to bring blockchain assets into mainstream finance."
+    thesis: "Brian bet on regulatory legitimacy while crypto moved offshore — building the working plumbing of modern finance: stablecoins, custody, tokenization."
   },
   {
     first: "Elon", last: "Musk", company: "Tesla", company2: "SpaceX",
@@ -95,13 +95,13 @@ const founders = [
     first: "He", last: "Xiaopeng", company: "XPeng",
     role: "Co-founder & CEO", founded: "2014", sector: "Robotics",
     geo: "China", accent: "#0a8de8",
-    thesis: "Xiaopeng built XPeng like a technology company rather than a traditional carmaker, using software, AI and rapid iteration to improve the vehicle long after it leaves the factory."
+    thesis: "Xiaopeng built XPeng as a technology company rather than a traditional carmaker, using software, AI and rapid iteration to improve the vehicle long after it leaves the factory."
   },
   {
     first: "Dylan", last: "Field", company: "Figma",
     role: "Co-founder & CEO", founded: "2012", sector: "Digital Media",
     geo: "United States", accent: "#a259ff",
-    thesis: "Dylan transformed design from a standalone desktop tool into a collaborative, cloud-based platform. By enabling designers, engineers and product managers to collaborate in real time, Figma has become a critical infrastructure for modern software development."
+    thesis: "Dylan transformed design from a standalone desktop tool into a collaborative, cloud-based platform. By enabling designers, engineers and product managers to collaborate in real time, Figma has become critical infrastructure for modern software development."
   },
   {
     first: "Peter", last: "Beck", company: "Rocket Lab",
@@ -119,7 +119,7 @@ const founders = [
     first: "Mikheil", last: "Lomtadze", company: "Kaspi",
     role: "Co-founder & CEO", founded: "2006", sector: "Ecommerce",
     geo: "Kazakhstan", accent: "#f14635",
-    thesis: "Mikheil transformed a regional bank into Kazakhstan’s leading super app, integrating payments, shopping and financial services to create one of the country’s most deeply embedded digital platforms used by millions every day."
+    thesis: "Mikheil turned a regional bank into one of the world’s most embedded super apps outside China — integrating payments, shopping and financial services so deeply that most of Kazakhstan transacts through Kaspi every day."
   }
 ];
 
@@ -278,13 +278,23 @@ const SCENE_YOUTUBE = {
   "Tesla":         { id: "T43sbhCKvBY", start: 14 },
   "Coinbase":      { id: "Gxr-ViBuHB8", start: 7 },               // skip the typed "update required" intro
   "Palantir":      { id: "I7siZgE533E", start: 15 },
-  "Lumine":        { id: "oMKR10UfxNQ", zoom: 1.38 },             // letterboxed upload — crop past the bars
+  // Letterboxed upload: the bars force the zoom (>=~1.33 or a black sliver
+  // shows top/bottom), so the fix for the user-flagged over-crop (2026-09-15)
+  // is mostly biasX — the film keeps its wordmarks at the LEFT (stage screen,
+  // the big letters at the open), so crop less there and more off the right.
+  "Lumine":        { id: "oMKR10UfxNQ", zoom: 1.36, biasX: 0.35 },
   "Fortinet":      { id: "o0btrmZcmGI" },
   "Kaspi":         { id: "Gbw18iKpqP8", start: 2, zoom: 1.6, biasY: 0.35, biasX: 0.7 }, // subs bottom, watermark top-left
   "Roblox":        { id: "VL6rYNmfrjM", start: 5 },               // skip the "1989" title card
   "Figma":         { id: "IVON-e6gOG8", start: 3 },
   "CATL":          { id: "Z75mVvU7MPQ", zoom: 1.5, biasY: 0.38 }, // subtitles at the bottom
-  "Axon":          { id: "WbA2M9z7mh8", start: 4 },               // skip the logo-on-black intro
+  // start 4 skips the logo-on-black intro. De-zoomed 2026-09-15 (user flagged
+  // the crop): the film runs a product lower-third at the LEFT edge ("AXON
+  // ECOSYSTEM / FUSUS") that the default 1.32 centred crop clipped. 1.18 with
+  // the overflow pushed to the top (12.96% top crop keeps the YT title hidden,
+  // the >=12% rule above) and biasX .15 keeps the left; the right side of this
+  // footage is ambient set dressing and can lose the difference.
+  "Axon":          { id: "WbA2M9z7mh8", start: 4, zoom: 1.18, biasY: 0.85, biasX: 0.15 },
   "Mercado Libre": { id: "tniyxhRQSW8" },                          // letterbox bars covered by the default crop
   "Rocket Lab":    { id: "4aJ5NPt5fSM", start: 37 },              // same film as the old cut: pad-at-sunset → liftoff
   "XPeng":         { id: "0bHjqkX_ZRI", start: 1, zoom: 1.4, biasY: 0.44 }, // spec text at the bottom
@@ -917,7 +927,7 @@ const counterIO = new IntersectionObserver(
 );
 // Seed the animation's starting value from JS rather than hard-coding it in the
 // markup. The HTML carries the REAL figure so crawlers that don't run JS extract
-// 24.7, not a "0.0" placeholder; anyone with JS sees the same count-up as before.
+// 23.2, not a "0.0" placeholder; anyone with JS sees the same count-up as before.
 // Safe to do after paint: every counter sits well below the fold.
 counterTargets.forEach((el) => {
   const unit = el.querySelector(".perf-unit, .stat-unit, .odd-unit");
