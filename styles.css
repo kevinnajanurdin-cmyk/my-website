@@ -2886,17 +2886,17 @@ body.nav-open.over-hero .header-cta {
 }
 
 /* ─── Homepage about-section CTA pointing to /fund.html ── */
-/* This CTA carries .btn .btn-outline in the markup, so its padding, type scale,
-   border weight and hover all come from the shared button styles and cannot
-   drift from the other outline buttons. The ONE deliberate exception is the
-   shape: the pill is wanted here, on the home page primary CTA, so the radius
-   is overridden back. Declared after .btn, so these win at equal specificity. */
+/* This CTA carries .btn .btn-outline in the markup, so its padding, type
+   scale, border weight, hover AND SHAPE all come from the shared button
+   styles and cannot drift from the other outline buttons. It ran as the one
+   pill on the site until 2026-09-15, a deliberate exception the user then
+   withdrew — no radius is declared here so it takes .btn's 2px like the rest;
+   don't reintroduce one without a new decision. */
 .about-cta {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   margin-top: 40px;
-  border-radius: 999px;
 }
 /* Keyboard focus keeps the fill this button already had. The other outline
    buttons show only the UA focus ring, so this is an extra affordance rather
