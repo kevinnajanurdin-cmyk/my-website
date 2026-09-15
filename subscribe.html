@@ -69,9 +69,12 @@
          returns on the first upward nudge, and never hides near the top of the
          page or while the mobile menu (which hangs off the header) is open.
          Inline INSIDE the header on every page ON PURPOSE: build-theme.ps1
-         cuts WP's header.php from index.html at the first </header>, and the
-         sub-page templates are self-contained with their own header markup —
-         so each page's copy is its only copy, statically and on WordPress. -->
+         cuts WP's header.php from index.html at the first closing header tag
+         (so do NOT write that tag literally in this comment — the build found
+         it in an earlier wording of this very sentence and cut the file short,
+         mid-comment), and the sub-page templates are self-contained with their
+         own header markup — so each page's copy is its only copy, statically
+         and on WordPress. -->
     <script>
     (function () {
       var header = document.querySelector(".site-header");
