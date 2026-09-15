@@ -585,10 +585,19 @@ function stopPanelEmbed() {
 // straight on clean footage. Debounced against carousel flicking; one
 // background player at most; never mounts while the carousel is offscreen.
 let prewarmTimer = null;
+// Stamped by the carousel's setPos on every movement frame. The prewarm gate
+// below reads it so a YouTube player is never mounted (or torn down to make
+// way for another) WHILE the visitor is flicking — iframe mount/teardown is a
+// main-thread stall of tens of ms, and it used to land mid-gesture whenever a
+// dwell had armed the 700ms debounce and the visitor then resumed browsing.
+let cfLastMoveTs = 0;
 function schedulePrewarm(idx) {
   if (prewarmTimer) clearTimeout(prewarmTimer);
   prewarmTimer = setTimeout(() => {
     prewarmTimer = null;
+    // Still moving (or only just stopped)? Re-arm rather than mount: the whole
+    // point of pre-warming is to use IDLE time, not to compete with the flick.
+    if (Date.now() - cfLastMoveTs < 600) { schedulePrewarm(idx); return; }
     if (panel && panel.classList.contains("open")) return; // panel owns the embed
     const cf = document.querySelector(".coverflow");
     if (cf) {
@@ -715,16 +724,48 @@ if (coverflow && cards.length) {
   }
 
   // Set the floating position (clamped) and repaint only if it changed.
+  // While the deck is in motion the stage carries .cf-moving, which the CSS
+  // uses to disable the cards' grayscale-filter transition: an animating
+  // `filter` re-rasterizes the portrait bitmap every frame (transform and
+  // opacity composite for free; filter does not), and at flick speed several
+  // cards were animating it at once — the main source of the flick stutter.
+  // The class drops 140ms after the last movement, so the card you SETTLE on
+  // still gets its .6s bloom to colour.
+  let cfMoveTimer = null;
   const setPos = (p) => {
     const next = Math.max(0, Math.min(total - 1, p));
     if (next === cfPos) return;
     cfPos = next;
+    cfLastMoveTs = Date.now();
+    if (stage && cfMoveTimer === null) stage.classList.add("cf-moving");
+    if (cfMoveTimer) clearTimeout(cfMoveTimer);
+    cfMoveTimer = setTimeout(() => {
+      cfMoveTimer = null;
+      if (stage) stage.classList.remove("cf-moving");
+    }, 140);
     renderCoverflow();
   };
 
   // Initial paint
   renderCoverflow();
   window.addEventListener("resize", renderCoverflow, { passive: true });
+
+  // The cards beyond the opening fan are loading="lazy", and — translated up
+  // to ~1400px off to the sides — the browser rightly hasn't fetched them. But
+  // that meant the FIRST flick toward either end fetched and decoded those
+  // portraits mid-gesture, which reads as stutter on top of the animation.
+  // Once the page is idle, pull them all in and decode them off the
+  // interaction path, so by the time anyone flicks the pixels are ready.
+  const predecode = () => {
+    cards.forEach((c) => {
+      const img = c.querySelector("img");
+      if (!img) return;
+      if (img.loading === "lazy") img.loading = "eager";
+      if (img.decode) img.decode().catch(() => {});
+    });
+  };
+  if ("requestIdleCallback" in window) requestIdleCallback(predecode, { timeout: 4000 });
+  else setTimeout(predecode, 1500);
 
   // Bandwidth courtesy: tear the background pre-warm player down while the
   // carousel is offscreen; resume pre-warming when it scrolls back into view.

@@ -1561,6 +1561,12 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   filter: grayscale(100%) contrast(1.02);
   transition: filter .6s cubic-bezier(.2,.7,.2,1);
 }
+/* While the deck is being flicked (script.js puts .cf-moving on the stage),
+   the grayscale bloom must not animate: a transitioning `filter` repaints the
+   bitmap every frame, and mid-flick several cards transition at once — the
+   user-reported carousel stutter. In motion the active card flips to colour
+   instantly; the .6s bloom is reserved for the card you settle on. */
+.coverflow-stage.cf-moving .cover-card img { transition: none; }
 .cover-card.active img {
   filter: grayscale(0) contrast(1.02);
 }
