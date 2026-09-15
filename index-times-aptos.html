@@ -3,16 +3,69 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Contemporary Amperex Technology Co. (CATL) — Ziller Funds Management</title>
-  <meta name="description" content="Portfolio holding in focus: how Robin Zeng built CATL into the world's leading battery maker, riding the secular wave of global electrification." />
+  <title>Ziller — font trial: Times New Roman + Aptos</title>
+  <meta name="description" content="A Sydney-based global equity specialist investing in founder-led stocks across key global growth themes." />
   <link rel="icon" type="image/svg+xml" href="assets/ziller-mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="preload" as="font" type="font/ttf" href="assets/fonts/riccione-extralight.ttf" crossorigin>
   <link rel="preload" as="font" type="font/ttf" href="assets/fonts/riccione-extralight-italic.ttf" crossorigin>
-  <link rel="preload" as="font" type="font/ttf" href="assets/fonts/manrope-variable.ttf" crossorigin>
+  <link rel="preload" as="font" type="font/otf" href="assets/fonts/formata-light.otf" crossorigin>
   <link rel="stylesheet" href="styles.css" />
-  <script>document.documentElement.classList.add('js');</script>
+  <!-- Preload the lead carousel portrait so the active card paints immediately -->
+  <link rel="preload" as="image" href="assets/founders/jensen.jpg" fetchpriority="high">
+  <!-- ─────────────────────────────────────────────────────────────────
+       FONT TRIAL COPY of index.html — Times New Roman (serif) + Aptos (sans).
+       Everything else (markup, styles.css, script.js, assets) is shared with
+       the live home page; only the two typefaces change. Delete this one file
+       to drop the trial — nothing else references it.
+
+       The site names its fonts in two places, so both are covered:
+       1. --serif / --sans drive every rule in styles.css.
+       2. The founder-performance chart is drawn on a <canvas> in script.js,
+          which hardcodes 'Riccione Serial' / 'Formata Light'. The shim below
+          rewrites those names as ctx.font is assigned. It must run BEFORE
+          script.js — that script is deferred, so this inline block wins.
+          (An @font-face local() remap was tried first and is NOT viable:
+          Chrome will not match Aptos via local(), though Times matches fine.)
+       ───────────────────────────────────────────────────────────────── -->
+  <style>
+    :root {
+      --serif: "Times New Roman", Times, serif;
+      --sans:  "Aptos", "Segoe UI", system-ui, sans-serif;
+    }
+
+    /* Weight parity with the brand fonts.
+       The site declares font-weight 500 on serif headings and 600 on labels,
+       but only ONE cut of Riccione / Formata exists (each @font-face claims
+       100-900), and font-synthesis is none — so on the live site every one of
+       those declarations renders at the single light weight.
+       Times New Roman and Segoe UI DO ship real heavier cuts, so the very same
+       declarations came out semibold here and the page read as "bolder".
+       Pin to regular so the trial shows the intended design, not a side effect
+       of the substitution. (<strong>/<b> keep their emphasis.) */
+    body, body *:not(strong):not(b) { font-weight: 400 !important; }
+  </style>
+  <script>
+    (function () {
+      var proto = window.CanvasRenderingContext2D && CanvasRenderingContext2D.prototype;
+      if (!proto) return;
+      var desc = Object.getOwnPropertyDescriptor(proto, 'font');
+      if (!desc || !desc.set) return;
+      Object.defineProperty(proto, 'font', {
+        configurable: true,
+        get: desc.get,
+        set: function (value) {
+          desc.set.call(this, String(value)
+            .replace(/'Riccione Serial', Georgia, serif/g, 'Times New Roman, Times, serif')
+            .replace(/'Formata Light', sans-serif/g, 'Aptos, Segoe UI, sans-serif'));
+        }
+      });
+    })();
+  </script>
 </head>
-<body class="page-essay">
+<body class="page-home">
 
   <div class="topbar">
     <div class="container topbar-inner">
@@ -22,7 +75,7 @@
   </div>
   <header class="site-header">
     <div class="container header-inner">
-      <a href="index.html" class="brand" aria-label="Ziller Funds Management">
+      <a href="#top" class="brand" aria-label="Ziller Funds Management">
         <svg class="brand-logo" viewBox="0 0 841.89 320.31" aria-hidden="true">
           <g fill="currentColor">
             <path d="M181.2,167.42s-6.98,19.22-33.67,19.22h-31.37L192.63,48.94h-99.64l4.45,21.04h1.86s6.98-19.22,33.67-19.22h27.37l-76.47,137.7h103.64l-4.45-21.04h-1.86Z"/>
@@ -52,10 +105,10 @@
         </svg>
       </a>
       <nav class="primary-nav" aria-label="Primary">
-        <a href="index.html#fund">Fund</a>
+        <a href="fund.html">Fund</a>
         <a href="approach.html">Approach</a>
         <a href="team.html">Team</a>
-        <a href="insights.html" aria-current="page">Insights</a>
+        <a href="insights.html">Insights</a>
         <a href="contact.html">Contact</a>
       </nav>
       <div class="header-cta">
@@ -65,127 +118,196 @@
         <span></span><span></span><span></span>
       </button>
     </div>
-    <!-- Auto-hiding menu bar: slides away on a deliberate downward scroll,
-         returns on the first upward nudge, and never hides near the top of the
-         page or while the mobile menu (which hangs off the header) is open.
-         Inline INSIDE the header on every page ON PURPOSE: build-theme.ps1
-         cuts WP's header.php from index.html at the first </header>, and the
-         sub-page templates are self-contained with their own header markup —
-         so each page's copy is its only copy, statically and on WordPress. -->
-    <script>
-    (function () {
-      var header = document.querySelector(".site-header");
-      if (!header) return;
-      var lastY = window.pageYOffset || 0;
-      var acc = 0; // signed scroll accumulator; resets when direction flips
-      window.addEventListener("scroll", function () {
-        var y = window.pageYOffset || document.documentElement.scrollTop || 0;
-        var d = y - lastY;
-        lastY = y;
-        if (document.body.classList.contains("nav-open")) {
-          header.classList.remove("nav-hidden"); acc = 0; return;
-        }
-        if (y <= 90) { header.classList.remove("nav-hidden"); acc = 0; return; }
-        if (d > 0) {        // downward: hide only after ~140px of intent
-          acc = Math.max(0, acc) + d;
-          if (acc > 140) header.classList.add("nav-hidden");
-        } else if (d < 0) { // upward: any real nudge brings it back
-          acc = Math.min(0, acc) + d;
-          if (acc < -8) header.classList.remove("nav-hidden");
-        }
-      }, { passive: true });
-    })();
-    </script>
   </header>
 
-  <main class="essay-page">
-    <article class="essay">
+  <main id="top">
 
-      <!-- Back -->
-      <nav class="essay-back-wrap">
-        <div class="container essay-container">
-          <a href="insights.html" class="essay-back">&larr; Insights</a>
-        </div>
-      </nav>
+    <!-- HERO — founders carousel -->
+    <section class="hero-founders" id="founders" aria-label="The founders we back">
+      <div class="coverflow coverflow--hero">
+        <div class="coverflow-pin" data-hero-stage>
+          <span class="hero-shape hero-shape-left" aria-hidden="true"></span>
+          <span class="hero-shape hero-shape-right" aria-hidden="true"></span>
+          <div class="coverflow-inner">
+            <header class="coverflow-head">
+              <p class="section-eyebrow">The founders we back</p>
+              <h2 class="section-title">Sixteen founders<br/>building the next decade.</h2>
+            </header>
 
-      <!-- The Portrait -->
-      <figure class="essay-portrait">
-        <img src="assets/essays/catl-hero.png"
-             alt="CATL — Contemporary Amperex Technology manufacturing facility &mdash; pen and ink illustration" />
-      </figure>
+            <div class="coverflow-stage" id="coverflow-stage" aria-roledescription="carousel">
+              <!-- cards rendered by script.js -->
+            </div>
 
-      <!-- Title block -->
-      <header class="essay-header">
-        <div class="container essay-container">
-          <hr class="essay-rule" />
-          <!-- Writer, not the category: the .essay-meta line is writer / date / read time.
-               Mirrors the single-essay PHP in build-theme.ps1 - change both together. -->
-          <div class="essay-meta">
-            <span>Joseph Ziller</span>
-            <span class="essay-meta-dot">&middot;</span>
-            <time datetime="2025-10-06">October 2025</time>
-            <span class="essay-meta-dot">&middot;</span>
-            <span>2 min read</span>
+            <div class="coverflow-meta">
+              <p class="coverflow-active-name" id="cf-name">&nbsp;</p>
+              <p class="coverflow-active-role" id="cf-role">&nbsp;</p>
+            </div>
+
+            <div class="coverflow-progress" aria-hidden="true">
+              <span class="coverflow-progress-bar">
+                <span class="coverflow-progress-fill" id="cf-progress"></span>
+              </span>
+            </div>
+            <p class="coverflow-hint">Click a founder to learn about their story</p>
           </div>
-          <h1 class="essay-title">Contemporary Amperex Technology Co. (CATL)</h1>
-          <hr class="essay-rule" />
-        </div>
-      </header>
-
-      <!-- Body -->
-      <div class="essay-body">
-        <div class="container essay-container">
-
-          <p>CATL is the global standard-setter for EV and energy-storage battery systems. Headquartered in Ningde, China, the company supplies more than one-third of the global EV and energy-storage battery market and has maintained this leadership for eight consecutive years. Its products power over 17 million vehicles and more than 1,700 grid-scale storage installations worldwide.</p>
-
-          <h2>Secular Growth</h2>
-
-          <p>Global demand for electrification is expanding at a rapid pace. Electric vehicles now represent over 20% of new car sales worldwide, while grid-scale energy storage is becoming a critical component of renewable integration and power reliability. China alone targets approximately 180 GW of storage capacity by 2027&mdash;twice its current level, and more than any other country globally. The combination of policy momentum and improving battery economics presents a favourable environment for growth in both mobility and storage applications.</p>
-
-          <h2>Founder&rsquo;s Arc</h2>
-
-          <p>CATL was founded in 2011 by Robin Zeng, following his earlier success with ATL, a supplier of lithium batteries for consumer electronics (iPods). Zeng quickly secured BMW as a flagship customer and scaled into the leading EV cell supplier worldwide by 2017. Zeng&rsquo;s innate ability to &lsquo;skate where the puck is going to be, not where it has been&rsquo; has enabled CATL to outpace peers despite intense competition.</p>
-
-          <h2>Innovation at Scale</h2>
-
-          <p>CATL deploys the industry&rsquo;s largest R&amp;D budget by a margin. In addition, we believe CATL has one of the best &lsquo;output per R&amp;D $ spent&rsquo; versus its key competitors.</p>
-
-          <figure class="essay-figure">
-            <img src="assets/essays/catl-rd-spend.png" alt="Chart: CATL research and development spend versus Chinese and Korean peers" loading="lazy" />
-            <figcaption>Source: Chinese peers include BYD Co + EVE Energy + Gotion + CALB. Korean peers include LGES + Samsung SDI + SK Innovation. *Assumed 95% of Samsung SDI&rsquo;s R&amp;D for batteries, 8% for SK Innovation, and 21% for BYD in line with each company&rsquo;s revenue split.</figcaption>
-          </figure>
-
-          <p>The company has consistently translated laboratory innovation into scaled commercial battery deployments. CATL maintains leadership across multiple chemistry systems&mdash;LFP, NCM, M3P, sodium-ion, and condensed/solid-state. Its flagship products, Qilin and Shenxing, represent meaningful advances versus peers in both range and charging speed: Qilin achieved approximately 1,000 km on a single charge with superior volume utilisation, while Shenxing enabled around 520 km of range from a five-minute charge.</p>
-
-          <h2>Manufacturing &amp; Integration</h2>
-
-          <p>CATL&rsquo;s manufacturing base operates at &ldquo;extreme&rdquo; scale and precision. Smart-factory automation allows the production of millions of cells per day with defect rates measured in parts per billion. Vertical integration extends across raw-material procurement, component fabrication, and end-of-life recycling. This fusion of superior manufacturing and vertical integration offers quality consistency, cost stability, and supply security.</p>
-
-          <h2>Powering Profits</h2>
-
-          <p>CATL&rsquo;s gross margins average ~26% versus ~19% for peers, revenue is projected to grow annually at ~23% through 2030 versus ~17% for peers and earnings are expected to grow by nearly 30% pa as energy-storage systems increase in mix and operating leverage improves.</p>
-
-          <p>Trading at 24&times; forward earnings with a PEG ratio of 0.8&times;, CATL offers unmatched exposure to the premiere battery player globally at a compelling valuation.</p>
-
-          <p class="essay-disclaimer">Please note that these are the views of the writer and not necessarily the views of Ziller. This article does not take into account your investment objectives, particular needs, or financial situation.</p>
-
         </div>
       </div>
+    </section>
 
-      <!-- Footer -->
-      <footer class="essay-foot">
-        <div class="container essay-container">
-          <div class="essay-author">
-            <span class="essay-author-label">Written by</span>
-            <span class="essay-author-name">Joseph Ziller</span>
-          </div>
-          <div class="essay-nav">
-            <a href="insights.html" class="btn btn-outline">&larr; Back to Insights</a>
-          </div>
+    <!-- ABOUT -->
+    <section class="about" id="fund">
+      <div class="container about-inner">
+        <p class="section-eyebrow">About Us</p>
+        <h2 class="about-headline">
+          A Sydney-based global equity specialist, investing in
+          <em>founder-led stocks</em> across key global growth themes.
+        </h2>
+        <div class="about-stat">
+          <span class="stat-number" data-count="24.7" data-decimals="1">0.0<span class="stat-unit">%</span></span>
+          <span class="stat-label">Net returns p.a. since November 2022</span>
         </div>
-      </footer>
+        <a class="about-cta" href="fund.html">
+          <span>View fund information</span>
+          <span class="about-cta-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
 
-    </article>
+    <!-- THE FOUNDER-LED ADVANTAGE -->
+    <section class="odds" id="invest">
+      <aside class="odds-rail" aria-hidden="true">
+        <span class="odds-rail-label">The Founder-led Advantage</span>
+        <span class="odds-rail-mark"></span>
+      </aside>
+      <div class="odds-head">
+        <h2 class="section-title">The Founder-led Advantage</h2>
+        <p class="odds-body">Founder-led companies have historically outperformed within global equities &mdash; a finding substantiated by academic and corporate research.</p>
+      </div>
+      <div class="founder-chart-wrap">
+        <canvas class="founder-chart" id="founder-chart" aria-hidden="true"></canvas>
+      </div>
+
+      <div class="odds-stack">
+        <article class="odd">
+          <h3 class="odd-number">
+            <span class="odd-figure">10<span class="odd-unit">x</span></span>
+          </h3>
+          <p class="odd-text">20-year return of founder-led stocks <span class="odd-text-note">(3.3% alpha pa vs. all stocks)*</span></p>
+        </article>
+        <article class="odd">
+          <h3 class="odd-number">
+            <span class="odd-figure odd-figure-compound">23.0 <span class="odd-unit">vs</span> 4.8 <span class="odd-unit">years</span></span>
+          </h3>
+          <p class="odd-text">Median Ziller founder tenure vs <br />median global CEO tenure</p>
+        </article>
+        <article class="odd">
+          <h3 class="odd-number">
+            <span class="odd-figure">39.5<span class="odd-unit">%</span></span>
+          </h3>
+          <p class="odd-text">Ziller outperformance since inception^</p>
+        </article>
+        <article class="odd">
+          <h3 class="odd-number">
+            <span class="odd-figure">120.5<span class="odd-unit">%</span></span>
+          </h3>
+          <p class="odd-text">Ziller return since inception^</p>
+        </article>
+      </div>
+      <div class="odds-footnotes">
+        <p class="odds-footnote">* Based on an analysis of MSCI All Country World Index Constituents from 2006&ndash;2026 by Ziller Funds Management. All Stocks = MSCI All Country World Index (AUD). Founder-led stocks have been chosen based on Ziller&rsquo;s experience and selections are subjective and in no way meant to be definitive or exhaustive</p>
+        <p class="odds-footnote">^ Returns are net of fees and inception date is 1 November 2022. Past performance is not a reliable indicator of future performance.</p>
+      </div>
+    </section>
+
+    <!-- OUR APPROACH -->
+    <section class="pillars">
+      <div class="container">
+        <div class="pillars-grid">
+          <article class="pillar">
+            <img class="pillar-icon" src="assets/icons/internet.png" alt="" />
+            <h3>Global Equities</h3>
+          </article>
+          <article class="pillar">
+            <img class="pillar-icon" src="assets/icons/founder.png" alt="" />
+            <h3>Founder-led</h3>
+          </article>
+          <article class="pillar">
+            <img class="pillar-icon" src="assets/icons/target.png" alt="" />
+            <h3>Concentrated Growth</h3>
+          </article>
+          <article class="pillar">
+            <img class="pillar-icon" src="assets/icons/settings.png" alt="" />
+            <h3>Disciplined Process</h3>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT FOUNDERS DO DIFFERENTLY -->
+    <section class="advantage">
+      <div class="container">
+        <p class="advantage-intro">Founders bring a special set of qualities which drive a high-performance operating culture unmatched by peers. Over the years, results from this culture compound and can lead to superior long-term stock performance (Zook, 2016).</p>
+        <div class="advantage-grid">
+          <article class="advantage-card">
+            <span class="advantage-num">01</span>
+            <div class="advantage-body">
+              <h3>Frontline Obsession</h3>
+              <p>Founders empower employees closest to customers, creating a culture of service excellence and long-term loyalty.</p>
+            </div>
+          </article>
+          <article class="advantage-card">
+            <span class="advantage-num">02</span>
+            <div class="advantage-body">
+              <h3>Owners Mindset</h3>
+              <p>Founders act quickly, avoid bureaucracy and allocate capital as if it were their own.</p>
+            </div>
+          </article>
+          <article class="advantage-card">
+            <span class="advantage-num">03</span>
+            <div class="advantage-body">
+              <h3>Business Insurgency</h3>
+              <p>Founders challenge industry norms and reshape markets on behalf of underserved customers.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- INSIGHTS TEASER -->
+    <section class="insights" id="insights">
+      <div class="container insights-inner">
+        <div class="insights-text">
+          <p class="section-eyebrow">Insights</p>
+          <h2 class="section-title">Essays from the desk.</h2>
+          <p>Monthly notes on founders we admire, businesses we own, and the structural shifts shaping the next decade.</p>
+          <a href="insights.html" class="btn btn-primary">Read our latest essay</a>
+        </div>
+        <div class="insights-stack">
+          <a class="insight-tile insight-tile--lead" href="peter-beck-rocket-lab.html" style="--img:url('assets/essays/cards/peter-beck.jpg'); --pos:center 20%;">
+            <span class="insight-kicker"><span class="insight-kicker-dot"></span><span class="insight-kicker-label">Founder in Focus</span></span>
+            <span class="insight-when">Jun 2026</span>
+            <span class="insight-tile-cap">
+              <span class="insight-title">Peter Beck, Rocket Lab</span>
+            </span>
+          </a>
+          <a class="insight-tile" href="the-founders-advantage.html" style="--img:url('assets/essays/cards/founders-advantage.jpg')">
+            <span class="insight-kicker"><span class="insight-kicker-dot"></span><span class="insight-kicker-label">Thought Piece</span></span>
+            <span class="insight-when">Mar 2026</span>
+            <span class="insight-tile-cap">
+              <span class="insight-title">The Founders&rsquo; Advantage</span>
+            </span>
+          </a>
+          <a class="insight-tile" href="catl.html" style="--img:url('assets/essays/cards/catl.jpg')">
+            <span class="insight-kicker"><span class="insight-kicker-dot"></span><span class="insight-kicker-label">Company in Focus</span></span>
+            <span class="insight-when">Oct 2025</span>
+            <span class="insight-tile-cap">
+              <span class="insight-title">Contemporary Amperex Technology Co. (CATL)</span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <footer class="site-footer">
@@ -236,39 +358,49 @@
           </div>
           <div>
             <h4>Legal</h4>
-            <a href="#">Privacy</a>
-            <a href="#">Disclosures</a>
-            <a href="#">Terms</a>
+            <a href="/wp-content/uploads/Privacy-Statement-Ziller-Funds-Management.pdf" target="_blank" rel="noopener">Privacy</a>
+            <a href="/disclaimer/">Disclaimer</a>
           </div>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; <span id="year"></span> Ziller Funds Management Pty Ltd. ABN 00 000 000 000. AFSL 000000.</p>
+        <p>© <span id="year"></span> Ziller Funds Management Pty Ltd (ABN 88 688 720 578), Corporate Authorised Representative (CAR 1317129) of Perennial Value Management Limited (ABN 22 090 879 904, AFSL 247293).</p>
         <p><a href="mailto:invest@zillerfm.com">invest@zillerfm.com</a></p>
       </div>
   </footer>
 
-  <script>
-    (function () {
-      var y = document.getElementById('year');
-      if (y) y.textContent = new Date().getFullYear();
+  <!-- FOUNDER DETAIL PANEL -->
+  <div class="founder-panel" id="founder-panel" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="panel-name">
+    <div class="founder-panel-backdrop" data-close></div>
+    <aside class="founder-panel-inner">
+      <button class="founder-panel-close" data-close aria-label="Close">×</button>
+      <div class="founder-panel-photo">
+        <video class="panel-scene" id="panel-video" autoplay muted loop playsinline preload="none" hidden></video>
+        <img class="panel-scene" id="panel-scene" alt="" />
+        <div class="founder-panel-photo-inner" id="panel-photo">
+          <span id="panel-initials"></span>
+        </div>
+      </div>
+      <div class="founder-panel-body">
+        <div class="panel-logo-slot"><img class="panel-logo" id="panel-logo" alt="" /><img class="panel-logo" id="panel-logo-2" alt="" hidden /></div>
+        <h3 class="founder-panel-name" id="panel-name"></h3>
+        <p class="founder-panel-role" id="panel-role"></p>
+        <dl class="founder-panel-stats">
+          <div><dt>Founded</dt><dd id="panel-founded"></dd></div>
+          <div><dt>Theme</dt><dd id="panel-sector"></dd></div>
+          <div><dt>Geography</dt><dd id="panel-geo"></dd></div>
+        </dl>
+        <p class="founder-panel-thesis" id="panel-thesis"></p>
+        <div class="founder-panel-nav">
+          <button data-nav="prev" aria-label="Previous founder">← Prev</button>
+          <button data-nav="next" aria-label="Next founder">Next →</button>
+        </div>
+      </div>
+    </aside>
+  </div>
 
-      var toggle = document.querySelector('.menu-toggle');
-      if (toggle) {
-        toggle.addEventListener('click', function () {
-          var open = toggle.getAttribute('aria-expanded') === 'true';
-          toggle.setAttribute('aria-expanded', String(!open));
-          document.body.classList.toggle('nav-open', !open);
-        });
-        document.querySelectorAll('.primary-nav a').forEach(function (a) {
-          a.addEventListener('click', function () {
-            document.body.classList.remove('nav-open');
-            toggle.setAttribute('aria-expanded', 'false');
-          });
-        });
-      }
-    })();
-  </script>
+  <script src="script.js" defer></script>
+  <script src="founder-chart.js" defer></script>
   <script src="prefetch.js" defer></script>
 </body>
 </html>

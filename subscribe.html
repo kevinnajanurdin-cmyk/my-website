@@ -65,6 +65,37 @@
         <span></span><span></span><span></span>
       </button>
     </div>
+    <!-- Auto-hiding menu bar: slides away on a deliberate downward scroll,
+         returns on the first upward nudge, and never hides near the top of the
+         page or while the mobile menu (which hangs off the header) is open.
+         Inline INSIDE the header on every page ON PURPOSE: build-theme.ps1
+         cuts WP's header.php from index.html at the first </header>, and the
+         sub-page templates are self-contained with their own header markup —
+         so each page's copy is its only copy, statically and on WordPress. -->
+    <script>
+    (function () {
+      var header = document.querySelector(".site-header");
+      if (!header) return;
+      var lastY = window.pageYOffset || 0;
+      var acc = 0; // signed scroll accumulator; resets when direction flips
+      window.addEventListener("scroll", function () {
+        var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+        var d = y - lastY;
+        lastY = y;
+        if (document.body.classList.contains("nav-open")) {
+          header.classList.remove("nav-hidden"); acc = 0; return;
+        }
+        if (y <= 90) { header.classList.remove("nav-hidden"); acc = 0; return; }
+        if (d > 0) {        // downward: hide only after ~140px of intent
+          acc = Math.max(0, acc) + d;
+          if (acc > 140) header.classList.add("nav-hidden");
+        } else if (d < 0) { // upward: any real nudge brings it back
+          acc = Math.min(0, acc) + d;
+          if (acc < -8) header.classList.remove("nav-hidden");
+        }
+      }, { passive: true });
+    })();
+    </script>
   </header>
 
   

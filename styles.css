@@ -260,8 +260,14 @@ body.home .coverflow-pin { height: calc(100vh - 35px); }
   backdrop-filter: saturate(140%) blur(12px);
   border-bottom: 1px solid var(--line);
   color: var(--ink);
-  transition: background-color .35s ease, border-color .35s ease, color .35s ease;
+  transition: background-color .35s ease, border-color .35s ease, color .35s ease,
+              transform .32s ease;
 }
+/* Auto-hiding menu bar (2026-09-15): the inline script inside each page's
+   <header> adds this while the visitor scrolls down and removes it on the
+   first upward nudge. Transform, not top/display: it slides on the compositor
+   and the sticky positioning underneath is untouched. */
+.site-header.nav-hidden { transform: translateY(-100%); }
 body.over-hero .site-header {
   background: var(--dark);
   backdrop-filter: none;
