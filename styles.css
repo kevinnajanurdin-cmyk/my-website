@@ -2983,6 +2983,27 @@ body.nav-open.over-hero .header-cta {
 @media (prefers-reduced-motion: reduce) {
   .js [data-reveal] { opacity: 1 !important; transform: none !important; transition: none; }
 }
+/* A BUTTON that also reveals has to get its hover transition back. `transition`
+   is one property, not a list that merges, so the rule above does not add the
+   reveal legs to .btn's `all .2s ease` — it REPLACES it, and every colour on the
+   button then snaps between states with no fade at all. The user spotted it on
+   the Founder-led Advantage "Invest now": "abrupt compared to the menu bar
+   button", which is exactly right, because the header CTA does not reveal and so
+   keeps its .2s.
+   Restated here with both sets of legs. The reveal legs must stay identical to
+   the rule above — same .7s, same curve, same var(--d) — or a revealing button
+   would arrive differently from everything around it.
+   Specificity is (0,3,0) against that rule's (0,2,0), so this wins wherever it
+   sits in the file; it is kept next to the rule it repairs rather than beside
+   the button, because the trap belongs to [data-reveal], not to any one page.
+   Only one button on the site reveals today. This is for the next one. */
+.js .btn[data-reveal] {
+  transition: opacity .7s cubic-bezier(.2,.7,.2,1) var(--d, 0s),
+              transform .7s cubic-bezier(.2,.7,.2,1) var(--d, 0s),
+              background-color .2s ease,
+              border-color .2s ease,
+              color .2s ease;
+}
 
 /* The intro video reveals from a blur, but the generic [data-reveal].is-visible
    rule above only restores opacity/transform — so the blur(10px) on .hero-video
