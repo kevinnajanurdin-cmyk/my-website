@@ -2496,7 +2496,11 @@ body.nav-open.over-hero .header-cta {
 /* ─── Key facts (editorial snapshot) ───────────────────── */
 .fund-kf-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* Four cells since 2026-09-18 (the Zenith badge joined the three figures).
+     auto-fit rather than repeat(4): between this section's full width and the
+     560px stack, four fixed columns squeeze the labels onto two lines each —
+     auto-fit lets the row break to 2x2 through that band instead. */
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   border-top: 1px solid var(--ink);
   border-bottom: 1px solid var(--line);
 }
@@ -2507,6 +2511,43 @@ body.nav-open.over-hero .header-cta {
   gap: 16px;
 }
 .fund-kf-stat + .fund-kf-stat { border-left: 1px solid var(--line); }
+/* The badge cell — no label, and centred rather than top-aligned. Pinning the
+   mark to the sibling figures' height did align all four labels, but at 52px
+   the badge's OWN type ("Zenith", "APPROVED") became unreadable, and a
+   certification mark that says what it is does not need a "Rating" caption
+   under it. So it gets a legible size and sits centred in the cell instead.
+   Sized by HEIGHT with width:auto so the aspect ratio of a third party's mark
+   is never altered. */
+.fund-kf-stat--rating { justify-content: center; gap: 10px; }
+/* The rating's disclaimer link ("Disclaimer", pointing at the Zenith section
+   of the disclaimer page). Deliberately quieter than .fund-kf-label — this is
+   a compliance pointer, not a caption, so it should be findable without
+   competing with the figures. Underlined because it is the only link in this
+   row and nothing else marks it as one. */
+.fund-kf-rating-note {
+  align-self: start;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: .02em;
+  color: var(--ink-mute);
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
+}
+.fund-kf-rating-note:hover {
+  color: var(--ink);
+  text-decoration-color: currentColor;
+}
+.fund-kf-rating {
+  display: block;
+  height: clamp(58px, 6vw, 84px);
+  width: auto;
+  /* Essential, not decoration: .fund-kf-stat is a COLUMN flex container, so
+     the default align-items:stretch pulls a replaced element out to the full
+     cell width and squashes the mark flat. The text figures beside it show no
+     symptom, which is what makes this easy to miss. */
+  align-self: start;
+}
 .fund-kf-figure {
   font-family: var(--serif);
   font-weight: 500;

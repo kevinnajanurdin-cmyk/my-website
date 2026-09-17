@@ -235,6 +235,18 @@
             <span class="fund-kf-figure">1.5</span>
             <span class="fund-kf-label">Beta^</span>
           </div>
+          <!-- Ratings badge as a fourth column. It lives HERE rather than in
+               the footer because the mark's wordmark is black: on this light
+               section it reads, on the navy footer it vanished. The onerror
+               removes the whole cell if the asset is ever missing, so the row
+               falls back to three columns instead of showing a broken icon. -->
+          <div class="fund-kf-stat fund-kf-stat--rating">
+            <img class="fund-kf-rating" src="assets/ratings/zenith.png"
+                 alt="Zenith Investment Partners — Approved rating"
+                 width="120" height="92" loading="lazy" decoding="async"
+                 onerror="this.closest('.fund-kf-stat').remove()" />
+            <a class="fund-kf-rating-note" href="/disclaimer/#zenith-rating">Disclaimer</a>
+          </div>
         </div>
 
         <!-- Descriptive detail -->
@@ -491,7 +503,7 @@
       </svg>
       <div class="container footer-inner">
         <div class="footer-brand">
-          <p>Founder-led global equities.<br/>Sydney, Australia.</p>
+          <p>Founder-led global equities.<br/>Sydney, Australia.</p>
         </div>
         <div class="footer-links">
           <div>
