@@ -17,12 +17,49 @@
   // WHITE, for the founder-led series — its line, the wash beneath it, and its
   // 10x figure and label. It carried brand Ivory ("222,214,201") until
   // 2026-09-09, so the fund's series read warm against a neutral market; the
-  // user asked for white, so the chart is now monochrome and the two series
+  // user asked for white, so the chart is monochrome and the two series
   // separate by WEIGHT and stroke width instead of by hue.
   // That makes the alpha ladder below load-bearing rather than decorative:
   // with the hue gone it is the only thing telling the two series apart, so
   // every FUND alpha must stay ABOVE BENCH_A (0.72). See FUND_LABEL_A.
+  // WHITE, and it must stay light. A light clay was tried on 2026-09-18 and
+  // rejected; brand terracotta #C25332 cannot replace it here, because the
+  // block below requires every FUND value to composite BRIGHTER than BENCH_A's
+  // 9.06:1 and terracotta is 3.59:1 on this navy — it would make the fund's
+  // own series the DIMMER of the two and push the 12px "Founder-led Stocks"
+  // label and its small "x" back under AA, undoing the fix recorded below.
+  // The band's TITLE carries the terracotta instead (see .odds-head
+  // .section-title), where 36px+ display type clears AA-large.
   var FUND = "255,255,255";
+  // The founder-led LINE and the wash beneath it — soft coral #E07A55, given
+  // by the user as a swatch and settled 2026-09-18, after brand terracotta
+  // #C25332 read as "red, a negative colour" and an orange "Ember" #D4752E was
+  // tried in between. Deliberately NOT applied to this series' figure, "x" or
+  // label: those stay FUND white, so the tint sits on the graphics and the
+  // type stays neutral.
+  // THE LESSON, measured: this shade is at hue 16°, CLOSER to red than the
+  // ember it replaced (26°) and all but identical to the terracotta it
+  // replaced (14°). What makes it read as warm rather than negative is not
+  // hue rotation at all — it is lightness (88% value vs terracotta's 76%) and
+  // desaturation (62% vs 74%). So if this ever needs retuning, lighten and
+  // soften before rotating toward gold; rotation changes the colour's family,
+  // lightness changes its character.
+  // It is also 5.56:1 on this navy against terracotta's 3.59:1, clearing the
+  // 4.5:1 AA bar for body text that terracotta never could — the same lift in
+  // lightness buys that for free.
+  // It is still DIMMER than the benchmark's 9.06:1, so the 2.5px-vs-2px weight
+  // and the hue are what separate the two series, not brightness.
+  // Two LIGHTER candidates were tried on this stroke AND its wash earlier the
+  // same day and both reverted: a light clay #F5D3C0 and brand ivory. Each
+  // measured ~11:1 and did put the fund's line on top of that ranking, but
+  // neither tinted the wash — source warmth on the red-to-blue axis is +139
+  // here against clay's +53 and ivory's +21, and below ~+50 nothing survives a
+  // .16 fill. Don't re-litigate this on contrast grounds alone.
+  // LOCAL TO THIS CHART: --terracotta in styles.css is untouched and still
+  // #C25332, so the site now carries two warm accents by choice. If this one is
+  // ever promoted site-wide, note that the About headline's pen underline BAKES
+  // its hex into an SVG data-URI and will NOT follow the token.
+  var FUND_LINE = "224,122,85";
   // Line and end figure. Composite to rgb(236,237,238) / 14.07:1 and
   // rgb(243,244,245) / 14.97:1 on the navy, against the benchmark line's
   // 9.06:1 — a 1.55:1 separation between the two lines, up from the 1.09:1 the
@@ -69,6 +106,12 @@
   var N = F.length;
   var Y_MIN = 2006, Y_MAX = 2026;
   var V_MAX = 1200000;
+  // Series high, used to anchor the top of the outperformance wash.
+  var F_MAX = (function () {
+    var m = 0;
+    for (var i = 0; i < F.length; i++) if (F[i] > m) m = F[i];
+    return m;
+  })();
   var GRID_STEPS = [100000, 300000, 500000, 700000, 900000, 1100000];
 
   var PAD_L = 64, PAD_R = 130, PAD_T = 24, PAD_B = 36;
@@ -185,9 +228,32 @@
       ctx.lineTo(xAt(YR[k]), yAt(M[k]));
     }
     ctx.closePath();
-    var grad = ctx.createLinearGradient(0, chartT, 0, chartB);
-    grad.addColorStop(0, "rgba(" + FUND + ",0.09)");
-    grad.addColorStop(1, "rgba(" + FUND + ",0.015)");
+    // Anchor the wash to the BAND, not the plot box: it starts at the founder
+    // line's own peak rather than at chartT, so the strong end of the ramp sits
+    // exactly where the band's top edge is instead of being spent on empty
+    // space above it. F_MAX is the series high, so yAt() of it is that peak.
+    var grad = ctx.createLinearGradient(0, yAt(F_MAX), 0, chartB);
+    // The outperformance band, washed in the LINE's terracotta rather than
+    // white (2026-09-18), so the band and the line bounding it are one colour.
+    // Alphas are up from the old white .09/.015 because terracotta is a
+    // mid-dark colour where white was not: at the old values the same wash
+    // DARKENED the band's green and blue channels instead of lifting it, so it
+    // read as a shadow rather than a tint. Unlike a blurred shadow, a flat
+    // gradient fill applies its alpha at face value, so the hue survives here
+    // where it would not in a glow.
+    // A LIGHTER clay #F5D3C0 wash was tried here the same day and reverted:
+    // it lifted the band like the old white one, but measured only -17 on the
+    // red-to-blue axis against the navy's -24, where this reaches -4. Raising
+    // its alpha did not help — a light colour spends alpha on lightness before
+    // hue, so at .24 it gained 3 points of warmth and went visibly pale. The
+    // user chose the stronger tint.
+    // Three stops, not two, and the ramp now runs all the way to zero: a
+    // straight .20 -> .03 over the whole plot box put most of the band in the
+    // weak tail, so it read as a flat tint rather than a fade. The mid stop at
+    // 45% keeps the top half saturated and drops the rest away quickly.
+    grad.addColorStop(0, "rgba(" + FUND_LINE + ",0.30)");
+    grad.addColorStop(0.45, "rgba(" + FUND_LINE + ",0.12)");
+    grad.addColorStop(1, "rgba(" + FUND_LINE + ",0)");
     ctx.fillStyle = grad;
     ctx.fill();
 
@@ -198,7 +264,7 @@
     drawLine(M);
 
     // ── Founder line ──
-    ctx.strokeStyle = "rgba(" + FUND + "," + FUND_A + ")";
+    ctx.strokeStyle = "rgba(" + FUND_LINE + "," + FUND_A + ")";
     ctx.lineWidth = 2.5;
     drawLine(F);
 

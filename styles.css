@@ -909,6 +909,12 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   text-align: center;
 }
 .odds-head .section-title {
+  /* White. Three accent shades were tried here on 2026-09-18 — a pale clay
+     tint, brand terracotta, then brand ivory — and all three were rejected;
+     the title stays white and the band's warm accent lives on the chart's
+     founder-led LINE instead (FUND_LINE in founder-chart.js).
+     Scoped to .odds-head: .section-title is shared with contact, disclaimer,
+     subscribe and the quarterly update, none of which should pick this up. */
   color: var(--on-dark);
   margin: 0 0 24px;
   font-size: clamp(36px, 4.4vw, 56px);
