@@ -625,14 +625,20 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
      baked in as a literal here. If --terracotta ever moves, this hex must be
      changed by hand — it will not follow. */
   text-decoration-line: none;
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 10' preserveAspectRatio='none'><path fill='%23c25332' d='M2,6.2 C90,4.4 200,3.6 298,4.2 L298,5.0 C200,5.4 90,6.6 2,6.9 Z'/></svg>");
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 14' preserveAspectRatio='none'><path fill='%23c25332' d='M4,8.23 C20,8.30 38,8.36 55,8.40 C74,8.40 93,8.39 110,8.40 C133,8.52 156,8.68 175,8.80 C194,8.88 213,8.90 230,8.90 C244,8.84 257,8.76 268,8.65 C279,8.52 289,8.37 296,8.20 L296,8.50 C289,8.72 279,9.05 268,9.35 C257,9.60 244,9.87 230,10.10 C213,10.40 194,10.60 175,10.70 C156,10.74 133,10.73 110,10.70 C93,10.50 74,10.22 55,9.90 C38,9.45 20,9.00 4,8.57 Z'/></svg>");
   background-repeat: no-repeat;
-  /* Wider than the phrase, pulled left by half the excess, so the stroke
-     overshoots slightly at both ends rather than stopping dead on the last
-     letter. Half the overshoot it first carried, and a finer stroke: at .26em
-     with a bigger overhang the mark read as a marker scrawl. */
-  background-position: -.08em 100%;
-  background-size: calc(100% + .16em) .22em;
+  /* ASYMMETRIC overshoot, .10em before the phrase and .24em past it, so the
+     stroke enters just under the first letter and flies out beyond the last —
+     a pen leaving the page, not a rule stopping dead on both letters. An even
+     overhang is what makes a mark read as a rule however it is shaped.
+     .34em of height, up from .22em: the box height is what the thickness
+     modulation has to live inside, and at .22em the nib's swell peaked at
+     ~1.2px while its taper was a tenth of that — the variation was there in
+     the path and invisible on screen. The earlier "marker scrawl" rejection
+     was an even .26em stroke with a big overhang; this is taller at its middle
+     and finer at its ends than that one ever was. */
+  background-position: -.12em 100%;
+  background-size: calc(100% + .24em) .34em;
   -webkit-box-decoration-break: clone;
           box-decoration-break: clone;
 }
@@ -5897,9 +5903,47 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
      hero, so the hero must stay its containing block or the oversized glow
      escapes overflow:hidden and widens the page. Not sticky here — the curtain
      effect is desktop only. */
-  /* The foot is deep enough to give the water a band of its own below the
-     copy — stacked, there is no column beside the text to put it in. */
-  .fla-hero { height: auto; min-height: 0; position: relative; padding: clamp(88px, 15vh, 138px) 0 clamp(200px, 62vw, 280px); }
+  /* Stacked: the copy on a pale ground, the photograph as a band beneath it.
+     The foot is deep enough to give the water a band of its own — stacked,
+     there is no column beside the text to put it in.
+     THREE faults compounded here before 2026-09-21, and the first is the one
+     that matters:
+     1. `aspect-ratio: 3 / 1` was never released at this width, so the hero kept
+        a DEFINITE height derived from its width. The copy is ~420px tall on a
+        phone and the box resolved to 368px, and `overflow: hidden` ate the
+        difference — the lede lost its last line and a half, mid-sentence. Any
+        definite height on a stacked hero will do this; `height: auto` alone
+        cannot save it while a ratio is still in force.
+     2. `.fla-hero-lede`'s `max-width: min(46%, 560px)` is a DESKTOP measure: it
+        exists to hold the copy inside the photograph's empty left region. There
+        is no left region once this stacks, and 46% of a 375px phone is a 150px
+        ribbon of text running 333px down the page.
+     3. `cover` on a near-square box scales the 2.81:1 picture to about 1030px
+        wide and crops to its middle — which is exactly where the drop is, so
+        the ripples sat directly behind the copy.
+     The fix is the one the CTA bands already use at this width: flat ground for
+     the words, picture in a pseudo-element at the foot, faded in. */
+  .fla-hero {
+    aspect-ratio: auto; height: auto; min-height: 0; max-height: none;
+    position: relative;
+    /* Sampled from the picture's upper region, so the ground the copy sits on
+       and the top of the band below it are the same tone and the fade has
+       nothing to betray. */
+    background: #e9eff7;
+    padding: clamp(48px, 8vh, 96px) 0 clamp(170px, 46vw, 260px);
+  }
+  .fla-hero::after {
+    content: ""; position: absolute; inset: auto 0 0 0; z-index: 0;
+    height: clamp(150px, 42vw, 240px);
+    /* `150% auto`, not `cover`: at a phone's width cover draws the whole 2103px
+       frame into 390px and the drop becomes a thumbnail. Same reasoning and the
+       same numbers as the CTA bands' mobile strip — keep the two in step. */
+    background: url("assets/scenes/droplet.png") right 72% / 150% auto no-repeat;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 34%);
+    mask-image: linear-gradient(180deg, transparent 0, #000 34%);
+  }
+  /* Full measure: see fault 2 above. */
+  .fla-hero-lede { max-width: none; }
   .fla-stage {
     --fx: 50%; --fy: 87%;
     --pool: min(108vw, 560px);
@@ -5930,7 +5974,10 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
     aspect-ratio: auto; height: auto; min-height: 0; max-height: none;
     position: relative; isolation: isolate;
     background: #dbe4ef;
-    padding-bottom: clamp(170px, 44vw, 260px);
+    /* Down from clamp(170px, 44vw, 260px) — the band was too tall, and what
+       made it tall was empty water: the strip was showing ~50px of blank
+       surface above the bead before any ink arrived. See the ::before. */
+    padding-bottom: clamp(126px, 34vw, 205px);
   }
   .fla-say-band p { max-width: none; }
   .fla-say-band::before {
@@ -5939,14 +5986,27 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
        a left/right pair does not stretch — width wins and the box stays pinned
        left, which left the strip 78% wide with bare ground beside it. */
     width: 100%;
-    height: clamp(150px, 40vw, 240px);
+    /* Shorter, and the height went hand in hand with the position below: at
+       40vw the window opened at 18% of the picture, so the first quarter of the
+       strip was blank water before the bead appeared. */
+    height: clamp(110px, 31vw, 190px);
     /* 150%, not cover. At a phone's width `cover` draws the whole 2103px frame
        into 390px and the droplet is a thumbnail; zooming to one and a half
        screens brings it back to a legible size, and the crop still lands on the
-       picture's empty left. */
-    background: url("assets/scenes/droplet.png") right 72% / 150% auto no-repeat;
-    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 34%);
-    mask-image: linear-gradient(180deg, transparent 0, #000 34%);
+       picture's empty left.
+       65% rather than 72%: with a shorter strip the visible window is a smaller
+       slice of the picture, and this is where it has to sit to open just above
+       the bead (image y 28%) instead of well above it. The three numbers here —
+       strip height, position, and the fade below — are one calculation, not
+       three preferences: the fade has to land ON the last of the empty water,
+       so that what it dissolves is blank surface and the ink arrives already at
+       full strength. Move one and re-derive the others. */
+    background: url("assets/scenes/droplet.png") right 65% / 150% auto no-repeat;
+    /* 22%, down from 34%: the fade is now sized to the ~30px of water left above
+       the bead. At 34% of the shorter strip it would have reached into the drop
+       itself and left the bead half-transparent. */
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 22%);
+    mask-image: linear-gradient(180deg, transparent 0, #000 22%);
   }
   /* The left-hand wash goes with the side-by-side layout it was drawn for. Once
      the picture is a strip UNDER the copy there is no left to lighten, and a
@@ -5967,4 +6027,89 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   .fla-plats li > a { padding: 12px 10px; }
   .fla-plats img { max-height: 24px; }
   .fla-h2, .fla-say { max-width: none; }
+
+  /* ── Phone type-and-rhythm pass (2026-09-21) ─────────────────────────
+     Stacked, every act is the same full-width column, so size differences
+     that read as HIERARCHY on desktop (22px prose in wide measures against
+     17px in the three-across grids) read as INCONSISTENCY here — audited at
+     390px, running copy arrived in four sizes: 17, 20 and 22px, with ledes
+     at 16 and 22. One body size now: 17px/1.65, matching what .fla-reasons
+     and .fla-proof already used. THE SIZE WENT ROUND A FULL LOOP before
+     settling here: this pass first unified down to 17, the user asked for
+     larger ("I like the font, especially body font, to be larger"), the
+     whole scale went up to 19/20, and after living with it through the
+     spacing rounds the user reverted — "actually revert to smaller font".
+     17 is the CONSIDERED answer, not the default; don't walk this loop
+     again in either direction without being asked.
+     The deliberate exceptions: .fla-say ledes and the CTA-band sentence a
+     step up at 18px, the hero lede and the quiet closing act at 16px, and
+     the 3.3% stat line untouched on its 24px clamp floor — it is the page's
+     claim, and 24px is also what its accent-contrast arithmetic has always
+     been quoted against. */
+  .fla-cols p,
+  .fla-spec-copy .fla-say--tight,
+  .fla-outperf-copy p,
+  .fla-etf-copy p {
+    font-size: 17px; line-height: 1.65;
+  }
+  .fla-say { font-size: 18px; }
+  .fla-say-band p { font-size: 18px; }
+
+  /* Paragraph rhythm in the Why act had TWO sources stacked: .fla-cols'
+     18px grid gap plus each p's 22px margin-bottom = 40px holes between
+     paragraphs of 28px lines. The margin is the desktop mechanism (shared
+     with the other -copy blocks); stacked, the GAP is the single source. */
+  .fla-cols { gap: 20px; }
+  .fla-cols p { margin-bottom: 0; }
+
+  /* Desktop act padding is 114-135px a side at this height, which stacks
+     ~250px of blank between consecutive acts on a phone. The IDs must be
+     listed — #fla-why and #fla-advisers carry their own ID-specificity
+     paddings that a bare .fla-act override can never beat. */
+  #fla-why, #fla-spec, #fla-advisers, #fla-proof, #fla-etf, #fla-outperf, #fla-team {
+    padding-top: clamp(52px, 14vw, 72px);
+    padding-bottom: clamp(52px, 14vw, 72px);
+  }
+  .fla-pds { padding: clamp(52px, 14vw, 72px) 0; }
+
+  /* Intra-act gaps sized for 844px viewports, cut to suit a phone's. */
+  .fla-proofs { margin-top: 40px; row-gap: 40px; }
+  .fla-reasons { margin-top: 38px; }
+
+  /* The rhythm problem the user flagged (red mark under the "Why" heading) was
+     FLATNESS: heading-to-body measured ~38px visual against ~33px between
+     paragraphs — near-identical steps, so nothing grouped. Two ways to break a
+     tie like that, and the user picked between them: binding the heading TIGHT
+     to its copy (18px, ~26 visual) was tried first and rejected — "spacing too
+     tight" — so the hierarchy runs the other way, with the heading gap clearly
+     LARGER than the paragraph gap instead of clearly smaller. ~42 visual against
+     the paragraphs' ~33, under the ~55px act padding: three distinct steps, all
+     generous. This page's user consistently prefers air and size over density —
+     same correction as the 17px->19px type pass. Don't re-tighten. */
+  .fla-h2 { margin-bottom: 34px; }
+
+  /* Tidy rag, not justification. The brief was "neat and clean", and at this
+     measure the options were tried in order:
+     - ragged (the default) — the user called it messy;
+     - justify + hyphens:auto — straight edge, but the user called the line-end
+       dashes ugly and hard to read, and they were load-bearing: at ~32
+       characters a line, justification WITHOUT hyphens pays for its straight
+       edge with rivers of white inside the lines, which is worse than either.
+     So the straight edge is off the table at this measure — a phone column
+     simply cannot justify cleanly without breaking words — and the neatness
+     comes from optimising the rag instead. `text-wrap: pretty` re-breaks the
+     whole paragraph to even out line lengths, kill one-word last lines and
+     avoid extreme steps between neighbouring lines; no dash, no river, and
+     browsers without it just keep the ordinary greedy rag. The codebase
+     already uses it for exactly this situation (.fla-spec-copy p, desktop).
+     `balance` is the wrong tool here: it is capped around six lines and
+     shortens EVERY line to match the longest need, which reads as a narrower
+     column, not a neater one. */
+  .fla-cols p,
+  .fla-spec-copy .fla-say--tight,
+  .fla-outperf-copy p:not(.fla-stat),
+  .fla-etf-copy p,
+  .fla-reasons p {
+    text-wrap: pretty;
+  }
 }
