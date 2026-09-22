@@ -3164,6 +3164,10 @@ body.nav-open.over-hero .header-cta {
 
 .principle-title {
   margin: 0 0 clamp(12px, 1.5vw, 18px);
+  /* SANS on purpose, though every other heading on the site is serif: tried in
+     Riccione on 2026-09-21 and reverted within the minute. The three cards
+     read as a technical statement rather than display copy, and the serif
+     softened that. Don't "fix" this to match .section-title. */
   font-family: var(--sans);
   font-weight: 500;
   font-size: clamp(22px, 2vw, 30px);
@@ -5974,10 +5978,12 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
     aspect-ratio: auto; height: auto; min-height: 0; max-height: none;
     position: relative; isolation: isolate;
     background: #dbe4ef;
-    /* Down from clamp(170px, 44vw, 260px) — the band was too tall, and what
-       made it tall was empty water: the strip was showing ~50px of blank
-       surface above the bead before any ink arrived. See the ::before. */
-    padding-bottom: clamp(126px, 34vw, 205px);
+    /* Cut twice at the user's request — first from clamp(170px, 44vw, 260px),
+       then again when the once-trimmed band still read tall at ~520px wide:
+       every term here scales with vw, so the water the first cut left (~25% of
+       the strip) grows in absolute pixels with the viewport, and what passed at
+       390 came back at 520. See the ::before. */
+    padding-bottom: clamp(112px, 31vw, 190px);
   }
   .fla-say-band p { max-width: none; }
   .fla-say-band::before {
@@ -5986,27 +5992,24 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
        a left/right pair does not stretch — width wins and the box stays pinned
        left, which left the strip 78% wide with bare ground beside it. */
     width: 100%;
-    /* Shorter, and the height went hand in hand with the position below: at
-       40vw the window opened at 18% of the picture, so the first quarter of the
-       strip was blank water before the bead appeared. */
-    height: clamp(110px, 31vw, 190px);
+    /* Cut twice; see the padding note on the band. The strip height, the
+       position and the fade are ONE calculation, not three preferences: the
+       window has to open just far enough above the bead (image y 42%) that the
+       fade dissolves ONLY blank water and the ink arrives at full strength.
+       Move one and re-derive the others.
+       This second cut opens the window at ~35% of the picture, ~4vw above the
+       bead, and shortens the fade to 12% to match — the fade can afford to be
+       short here because it joins two near-identical pale blues (the flat
+       ground and the picture's mid-water), so there is no seam for a longer
+       ramp to hide. At the first cut's 22% it would now reach the bead. */
+    height: clamp(100px, 28vw, 170px);
     /* 150%, not cover. At a phone's width `cover` draws the whole 2103px frame
        into 390px and the droplet is a thumbnail; zooming to one and a half
        screens brings it back to a legible size, and the crop still lands on the
-       picture's empty left.
-       65% rather than 72%: with a shorter strip the visible window is a smaller
-       slice of the picture, and this is where it has to sit to open just above
-       the bead (image y 28%) instead of well above it. The three numbers here —
-       strip height, position, and the fade below — are one calculation, not
-       three preferences: the fade has to land ON the last of the empty water,
-       so that what it dissolves is blank surface and the ink arrives already at
-       full strength. Move one and re-derive the others. */
-    background: url("assets/scenes/droplet.png") right 65% / 150% auto no-repeat;
-    /* 22%, down from 34%: the fade is now sized to the ~30px of water left above
-       the bead. At 34% of the shorter strip it would have reached into the drop
-       itself and left the bead half-transparent. */
-    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 22%);
-    mask-image: linear-gradient(180deg, transparent 0, #000 22%);
+       picture's empty left. */
+    background: url("assets/scenes/droplet.png") right 73% / 150% auto no-repeat;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 12%);
+    mask-image: linear-gradient(180deg, transparent 0, #000 12%);
   }
   /* The left-hand wash goes with the side-by-side layout it was drawn for. Once
      the picture is a strip UNDER the copy there is no left to lighten, and a
