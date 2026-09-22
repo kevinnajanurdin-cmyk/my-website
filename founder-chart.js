@@ -31,35 +31,31 @@
   // The band's TITLE carries the terracotta instead (see .odds-head
   // .section-title), where 36px+ display type clears AA-large.
   var FUND = "255,255,255";
-  // The founder-led LINE and the wash beneath it — soft coral #E07A55, given
-  // by the user as a swatch and settled 2026-09-18, after brand terracotta
-  // #C25332 read as "red, a negative colour" and an orange "Ember" #D4752E was
-  // tried in between. Deliberately NOT applied to this series' figure, "x" or
-  // label: those stay FUND white, so the tint sits on the graphics and the
-  // type stays neutral.
-  // THE LESSON, measured: this shade is at hue 16°, CLOSER to red than the
-  // ember it replaced (26°) and all but identical to the terracotta it
-  // replaced (14°). What makes it read as warm rather than negative is not
-  // hue rotation at all — it is lightness (88% value vs terracotta's 76%) and
-  // desaturation (62% vs 74%). So if this ever needs retuning, lighten and
-  // soften before rotating toward gold; rotation changes the colour's family,
-  // lightness changes its character.
-  // It is also 5.56:1 on this navy against terracotta's 3.59:1, clearing the
-  // 4.5:1 AA bar for body text that terracotta never could — the same lift in
-  // lightness buys that for free.
-  // It is still DIMMER than the benchmark's 9.06:1, so the 2.5px-vs-2px weight
-  // and the hue are what separate the two series, not brightness.
-  // Two LIGHTER candidates were tried on this stroke AND its wash earlier the
-  // same day and both reverted: a light clay #F5D3C0 and brand ivory. Each
-  // measured ~11:1 and did put the fund's line on top of that ranking, but
-  // neither tinted the wash — source warmth on the red-to-blue axis is +139
-  // here against clay's +53 and ivory's +21, and below ~+50 nothing survives a
-  // .16 fill. Don't re-litigate this on contrast grounds alone.
-  // LOCAL TO THIS CHART: --terracotta in styles.css is untouched and still
-  // #C25332, so the site now carries two warm accents by choice. If this one is
-  // ever promoted site-wide, note that the About headline's pen underline BAKES
-  // its hex into an SVG data-URI and will NOT follow the token.
-  var FUND_LINE = "224,122,85";
+  // The founder-led LINE and the wash beneath it — salmon #FAA08A, sampled
+  // from a reference the user supplied on 2026-09-22 and settled there.
+  // Deliberately NOT applied to this series' figure, "x" or label: those stay
+  // FUND white, so the tint sits on the graphics and the type stays neutral.
+  // It is in the BRAND TERRACOTTA FAMILY by construction, not by eye: hue 12°
+  // against terracotta's 14°, the same colour rotated barely two degrees, then
+  // lifted from 76% to 98% value and softened from 74% to 45% saturation. That
+  // is the whole recipe for making terracotta work on a dark ground — value
+  // and saturation, never hue. Rotating toward orange was tried (Ember, 26°)
+  // and moved away from the brand for no gain.
+  // It also lands at 8.21:1 on this navy against the benchmark line's
+  // effective 8.31:1 — the two series are finally EQUALS in brightness and
+  // separate purely by hue, which is what the chart wants: no reading of which
+  // line "matters more" is smuggled in by contrast. Everything before this was
+  // dimmer than the benchmark (terracotta 3.59:1, coral 5.56:1, brand teal
+  // 2.34:1) or brighter but hueless (clay and ivory, ~11:1).
+  // Shades tried on this stroke and reverted, in order: brand terracotta
+  // #C25332, light clay #F5D3C0, brand ivory, orange "Ember" #D4752E, coral
+  // #E07A55, true teal #4CC3B5, brand teal #3D5C73 (2.34:1 — a LIGHT-ground
+  // colour that recedes into this navy).
+  // LOCAL TO THIS CHART: --terracotta in styles.css is untouched at #C25332,
+  // and if any accent here is ever promoted site-wide, note that the About
+  // headline's pen underline BAKES its hex into an SVG data-URI and will NOT
+  // follow the token.
+  var FUND_LINE = "250,160,138";
   // Line and end figure. Composite to rgb(236,237,238) / 14.07:1 and
   // rgb(243,244,245) / 14.97:1 on the navy, against the benchmark line's
   // 9.06:1 — a 1.55:1 separation between the two lines, up from the 1.09:1 the

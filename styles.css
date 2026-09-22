@@ -91,7 +91,15 @@
      pull-quote rules, list numerals, the ticker bar and the discipline ticks,
      plus the surviving constellation dots. The Owners Mindset panel was
      terracotta until 2026-09-08 and is now --accent-deep.
-     Never running body text on the light page: it is 4.2:1 there, under AA. */
+     Never running body text on the light page: it is 4.2:1 there, under AA.
+     HOLD THIS VALUE. On 2026-09-22 it was warmed to #d06648 (a quarter of the
+     way toward the chart's salmon) and then to the salmon #FAA08A itself, and
+     both were reverted. The reason is the GROUND, not the shade: these marks
+     sit on the near-white page, where warming a colour LOSES contrast —
+     #d06648 measured 3.45:1 and the salmon 1.87:1, against this value's
+     4.28:1. The chart's founder line is the opposite case, on navy, where the
+     same salmon reaches 8.21:1; it carries its own hex in founder-chart.js and
+     is NOT meant to be unified with this token. */
   --terracotta: #c25332;
   --dark: #171f2f;
   /* Text on dark grounds is the PAGE GROUND, not pure white (2026-09-10). The
