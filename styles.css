@@ -91,38 +91,27 @@
      pull-quote rules, list numerals, the ticker bar and the discipline ticks,
      plus the surviving constellation dots. The Owners Mindset panel was
      terracotta until 2026-09-08 and is now --accent-deep.
-     SALMON #FAA08A SITE-WIDE from 2026-09-23, replacing brand terracotta
-     #C25332 by decision of the user. The name is kept so the ~16 consumers
-     did not all have to change; read it as "the warm accent".
-     Salmon is terracotta's own hue (12° vs 14°) lifted to 98% value and
-     softened to 45% saturation, which is why it is 8.21:1 on the navy bands
-     but only 1.87:1 on the near-white page (terracotta was 3.59:1 / 4.28:1).
-     So the marks on LIGHT grounds are now faint — a known, accepted state
-     while the user reviews it, not an oversight. If a light-ground mark needs
-     firming, give THAT consumer a deeper value locally; do not pull this
-     token back down, or the dark-ground marks lose what they gained.
-     The chart's founder line in founder-chart.js carries the same hex as a
-     literal (canvas cannot read custom properties) — change both together. */
+     SALMON #FAA08A on DARK grounds, site-wide from 2026-09-23, replacing
+     brand terracotta #C25332. The name is kept so the ~16 consumers did not
+     all have to change; read it as "the warm accent on navy".
+     8.21:1 on the navy bands. Light grounds use --terracotta-on-light below.
+     This hex is ALSO a literal in places that cannot read the token — FUND_LINE
+     in founder-chart.js, the constellation glow in approach.html, and the
+     rgba() glows on the Insights pulse dots. Change all together. */
   --terracotta: #faa08a;
-  /* The same accent for LIGHT grounds: salmon's hue (12°) taken down to 90%
-     value and up to 52% saturation, so it reads as the one warm colour
-     adjusting to its ground rather than a second accent. Set 2026-09-23.
-     2.45:1 on --bg (plain salmon is 1.87:1) — under the 3:1 a mark nominally
-     needs, by the user's choice: #D16D54 (3.25:1) went out first, then
-     #DB7960 (2.83:1), then this lighter step to keep more salmon character.
-     If a thin mark (the 1px dashes, the progress bar) reads too faint, step
-     back to #DB7960 or #D16D54 rather than touching --terracotta.
-     RULE: a warm mark on a light ground uses this; on navy it uses
-     --terracotta. Which consumers are which was MEASURED (computed background
-     behind each mark in a headless render), not guessed — re-measure if a
-     section changes ground. Light: blockquote, .essay-inline-quote,
-     .fund-slash, .invest-eyebrow::after, .ins-filter::after,
-     .coverflow-progress-fill, .fla-tick, .fla-say-band .fla-inline, and the
+  /* The accent on LIGHT grounds: #D58770, terracotta's hue (14°) at 84% value
+     and 47% saturation — 2.60:1 on --bg, where plain salmon is 1.87:1. Set
+     2026-09-23 after #D16D54, #DB7960 and #E6866E were each tried here; a
+     brief pass put #D58770 on navy too, and the user moved navy back to
+     salmon. Which consumers sit on light grounds was measured, not guessed:
+     blockquote, .essay-inline-quote, .fund-slash, .invest-eyebrow::after,
+     .ins-filter::after, .coverflow-progress-fill, .fla-tick,
+     .fla-say-band .fla-inline, the "The founders we back" eyebrow, and the
      About pen underline (a baked data-URI hex — change it by hand).
-     Navy, left on salmon: .odds-rail-mark, .insight-kicker-dot, .ins-card-dot,
-     .fund-ticker-card::before, .discipline-card::before,
-     .approach-intro-eyebrow::after. */
-  --terracotta-on-light: #e6866e;
+     Navy, on --terracotta: .odds-rail-mark, .insight-kicker-dot,
+     .ins-card-dot, .fund-ticker-card::before, .discipline-card::before,
+     .approach-intro-eyebrow::after, plus the chart and constellation. */
+  --terracotta-on-light: #d58770;
   --dark: #171f2f;
   /* Text on dark grounds is the PAGE GROUND, not pure white (2026-09-10). The
      user picked this shade off a swatch; it is exactly --bg, so the two sides
@@ -659,10 +648,10 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
      CAVEAT: a data URI cannot read a CSS custom property, so the terracotta is
      baked in as a literal here. If --terracotta ever moves, this hex must be
      changed by hand — it will not follow. Moved by hand on 2026-09-23 to
-     --terracotta-on-light (now #e6866e): this sits on the light page, where
+     the accent (now #d58770) by hand — this sits on the light page, where
      plain salmon is 1.87:1. */
   text-decoration-line: none;
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 14' preserveAspectRatio='none'><path fill='%23e6866e' d='M4,8.23 C20,8.30 38,8.36 55,8.40 C74,8.40 93,8.39 110,8.40 C133,8.52 156,8.68 175,8.80 C194,8.88 213,8.90 230,8.90 C244,8.84 257,8.76 268,8.65 C279,8.52 289,8.37 296,8.20 L296,8.50 C289,8.72 279,9.05 268,9.35 C257,9.60 244,9.87 230,10.10 C213,10.40 194,10.60 175,10.70 C156,10.74 133,10.73 110,10.70 C93,10.50 74,10.22 55,9.90 C38,9.45 20,9.00 4,8.57 Z'/></svg>");
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 14' preserveAspectRatio='none'><path fill='%23d58770' d='M4,8.23 C20,8.30 38,8.36 55,8.40 C74,8.40 93,8.39 110,8.40 C133,8.52 156,8.68 175,8.80 C194,8.88 213,8.90 230,8.90 C244,8.84 257,8.76 268,8.65 C279,8.52 289,8.37 296,8.20 L296,8.50 C289,8.72 279,9.05 268,9.35 C257,9.60 244,9.87 230,10.10 C213,10.40 194,10.60 175,10.70 C156,10.74 133,10.73 110,10.70 C93,10.50 74,10.22 55,9.90 C38,9.45 20,9.00 4,8.57 Z'/></svg>");
   background-repeat: no-repeat;
   /* ASYMMETRIC overshoot, .10em before the phrase and .24em past it, so the
      stroke enters just under the first letter and flies out beyond the last —
