@@ -51,10 +51,21 @@
   // #C25332, light clay #F5D3C0, brand ivory, orange "Ember" #D4752E, coral
   // #E07A55, true teal #4CC3B5, brand teal #3D5C73 (2.34:1 — a LIGHT-ground
   // colour that recedes into this navy).
-  // LOCAL TO THIS CHART: --terracotta in styles.css is untouched at #C25332,
-  // and if any accent here is ever promoted site-wide, note that the About
-  // headline's pen underline BAKES its hex into an SVG data-URI and will NOT
-  // follow the token.
+  // A second pass on 2026-09-22 added: lifts of brand teal along its own hue,
+  // #5C82A0 (4.05:1), #7BA0BC (5.97:1), #93B4CB (7.56:1) — note #A9C4D7
+  // (9.08:1) converges on brand Sky Blue, so lightening brand teal far enough
+  // to work on this navy just arrives at Sky; and brand Sky #A8CFE5 itself
+  // (8.65:1 composited), which pairs with the benchmark as well as this salmon
+  // does. Sky is DARK-GROUND only — 1.54:1 on the light --bg.
+  // The BENCHMARK stroke was also tried in colour that day and put back to
+  // white: terracotta at .70 (2.37:1, which only balanced because brand teal
+  // was under 3:1 too) and this salmon at .72 (4.88:1) and at full (8.21:1).
+  // BENCH_A still governs the "5x", its "x" and the "All Stocks" label in
+  // every case — colour belongs on the graphics, not on that type.
+  // SITE-WIDE since 2026-09-23: --terracotta in styles.css was moved to this
+  // same salmon, so this literal and the token now match. Canvas cannot read
+  // a custom property, so if the accent moves again, change this hex AND the
+  // token AND the About pen underline's data-URI (which bakes its hex).
   var FUND_LINE = "250,160,138";
   // Line and end figure. Composite to rgb(236,237,238) / 14.07:1 and
   // rgb(243,244,245) / 14.97:1 on the navy, against the benchmark line's

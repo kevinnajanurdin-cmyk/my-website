@@ -91,16 +91,38 @@
      pull-quote rules, list numerals, the ticker bar and the discipline ticks,
      plus the surviving constellation dots. The Owners Mindset panel was
      terracotta until 2026-09-08 and is now --accent-deep.
-     Never running body text on the light page: it is 4.2:1 there, under AA.
-     HOLD THIS VALUE. On 2026-09-22 it was warmed to #d06648 (a quarter of the
-     way toward the chart's salmon) and then to the salmon #FAA08A itself, and
-     both were reverted. The reason is the GROUND, not the shade: these marks
-     sit on the near-white page, where warming a colour LOSES contrast —
-     #d06648 measured 3.45:1 and the salmon 1.87:1, against this value's
-     4.28:1. The chart's founder line is the opposite case, on navy, where the
-     same salmon reaches 8.21:1; it carries its own hex in founder-chart.js and
-     is NOT meant to be unified with this token. */
-  --terracotta: #c25332;
+     SALMON #FAA08A SITE-WIDE from 2026-09-23, replacing brand terracotta
+     #C25332 by decision of the user. The name is kept so the ~16 consumers
+     did not all have to change; read it as "the warm accent".
+     Salmon is terracotta's own hue (12° vs 14°) lifted to 98% value and
+     softened to 45% saturation, which is why it is 8.21:1 on the navy bands
+     but only 1.87:1 on the near-white page (terracotta was 3.59:1 / 4.28:1).
+     So the marks on LIGHT grounds are now faint — a known, accepted state
+     while the user reviews it, not an oversight. If a light-ground mark needs
+     firming, give THAT consumer a deeper value locally; do not pull this
+     token back down, or the dark-ground marks lose what they gained.
+     The chart's founder line in founder-chart.js carries the same hex as a
+     literal (canvas cannot read custom properties) — change both together. */
+  --terracotta: #faa08a;
+  /* The same accent for LIGHT grounds: salmon's hue (12°) taken down to 90%
+     value and up to 52% saturation, so it reads as the one warm colour
+     adjusting to its ground rather than a second accent. Set 2026-09-23.
+     2.45:1 on --bg (plain salmon is 1.87:1) — under the 3:1 a mark nominally
+     needs, by the user's choice: #D16D54 (3.25:1) went out first, then
+     #DB7960 (2.83:1), then this lighter step to keep more salmon character.
+     If a thin mark (the 1px dashes, the progress bar) reads too faint, step
+     back to #DB7960 or #D16D54 rather than touching --terracotta.
+     RULE: a warm mark on a light ground uses this; on navy it uses
+     --terracotta. Which consumers are which was MEASURED (computed background
+     behind each mark in a headless render), not guessed — re-measure if a
+     section changes ground. Light: blockquote, .essay-inline-quote,
+     .fund-slash, .invest-eyebrow::after, .ins-filter::after,
+     .coverflow-progress-fill, .fla-tick, .fla-say-band .fla-inline, and the
+     About pen underline (a baked data-URI hex — change it by hand).
+     Navy, left on salmon: .odds-rail-mark, .insight-kicker-dot, .ins-card-dot,
+     .fund-ticker-card::before, .discipline-card::before,
+     .approach-intro-eyebrow::after. */
+  --terracotta-on-light: #e6866e;
   --dark: #171f2f;
   /* Text on dark grounds is the PAGE GROUND, not pure white (2026-09-10). The
      user picked this shade off a swatch; it is exactly --bg, so the two sides
@@ -164,7 +186,7 @@ img, svg { display: block; max-width: 100%; }
 blockquote {
   margin: 40px 0;
   padding: 0 0 0 clamp(24px, 3vw, 36px);
-  border-left: 2px solid var(--terracotta);
+  border-left: 2px solid var(--terracotta-on-light);
   /* Pinned, not inherited. Pasted editor content and page-builder columns
      routinely arrive centred and inset; the house quote is flush left and
      runs the full measure of the body it sits in. */
@@ -473,10 +495,15 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   color: var(--ink-mute);
   margin: 0 0 36px;
 }
-/* "The founders we back" only. Scoped to .coverflow-head so the other four
-   .section-eyebrow instances (two more on the home page, plus fund and
-   contact) keep --ink-mute. */
-.coverflow-head .section-eyebrow { color: var(--terracotta); }
+/* "The founders we back" — --terracotta-on-light, the light-ground accent,
+   set 2026-09-23. Plain salmon was 1.87:1 here, too faint for words, so it
+   went to the --ink-mute grey briefly and then to this at the user's ask.
+   It is TEXT, and 2.45:1 is under the 4.5:1 AA asks of small text — carried
+   by being bold, tracked-out caps above a large heading, but if it ever needs
+   to pass strictly, this is the one to deepen or return to --ink-mute.
+   Scoped to .coverflow-head so the other .section-eyebrow instances keep
+   --ink-mute. */
+.coverflow-head .section-eyebrow { color: var(--terracotta-on-light); }
 .section-eyebrow.centered { text-align: center; }
 .section-eyebrow.light { color: var(--on-dark-mute); }
 
@@ -631,9 +658,11 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
      phrase gets a fresh stroke per line rather than one stretched across both.
      CAVEAT: a data URI cannot read a CSS custom property, so the terracotta is
      baked in as a literal here. If --terracotta ever moves, this hex must be
-     changed by hand — it will not follow. */
+     changed by hand — it will not follow. Moved by hand on 2026-09-23 to
+     --terracotta-on-light (now #e6866e): this sits on the light page, where
+     plain salmon is 1.87:1. */
   text-decoration-line: none;
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 14' preserveAspectRatio='none'><path fill='%23c25332' d='M4,8.23 C20,8.30 38,8.36 55,8.40 C74,8.40 93,8.39 110,8.40 C133,8.52 156,8.68 175,8.80 C194,8.88 213,8.90 230,8.90 C244,8.84 257,8.76 268,8.65 C279,8.52 289,8.37 296,8.20 L296,8.50 C289,8.72 279,9.05 268,9.35 C257,9.60 244,9.87 230,10.10 C213,10.40 194,10.60 175,10.70 C156,10.74 133,10.73 110,10.70 C93,10.50 74,10.22 55,9.90 C38,9.45 20,9.00 4,8.57 Z'/></svg>");
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 14' preserveAspectRatio='none'><path fill='%23e6866e' d='M4,8.23 C20,8.30 38,8.36 55,8.40 C74,8.40 93,8.39 110,8.40 C133,8.52 156,8.68 175,8.80 C194,8.88 213,8.90 230,8.90 C244,8.84 257,8.76 268,8.65 C279,8.52 289,8.37 296,8.20 L296,8.50 C289,8.72 279,9.05 268,9.35 C257,9.60 244,9.87 230,10.10 C213,10.40 194,10.60 175,10.70 C156,10.74 133,10.73 110,10.70 C93,10.50 74,10.22 55,9.90 C38,9.45 20,9.00 4,8.57 Z'/></svg>");
   background-repeat: no-repeat;
   /* ASYMMETRIC overshoot, .10em before the phrase and .24em past it, so the
      stroke enters just under the first letter and flies out beyond the last —
@@ -1236,10 +1265,11 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 .insight-tile--lead .insight-kicker-dot {
   width: 8px;
   height: 8px;
-  /* A lifted terracotta, not the flat token: the lead dot sits on a dark
-     photo and has to carry a glow. #C25332 alone reads muddy there. */
-  background: #E07A55;
-  box-shadow: 0 0 8px 1px rgba(224, 122, 85, .6);
+  /* The accent itself since the 2026-09-23 move to salmon. This used to be a
+     lifted terracotta #E07A55 because #C25332 read muddy on the dark photo;
+     salmon is lighter than that lift, so the token now does the job alone. */
+  background: var(--terracotta);
+  box-shadow: 0 0 8px 1px rgba(250, 160, 138, .6);
 }
 .insight-tile--lead .insight-kicker-dot::before,
 .insight-tile--lead .insight-kicker-dot::after {
@@ -1247,7 +1277,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  box-shadow: 0 0 0 2px #E07A55;
+  box-shadow: 0 0 0 2px var(--terracotta);
   animation: insight-dot-pulse 2s cubic-bezier(.3, 0, .5, 1) infinite;
 }
 .insight-tile--lead .insight-kicker-dot::before { animation-delay: -1s; }
@@ -1695,7 +1725,7 @@ body.panel-open .cover-card.active .cover-card-tag {
   position: absolute;
   top: 0; left: 0; bottom: 0;
   width: 100%;
-  background: var(--terracotta);
+  background: var(--terracotta-on-light);
   transform-origin: left center;
   transform: scaleX(0);
 }
@@ -2181,7 +2211,7 @@ body.nav-open.over-hero .header-cta {
   display: inline-block;
   width: 48px;
   height: 1px;
-  background: var(--terracotta);
+  background: var(--terracotta-on-light);
   flex-shrink: 0;
 }
 
@@ -3660,7 +3690,7 @@ body.nav-open.over-hero .header-cta {
   display: inline-block;
   width: 48px;
   height: 1px;
-  background: var(--terracotta);
+  background: var(--terracotta-on-light);
 }
 .invest-title {
   margin: 0;
@@ -4229,7 +4259,7 @@ body.modal-open { overflow: hidden; }
   right: 0;
   bottom: -1px;
   height: 2px;
-  background: var(--terracotta);
+  background: var(--terracotta-on-light);
   transform: scaleX(0);
   transition: transform .3s ease;
 }
@@ -4373,8 +4403,8 @@ body.modal-open { overflow: hidden; }
 html:not(.js) .ins-card:first-child .ins-card-dot {
   width: 8px;
   height: 8px;
-  background: #E07A55;
-  box-shadow: 0 0 8px 1px rgba(224, 122, 85, .6);
+  background: var(--terracotta);
+  box-shadow: 0 0 8px 1px rgba(250, 160, 138, .6);
 }
 .ins-card.is-latest .ins-card-dot::before,
 .ins-card.is-latest .ins-card-dot::after,
@@ -4384,7 +4414,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::after {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  box-shadow: 0 0 0 2px #E07A55;
+  box-shadow: 0 0 0 2px var(--terracotta);
   animation: insight-dot-pulse 2s cubic-bezier(.3, 0, .5, 1) infinite;
 }
 .ins-card.is-latest .ins-card-dot::before,
@@ -4629,7 +4659,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .essay-inline-quote {
   margin: 40px 0;
   padding: 0 0 0 clamp(24px, 3vw, 36px);
-  border-left: 2px solid var(--terracotta);
+  border-left: 2px solid var(--terracotta-on-light);
 }
 .essay-inline-quote p {
   font-family: var(--sans);
@@ -5502,7 +5532,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   row-gap: clamp(48px, 7vh, 76px);             /* when they stack */
 }
 .fla-reasons li { border-top: 1px solid var(--line); padding-top: clamp(30px, 4.2vh, 42px); padding-bottom: clamp(10px, 2vh, 20px); }
-.fla-tick { display: block; width: 26px; height: 26px; margin-bottom: clamp(24px, 3.4vh, 34px); color: var(--terracotta); }
+.fla-tick { display: block; width: 26px; height: 26px; margin-bottom: clamp(24px, 3.4vh, 34px); color: var(--terracotta-on-light); }
 .fla-tick svg { display: block; width: 100%; height: 100%; }
 /* the tick draws itself in as the column arrives */
 .fla-tick svg path { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset .9s cubic-bezier(.4, 0, .25, 1) .15s; }
@@ -5768,8 +5798,8 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 /* "our team" in terracotta on the pale photograph of the CTA bands. The white
    underline these bands used belonged to the navy version they had before. */
 .fla-say-band .fla-inline {
-  color: var(--terracotta);
-  text-decoration-color: var(--terracotta);
+  color: var(--terracotta-on-light);
+  text-decoration-color: var(--terracotta-on-light);
 }
 .fla-say-band .fla-inline:hover { color: var(--ink); text-decoration-color: var(--ink); }
 /* The outperformance section is NAVY, so this link left the bands' terracotta

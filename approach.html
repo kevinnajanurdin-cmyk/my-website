@@ -449,13 +449,18 @@
         // halo. The centre is held at 255,170,120 rather than anything paler
         // because these blooms composite ADDITIVELY — the navy underneath is
         // added on top, so a whiter centre clips all three channels, the star
-        // goes white and the terracotta is thrown away. This lands warm amber.
-        grad.addColorStop(0.00, 'rgba(255,170,120,1)');
-        grad.addColorStop(0.09, 'rgba(252,150,100,0.95)');
-        grad.addColorStop(0.20, 'rgba(224,112,68,0.55)');
-        grad.addColorStop(0.42, 'rgba(200,88,52,0.20)');
-        grad.addColorStop(0.70, 'rgba(194,83,50,0.07)');   // brand terracotta
-        grad.addColorStop(1.00, 'rgba(194,83,50,0)');
+        // goes white and the accent is thrown away.
+        // Retuned 2026-09-23 for the site-wide move to salmon #FAA08A: the
+        // halo now runs out to salmon instead of terracotta. The centre stays
+        // a touch deeper and warmer than salmon itself (245,150,115) for the
+        // same additive reason — salmon's higher blue channel plus the navy's
+        // would push the core toward pink-white.
+        grad.addColorStop(0.00, 'rgba(245,150,115,1)');
+        grad.addColorStop(0.09, 'rgba(248,155,125,0.95)');
+        grad.addColorStop(0.20, 'rgba(250,160,138,0.55)');
+        grad.addColorStop(0.42, 'rgba(250,160,138,0.20)');
+        grad.addColorStop(0.70, 'rgba(250,160,138,0.07)');   // brand salmon
+        grad.addColorStop(1.00, 'rgba(250,160,138,0)');
         gc.fillStyle = grad;
         gc.fillRect(0, 0, GLOW_PX, GLOW_PX);
         return c;
