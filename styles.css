@@ -2557,7 +2557,22 @@ body.nav-open.over-hero .header-cta {
    under it. So it gets a legible size and sits centred in the cell instead.
    Sized by HEIGHT with width:auto so the aspect ratio of a third party's mark
    is never altered. */
-.fund-kf-stat--rating { justify-content: center; gap: 10px; }
+/* Zenith rating badge — sized and spaced to Annexure 1 of the Zenith Marketing
+   & Promotions Policy (Nov 2025):
+   · MINIMUM SIZE 114px wide on screen. --zr-w never goes below it (it was
+     previously height-driven and topped out at ~110px wide — under the floor).
+   · CLEAR SPACE on every side equal to the x-height of the "i" in "Zenith".
+     Measured on the supplied PNG: 75px of x-height on a 524px-wide mark, so
+     .143 of the rendered width (~16-19px here). The cell's own padding covers
+     the sides and top; the gap below is set to that unit so the Disclaimer
+     link can never sit inside it.
+   · COLOUR: the full-colour version on this light ground, untouched — no
+     filter, opacity or blend may ever be applied to it. */
+.fund-kf-stat--rating {
+  --zr-w: clamp(114px, 9vw, 132px);
+  justify-content: center;
+  gap: calc(var(--zr-w) * .143);
+}
 /* The rating's disclaimer link ("Disclaimer", pointing at the Zenith section
    of the disclaimer page). Deliberately quieter than .fund-kf-label — this is
    a compliance pointer, not a caption, so it should be findable without
@@ -2579,8 +2594,9 @@ body.nav-open.over-hero .header-cta {
 }
 .fund-kf-rating {
   display: block;
-  height: clamp(58px, 6vw, 84px);
-  width: auto;
+  width: var(--zr-w);
+  min-width: 114px;   /* the policy floor, restated so no override can undercut it */
+  height: auto;       /* proportion is fixed by the file — never set both */
   /* Essential, not decoration: .fund-kf-stat is a COLUMN flex container, so
      the default align-items:stretch pulls a replaced element out to the full
      cell width and squashes the mark flat. The text figures beside it show no

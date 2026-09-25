@@ -49,6 +49,12 @@ const founders = [
     thesis: "Robin combined chemistry innovation, simpler battery packs and enormous manufacturing scale to cut the cost of energy storage, helping electric vehicles compete with petrol cars on price and performance."
   },
   {
+    first: "Hitesh", last: "Doshi", company: "Waaree",
+    role: "Founder, Chair & MD", founded: "1989", sector: "New Energy",
+    geo: "India", accent: "#1f4e9c",
+    thesis: "Hitesh built Waaree from a small instrumentation business into India’s largest solar module manufacturer, scaling domestic production as India builds its own clean-energy supply chain rather than relying on imports."
+  },
+  {
     first: "Sam", last: "Hupert", company: "Pro Medicus",
     role: "Co-founder & CEO", founded: "1983", sector: "MedTech",
     geo: "Australia", accent: "#0a4f8a",
@@ -83,7 +89,7 @@ const founders = [
     first: "Brian", last: "Armstrong", company: "Coinbase",
     role: "Co-founder & CEO", founded: "2012", sector: "FinTech",
     geo: "United States", accent: "#0052ff",
-    thesis: "Brian bet on regulatory legitimacy while crypto moved offshore — building the working plumbing of modern finance: stablecoins, custody, tokenization."
+    thesis: "Brian bet on regulatory legitimacy while crypto moved offshore — building the working plumbing of modern finance: stablecoins, custody, tokenisation."
   },
   {
     first: "Elon", last: "Musk", company: "Tesla", company2: "SpaceX",
@@ -141,6 +147,7 @@ const PORTRAIT_FILES = {
   "Mercado Libre": "marcos.jpg",
   "Roblox": "baszucki.jpg",
   "Kaspi": "mikheil.png",
+  "Waaree": "hitesh.jpg",
 };
 const portraitUrl = (company) => {
   const f = PORTRAIT_FILES[company];
@@ -222,6 +229,7 @@ const SCENE_FILES = {
   "Mercado Libre": "mercadolibre.webp",
   "Roblox": "roblox.jpg",
   "Kaspi": "kaspi.webp",
+  "Waaree": "waaree.jpg",
 };
 const sceneUrl = (company) => {
   const f = SCENE_FILES[company];
@@ -379,7 +387,15 @@ function openPanel(i) {
   panelEls.photo.style.setProperty("--accent", f.accent);
 
   // Company logo now sits above the founder name (greyscale).
-  panelEls.logo.src = logoUrl(f.company);
+  // A company with no entry in LOGO_FILES yet (a newly added founder) shows
+  // no logo rather than a broken-image icon.
+  if (LOGO_FILES[f.company]) {
+    panelEls.logo.src = logoUrl(f.company);
+    panelEls.logo.hidden = false;
+  } else {
+    panelEls.logo.removeAttribute("src");
+    panelEls.logo.hidden = true;
+  }
   panelEls.logo.alt = f.company;
   // Adjust height per-company so all logos look roughly the same visual size
   // (their source files have very different aspect ratios).

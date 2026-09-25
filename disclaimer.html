@@ -112,7 +112,10 @@
   .legal-prose h2:first-child { margin-top: 0; }
   .legal-prose p { color: var(--ink-soft); font-size: .95rem; line-height: 1.8; margin: 0 0 1.15rem; }
   .legal-prose p:last-child { margin-bottom: 0; }
-  .legal-prose a { color: var(--accent-deep); }
+  /* Underlined: in running legal text colour alone does not mark a link
+     (steel vs slate is subtle), and the Zenith section's "Fund Research
+     Regulatory Guidelines" link is part of Zenith's prescribed wording. */
+  .legal-prose a { color: var(--accent-deep); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
   .legal-prose a:hover { color: var(--ink); }
   .legal-prose strong { color: var(--ink); font-weight: 500; }
 </style>
@@ -131,20 +134,22 @@
       <p>Any iNAV should not be relied upon as being the price at which units may be bought or sold on the ASX or Cboe, and may not reflect the true value of a unit. No assurance can be given that any iNAV will be published continuously, will be up to date or free from error.</p>
       <p>The ICE information is provided to the users "as is." Neither ICE nor Ziller Funds Management (Ziller) nor any of their affiliates make any express or implied warranties of any kind regarding the iNAV data, including, without limitation, any warranty of merchantability or fitness for a particular purpose or use. Neither ICE nor Daintree nor any of their affiliates guarantee the adequacy, accuracy, timeliness or completeness of the ICE iNAV data and to the extent permitted by law accept no liability to any person for any interruption, inaccuracy, error or omission, regardless of cause, in the iNAV data or for any damages (whether direct or indirect, consequential, punitive or exemplary) resulting from any use or reliance on the data. Prior to the execution of a security trade, you are advised to consult with your broker or other financial representative to verify pricing information.</p>
       <p>iNAV calculations as shown on <a href="/">www.zillerfm.com</a> (the "data") provided by <a href="https://www.theice.com/market-data/indices" target="_blank" rel="noopener">ICE Data Indices</a>, see <a href="https://www.intercontinentalexchange.com/terms-of-use" target="_blank" rel="noopener">ICE Terms of Use</a>, and is updated during exchange trading hours. Powered by <a href="https://www.factset.com/" target="_blank" rel="noopener">Factset</a>. iNAV is indicative and for reference purposes only. The Fund is not sponsored, endorsed, sold or marketed by ICE Data Indices, LLC, its affiliates ("ICE Data") and ICE Data or its respective third party suppliers MAKE NO EXPRESS OR IMPLIED WARRANTIES, AND HEREBY EXPRESSLY DISCLAIM ALL WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE WITH RESPECT TO THE iNAV, IOPV, FUND OR ANY FUND DATA INCLUDED THEREIN. IN NO EVENT SHALL ICE DATA HAVE ANY LIABILITY FOR ANY SPECIAL, PUNITIVE, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES (INCLUDING LOST PROFITS), EVEN IF NOTIFIED OF THE POSSIBILITY OF SUCH DAMAGES. You acknowledge that the data is provided for information only and should not be relied upon for any purpose.</p>
-      <!-- Zenith rating disclaimer. Zenith's PRESCRIBED wording — do not edit
-           it for house style. Supplied by the user 2026-09-18 and used as
-           given, with ONE substitution they directed: the APIR codes came
-           through as "PIM7802AU and PIM0941AU" (Perennial-issued codes) and
-           were replaced with Ziller's own "ZIL7791AU". Those codes state WHICH
-           products Zenith assessed, so if a future rating letter names
-           different ones, this must follow the letter, not the fund.
-           NB the text says "Corporations Act 2007"; the Act is the
-           Corporations Act 2001. Left as supplied — flagged to the user, not
-           silently corrected, because it is a compliance disclosure.
-           The id is the anchor target for the "Rating information" link under
-           the badge in fund.html's Key Facts. -->
+      <!-- Zenith rating disclaimer — Zenith's PRESCRIBED wording, verbatim from
+     Annexure 2 ("Zenith Investment Rating") of the Zenith Marketing & Promotions
+     Policy, November 2025. Do not edit it for house style. The only inserted
+     values are the ones the policy requires: the fund identifier (APIR
+     ZIL7791AU) and the rating's assigned date.
+     SINGLE COPY: this is the only place the text appears. The badge in
+     fund.html's Key Facts links here via its "Disclaimer" link. An on-page
+     copy beside the badge was added on 2026-09-24 (Annexure 2 says the
+     disclaimer must ACCOMPANY the logo) and removed the same day at the
+     user's request, with that risk flagged — if Zenith's legal team asks for
+     it beside the badge, restore it on fund.html under the Key Facts footnote.
+     RENEWAL: ratings are valid ~12 months from the assigned date. When Zenith
+     re-rates the fund, update the date here (both copies) and swap in the
+     logo Zenith supplies with the new rating. -->
       <h2 id="zenith-rating">Zenith Rating Information</h2>
-      <p>The Zenith Investment Partners (ABN 27 103 132 672. AFS Licence 226872) (&ldquo;Zenith&rdquo;) ratings (assigned November 2024 for ZIL7791AU) referred to in this document is limited to &ldquo;General Advice&rdquo; (s766B Corporations Act 2007) for Wholesale clients only. This advice has been prepared without taking into account the objectives, financial situation or needs of any individual and is subject to change at any time without prior notice. It is not a specific recommendation to purchase, sell or hold the relevant product(s). Investors should seek independent financial advice before making an investment decision and should consider the appropriateness of this advice in light of their own objectives, financial situation and needs. Investors should obtain a copy of and consider the PDS or offer document before making any decision and refer to the full Zenith Product Assessment available on the Zenith website. Past performance is not an indication of future performance. Zenith usually charges the product issuer, fund manager or related party to conduct Product Assessments. Full details regarding Zenith&rsquo;s methodology, ratings definitions and regulatory compliance are available on our Product Assessments and at <a href="http://www.zenithpartners.com.au/RegulatoryGuidelines" target="_blank" rel="noopener">http://www.zenithpartners.com.au/RegulatoryGuidelines</a></p>
+      <p>The Zenith Investment Partners (ABN 27 103 132 672, AFS Licence 226872) (&ldquo;Zenith&rdquo;) rating (ZIL7791AU assigned September 2026) referred to in this piece is limited to &ldquo;General Advice&rdquo; (s766B Corporations Act 2001) for Wholesale clients only. This advice has been prepared without taking into account the objectives, financial situation or needs of any individual, including target markets of financial products, where applicable, and is subject to change at any time without prior notice. It is not a specific recommendation to purchase, sell or hold the relevant product(s). Investors should seek independent financial advice before making an investment decision and should consider the appropriateness of this advice in light of their own objectives, financial situation and needs. Investors should obtain a copy of, and consider the PDS or offer document before making any decision and refer to the full Zenith Product Assessment available on the Zenith website. Past performance is not an indication of future performance. Zenith usually charges the product issuer, fund manager or related party to conduct Product Assessments. Full details regarding Zenith&rsquo;s methodology, ratings definitions and regulatory compliance are available on our Product Assessments and at <a href="https://www.zenithpartners.com.au/our-solutions/investment-research/regulatory-guidelines/" target="_blank" rel="noopener">Fund Research Regulatory Guidelines</a>.</p>
 
       <h2>Disclaimer</h2>
       <p>This website has been prepared and issued by Perennial Investment Management Limited (ABN 13 108 747 637, AFSL No. 275101) (<strong>PIML</strong>) as Responsible Entity and Ziller Funds Management Pty Limited (ABN 88 688 720 578) (<strong>Ziller</strong>) as the Investment Manager, a Corporate Authorised Representative (CAR 1317129) of Perennial Value Management Limited (ABN 22 090 879 904, AFSL No. 247293) (<strong>PVM</strong>). Ziller, PIML and PVM are part of Perennial Partners Limited (ABN 90 612 829 160, CAR 1293138 of PVM) (<strong>Perennial Partners</strong>).</p>

@@ -393,7 +393,7 @@
 
       var reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
       var ctx = canvas.getContext('2d');
-      var SURVIVORS = 17;
+      var SURVIVORS = 18;   // the portfolio's stock count — 18 since 2026-09-25 (Waaree added)
 
       // Cull waves — four, spread across the first ~78% of the (long) runway,
       // leaving the final stretch for a gather sized to the ORIGINAL scroll
@@ -422,7 +422,7 @@
       var smooth = function (t) { return t * t * (3 - 2 * t); };
 
       // ── Survivor bloom ──────────────────────────────────────────────
-      // The 17 chosen dots glow like stars. Two things make that read as
+      // The chosen dots (SURVIVORS) glow like stars. Two things make that read as
       // LIGHT rather than as the flat disc an earlier pass rightly rejected:
       // the falloff is a gradient (a hot warm core into a wide terracotta
       // halo, no edge anywhere), and it is composited with 'lighter', so a
@@ -432,8 +432,8 @@
       //
       // Pre-rendered once into an offscreen canvas because render() runs
       // synchronously on every scroll event (there is no rAF throttle — see
-      // the note on the scroll handler): 17 drawImage calls per event are
-      // nothing, whereas building 17 radial gradients, or paying for
+      // the note on the scroll handler): 18 drawImage calls per event are
+      // nothing, whereas building 18 radial gradients, or paying for
       // shadowBlur, on every event would not be.
       var GLOW_PX = 128;          // sprite is square; the bloom fills it
       var GLOW_SCALE = 5.2;       // halo radius / dot radius, scattered state
@@ -582,7 +582,7 @@
           ctx.fill();
         }
 
-        // ── Pass 2: the 17 survivors, as stars ──
+        // ── Pass 2: the survivors, as stars ──
         // Visibly distinct from the START — brighter and larger — so the eye
         // tracks them persisting while the field thins; the story reads
         // throughout the scroll, not just at the final gather. Each is a single
@@ -601,7 +601,7 @@
           // The halo tightens as the survivors gather. Scattered across the sky
           // a wide bloom is what gives the field depth, but in the final row
           // they sit only ~20px apart, where a 5.2x halo overlaps into one
-          // continuous glowing strip — that read as an LED strip, not as 17
+          // continuous glowing strip — that read as an LED strip, not as separate
           // stars. Tapering to 3.2x keeps each one a separate point of light.
           var halo = sr * (GLOW_SCALE - GLOW_TIGHTEN * conv);
           ctx.globalAlpha = lum;
