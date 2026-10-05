@@ -173,6 +173,7 @@ const LOGO_FILES = {
   "Roblox": "roblox.png",
   "Kaspi": "kaspi.png",
   "SpaceX": "spacex.svg",
+  "Waaree": "waaree.png",
 };
 const logoUrl = (company) =>
   `assets/companies/${encodeURIComponent(LOGO_FILES[company] || "").replace(/%2F/g, "/")}`;
@@ -209,6 +210,7 @@ const LOGO_HEIGHTS = {
   "Fortinet":      21,   // very wide wordmark
   "Kaspi":         50,   // filled disc, stencil cutouts (dense)
   "SpaceX":        21,   // very wide wordmark (aspect ~8.1, same class as Fortinet)
+  "Waaree":        26,   // wordmark + underline bar, tagline cropped off (aspect ~5.4, dense)
 };
 
 // Map company → scene/brand photo in assets/scenes/ (null = none yet)
