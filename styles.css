@@ -4883,6 +4883,35 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    ═══════════════════════════════════════════════════════════ */
 
 /* ── Hero: pinned, dark, rippling ────────────────────────── */
+.fla-page {
+  /* ── THE PAGE'S SANS TYPE SCALE: three sizes, and only three ──────────────
+     Asked for 2026-09-29: "too many variations of the body font size — three at
+     most". An audit of rendered text found TWELVE sans sizes on desktop (12, 13,
+     15, 16, 17, 17.28, 18, 18.56, 20, 22, 23.04 and 24.96px) and seven on a
+     phone. Most came from separate clamp()s landing on odd fractions, the rest
+     from each act having been tuned by itself. Every running-text rule on this
+     page now takes one of these three tokens. Adjust the scale HERE, not rule
+     by rule, or the drift comes back.
+       small — fine print: footnotes, the chart's past-performance line, and
+               the ASX ticker label
+       body  — all running copy, the hero and closing ledes, the closing
+               links and the Invest now button
+       lead  — the sentences that introduce or ask something: .fla-say ledes,
+               the proof lede, both CTA-band sentences and the PDS sentence
+     Deliberately OUTSIDE the scale, like the serif headings: the 3.3% stat
+     line, which is display type carrying the page's claim, and the 12px
+     footnote superscript, which is a mark rather than text. The site header
+     and footer are site chrome and keep their own sizes.
+     Body is 18px on desktop and not higher because it has to serve two
+     measures at once: the wide single-column acts and the three-across
+     advisers and proof grids, where anything bigger leaves ~30-character
+     lines. The phone values are the ones the user already settled
+     (17 body, 18 lead) after trying 19/20 and reverting. */
+  --fla-fs-small: 15px;
+  --fla-fs-body: 18px;
+  --fla-fs-lead: 22px;
+}
+
 .fla-hero {
   /* The topbar + header (93px) sit above this in flow, so a full 100vh box
      overhangs the fold and the centred content reads low. Subtract the chrome. */
@@ -4987,7 +5016,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 }
 .fla-hero-lede {
   margin: 0;
-  font-size: clamp(16px, 1.35vw, 19px); line-height: 1.6;
+  font-size: var(--fla-fs-body); line-height: 1.6;
   /* Ink now the ground is the pale photograph rather than navy. Over the
      image's left third this measures about 9:1. */
   color: var(--ink-soft);
@@ -5301,11 +5330,11 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .fla-say {
   margin: 0 0 clamp(22px, 3.2vh, 36px);
   max-width: 72ch;
-  font-size: clamp(22px, 1.8vw, 26px);
+  font-size: var(--fla-fs-lead);
   line-height: 1.6;
   color: var(--ink);
 }
-.fla-say--tight { font-size: clamp(20px, 1.62vw, 23px); line-height: 1.66; color: var(--ink-soft); }
+.fla-say--tight { font-size: var(--fla-fs-body); line-height: 1.66; color: var(--ink-soft); }
 /* 62ch, not 44: the one line that uses this is 59 characters and was
    breaking on the measure, not on the container. */
 .fla-say--centre { max-width: 62ch; margin-left: auto; margin-right: auto; text-align: center; }
@@ -5325,7 +5354,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   display: grid; gap: 18px;
 }
 .fla-cols p, .fla-etf-copy p, .fla-spec-copy p, .fla-outperf-copy p {
-  margin: 0 0 22px; font-size: 22px; line-height: 1.66; color: var(--ink-soft);
+  margin: 0 0 22px; font-size: var(--fla-fs-body); line-height: 1.66; color: var(--ink-soft);
 }
 .fla-cols p:last-child, .fla-etf-copy p:last-child, .fla-spec-copy p:last-child { margin-bottom: 0; }
 
@@ -5338,7 +5367,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    page's longest run of continuous prose, so it carries the most from the
    extra breathing room. Split out of the shared rule above so the ETF,
    specialist and outperformance copy keep their own size. */
-.fla-cols p { font-size: 20px; line-height: 1.7; }
+.fla-cols p { font-size: var(--fla-fs-body); line-height: 1.7; }
 .fla-outperf-copy p { color: rgba(255, 255, 255, .72); }
 
 
@@ -5362,16 +5391,18 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
      AA bar rather than 4.5:1. The size also suits the line carrying the page's
      main claim. */
   font-size: clamp(24px, 1.95vw, 29px); line-height: 1.45;
-  /* Brand Ivory, fourth and settled shade for this line (2026-09-09): the user
-     asked for terracotta -> "the teal" -> the steel --accent the PDS/TMD links
-     carry -> brand Sky Blue -> this. It measures 11.44:1 against the navy, more
-     even than the sky it replaces (9.99:1), so like that shade it would pass at
-     any size — unlike the terracotta (3.59:1) and steel (3.08:1) attempts,
-     which cleared AA only because this line is 24px or larger.
-     Composed from --ivory-rgb rather than a hex, because that token is channels
-     only; it is a DARK-GROUND colour and must not be reused on the light page,
-     where it is 1.3:1. */
-  color: rgb(var(--ivory-rgb));
+  /* Salmon, the site's warm accent (--terracotta, #faa08a since 2026-09-23),
+     from 2026-09-29: the user asked for this line to match the founder-led
+     series in the chart beside it, which draws in the same value
+     (founder-chart.js FUND_LINE, 250,160,138). So the claim and the line that
+     proves it now read as one colour across the section.
+     History, because this line has moved more than anything else on the
+     page: terracotta -> teal -> the steel --accent -> sky -> ivory -> salmon.
+     8.21:1 on the navy — like ivory and sky it would pass AA at any size, so
+     the 24px floor above is about the line's weight as the page's claim, not
+     about contrast any more. If --terracotta moves again, this follows it; if
+     FUND_LINE moves without it, the two drift apart — change both. */
+  color: var(--terracotta);
 }
 /* set at the body size like the rest of the line — the weight alone
    carries the emphasis */
@@ -5401,7 +5432,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .fla-outperf .btn-outline:hover { background: #fff; border-color: #fff; color: var(--dark); }
 .fla-outperf-chart .founder-chart-wrap { max-width: none; margin: 0 0 14px; }
 .fla-outperf-chart .founder-chart { height: clamp(300px, 42vh, 480px); }
-.fla-fine { margin: 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.44); }
+.fla-fine { margin: 0; font-size: var(--fla-fs-small); line-height: 1.6; color: rgba(255,255,255,.44); }
 
 /* ── 03 Specialist — copy + video, then the holdings ── */
 /* At 52 characters this is by far the longest heading on the page. Two things
@@ -5433,6 +5464,13 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    touching the type size. */
 .fla-spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 68px); align-items: stretch; }
 .fla-spec-grid .fla-video { order: -1; }
+/* Centred against the clip rather than hung from the top of the row. At the
+   old 22px the paragraph ran nearly the height of the video, so top-alignment
+   was invisible; at the scale's 18px body it is about half that height and,
+   hung from the top, left a dead block of white under it. Centring is what the
+   outperformance row beside the chart already does. Harmless once the grid
+   stacks below 980px — a lone column has nothing to centre against. */
+.fla-spec-copy { align-self: center; }
 /* Only give the clip the lion's share once there is width to spare — below
    this the blurb's column falls under ~35 characters and stops reading. */
 @media (min-width: 1200px) {
@@ -5548,7 +5586,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 /* Deliberately identical to .fla-proof p — the two three-across sections read
    as one family, so their body copy shares a size, leading and ink. Keep them
    in step if either is retuned. */
-.fla-reasons p { margin: 0; font-size: 17px; line-height: 1.62; color: var(--ink-soft); }
+.fla-reasons p { margin: 0; font-size: var(--fla-fs-body); line-height: 1.62; color: var(--ink-soft); }
 
 /* ── Statement CTA bands ── */
 /* The same photograph as the hero. Full-bleed `cover` rather than the image
@@ -5671,7 +5709,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   /* Up from clamp(17px, 1.45vw, 21px), which the user called way too small. The
      band is a call to action carrying one sentence; it was set smaller than the
      body copy around it. */
-  font-size: clamp(20px, 1.8vw, 25px); line-height: 1.5;
+  font-size: var(--fla-fs-lead); line-height: 1.5;
 }
 .fla-say-band--paper p { color: var(--ink); }
 
@@ -5711,7 +5749,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 #fla-etf .fla-h2 { max-width: none; text-align: center; }
 
 /* The proof act centres throughout: lede, icons, headings and body. */
-#fla-proof .fla-say { max-width: 66ch; margin-left: auto; margin-right: auto; text-align: center; font-size: clamp(17px, 1.45vw, 20px); line-height: 1.65; }
+#fla-proof .fla-say { max-width: 66ch; margin-left: auto; margin-right: auto; text-align: center; font-size: var(--fla-fs-lead); line-height: 1.6; }
 #fla-proof .fla-proof { text-align: center; }
 #fla-proof .fla-proof-icon img { margin: 0 auto; object-position: center; }
 
@@ -5761,7 +5799,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   #fla-advisers .fla-reasons { grid-template-columns: 1fr; row-gap: clamp(28px, 4vh, 40px); }
   #fla-advisers .fla-reasons li { column-gap: 14px; }
 }
-.fla-proof p { margin: 0; font-size: 17px; line-height: 1.62; color: var(--ink-soft); }
+.fla-proof p { margin: 0; font-size: var(--fla-fs-body); line-height: 1.62; color: var(--ink-soft); }
 
 /* The three proof columns share row lines — icon, heading, body — so the body
    copy starts on the same line in all three even though "Research-backed
@@ -5809,13 +5847,18 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .fla-say-band .fla-inline:hover { color: var(--ink); text-decoration-color: var(--ink); }
 /* The outperformance section is NAVY, so this link left the bands' terracotta
    behind: that shared rule put a 3.59:1 colour on a 19px link and sent the
-   hover to --ink, which is all but invisible on navy. It went to the stat
-   line's sky blue on 2026-09-08 to match it, then to brand Ivory the same day,
-   following the stat line there — the two are meant to stay in step, so move
-   them together. Ivory is 11.44:1 here, well past AA for a link this size. */
+   hover to --ink, which is all but invisible on navy. It followed the stat
+   line through sky, ivory and salmon, then on 2026-09-29 the user UNCOUPLED
+   it: "keep the team same colour (white) as rest". So it now takes its
+   sentence's own colour — the 72% white of .fla-outperf-copy p — and reads as
+   a link by its underline alone, which is how a utility link should read
+   (see the governing principle in the accent notes: accents mark the claim,
+   not "our team"). The stat line stays salmon on its own. The underline is
+   currentColor so it matches the words exactly, and the hover lifts to full
+   white, which is the non-colour-only change a link needs. */
 .fla-outperf .fla-inline {
-  color: rgb(var(--ivory-rgb));
-  text-decoration-color: rgb(var(--ivory-rgb));
+  color: inherit;
+  text-decoration-color: currentColor;
 }
 .fla-outperf .fla-inline:hover { color: #fff; text-decoration-color: #fff; }
 /* "our team" stays on ONE line. It is the two-word call to action these bands
@@ -5828,7 +5871,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .fla-arrows li { display: grid; grid-template-columns: 38px 1fr; gap: clamp(15px, 1.5vw, 22px); align-items: start; }
 .fla-arrow { display: block; width: 38px; height: 38px; margin-top: -4px; color: var(--accent); }
 .fla-arrow svg { display: block; width: 100%; height: 100%; }
-.fla-arrows p { margin: 0; font-size: 22px; line-height: 1.66; color: var(--ink-soft); }
+.fla-arrows p { margin: 0; font-size: var(--fla-fs-body); line-height: 1.66; color: var(--ink-soft); }
 
 /* The two-column grid is gone — the pointers sit on their own measure and
    the platforms run the full container underneath them. */
@@ -5842,7 +5885,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 .fla-ticker {
   display: inline-block; margin: 0 0 26px; padding: 8px 16px; border-radius: 3px;
   background: var(--dark); color: var(--on-dark);
-  font-size: 16px; font-weight: 500; letter-spacing: var(--track-eyebrow); text-transform: uppercase;
+  font-size: var(--fla-fs-small); font-weight: 500; letter-spacing: var(--track-eyebrow); text-transform: uppercase;
 }
 .fla-plats { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px; }
 .fla-plats li { background: #fff; border: 1px solid var(--line); border-radius: 3px; display: grid; place-items: center; min-height: 92px; }
@@ -5891,7 +5934,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    goes up with the type so the label keeps its room inside the box. */
 .fla-pds .btn-primary {
   background: rgb(var(--ivory-rgb)); color: var(--dark); border-color: rgb(var(--ivory-rgb));
-  font-size: 18px; padding: 16px 34px;
+  font-size: var(--fla-fs-body); padding: 16px 34px;
 }
 .fla-pds .btn-primary:hover {
   background: transparent; color: rgb(var(--ivory-rgb)); border-color: rgb(var(--ivory-rgb));
@@ -5908,7 +5951,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 #fla-team .fla-h2 { font-size: clamp(26px, 2.7vw, 38px); }
 #fla-team .fla-say {
   max-width: 58ch;
-  font-size: clamp(16px, 1.35vw, 19px);
+  font-size: var(--fla-fs-body);
   line-height: 1.6;
 }
 
@@ -5919,7 +5962,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    box they used to be. The hairline underline only firms up on hover. */
 .fla-way-link {
   display: inline-flex; align-items: center; gap: 9px;
-  font-size: 16px; font-weight: 500; color: var(--ink);
+  font-size: var(--fla-fs-body); font-weight: 500; color: var(--ink);
   text-decoration: underline;
   text-decoration-color: var(--line);
   text-decoration-thickness: 1px;
@@ -5934,7 +5977,7 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 /* Deliberately the quietest type on the page, but full container width —
    a ch measure at 13px pulled it in to ~667px and left it stranded in a
    narrow column. Disclaimers run the page. */
-.fla-notes p { margin: 0; max-width: none; font-size: 13px; line-height: 1.62; color: var(--ink-mute); opacity: .82; }
+.fla-notes p { margin: 0; max-width: none; font-size: var(--fla-fs-small); line-height: 1.62; color: var(--ink-mute); opacity: .82; }
 .fla-notes p span { font-weight: 500; margin-right: 3px; }
 
 /* ── Responsive ─────────────────────────────────────────── */
@@ -6087,19 +6130,25 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
      spacing rounds the user reverted — "actually revert to smaller font".
      17 is the CONSIDERED answer, not the default; don't walk this loop
      again in either direction without being asked.
-     The deliberate exceptions: .fla-say ledes and the CTA-band sentence a
-     step up at 18px, the hero lede and the quiet closing act at 16px, and
-     the 3.3% stat line untouched on its 24px clamp floor — it is the page's
-     claim, and 24px is also what its accent-contrast arithmetic has always
-     been quoted against. */
+     Since 2026-09-29 these sizes live in the page's three-size scale (see
+     .fla-page near the top of the FLA section) rather than in overrides here:
+     17 is the phone's body token, 18 its lead. The hero lede and the closing
+     act, which sat a step lower at 16px, are body now — a fourth size was
+     exactly what the scale exists to remove. The 3.3% stat line stays outside
+     the scale on its 24px clamp floor. */
+  /* The scale's phone values. Every running-text rule reads the tokens, so
+     this one block is the whole type change at this width. */
+  .fla-page {
+    --fla-fs-small: 14px;
+    --fla-fs-body: 17px;
+    --fla-fs-lead: 18px;
+  }
   .fla-cols p,
   .fla-spec-copy .fla-say--tight,
   .fla-outperf-copy p,
   .fla-etf-copy p {
-    font-size: 17px; line-height: 1.65;
+    line-height: 1.65;
   }
-  .fla-say { font-size: 18px; }
-  .fla-say-band p { font-size: 18px; }
 
   /* Paragraph rhythm in the Why act had TWO sources stacked: .fla-cols'
      18px grid gap plus each p's 22px margin-bottom = 40px holes between
