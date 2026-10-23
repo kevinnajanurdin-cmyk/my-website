@@ -492,7 +492,10 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
    to pass strictly, this is the one to deepen or return to --ink-mute.
    Scoped to .coverflow-head so the other .section-eyebrow instances keep
    --ink-mute. */
-.coverflow-head .section-eyebrow { color: var(--terracotta-on-light); }
+/* Semibold (2026-10-14): at the eyebrow's 500 weight, 13px and wide tracking
+   the strokes were thin enough that the salmon read paler than its swatch.
+   600 gives the colour more ink without changing it. */
+.coverflow-head .section-eyebrow { color: var(--terracotta-on-light); font-weight: 600; }
 .section-eyebrow.centered { text-align: center; }
 .section-eyebrow.light { color: var(--on-dark-mute); }
 
@@ -1707,7 +1710,11 @@ body.panel-open .cover-card.active .cover-card-tag {
 .coverflow-progress-bar {
   position: relative;
   display: block;
-  height: 1px;
+  /* 1.5px (2026-10-14): at 1px the fill was nearly all anti-aliased edge and
+     the salmon read washed out; 2px fixed that but was too heavy. On a
+     high-density screen 1.5px is a crisp 3 device pixels; on a standard one it
+     renders as a solid pixel plus a half-tone row, still richer than 1px. */
+  height: 1.5px;
   background: var(--line);
 }
 .coverflow-progress-fill {
@@ -2457,9 +2464,15 @@ body.nav-open.over-hero .header-cta {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  /* Four tracks, each card spanning two, so it still reads as a two-column
+     grid — but a lone card on the last row (the 5th, "Latest financial
+     report") can sit in the MIDDLE two tracks, centred under the pair above,
+     instead of hanging off the left. Any odd count centres its last card. */
+  grid-template-columns: repeat(4, 1fr);
   gap: 14px;
 }
+.fund-docs > li { grid-column: span 2; }
+.fund-docs > li:last-child:nth-child(odd) { grid-column: 2 / span 2; }
 .fund-doc {
   position: relative;
   display: grid;
@@ -3019,6 +3032,9 @@ body.nav-open.over-hero .header-cta {
     border-bottom-color: rgba(255,255,255,.16);
   }
   .fund-docs { grid-template-columns: 1fr; }
+  /* Single column: drop the spans, or a span of 2 would invent a second track. */
+  .fund-docs > li,
+  .fund-docs > li:last-child:nth-child(odd) { grid-column: auto; }
   .fund-data-grid { grid-template-columns: 1fr; }
   .fund-data-cell-wide { grid-column: auto; }
   .fund-mpi { grid-template-columns: 1fr; }

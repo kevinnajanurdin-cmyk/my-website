@@ -161,7 +161,7 @@
               <div class="funnel-center">
                 <p class="funnel-label funnel-eyebrow">The Investable Universe</p>
                 <div class="funnel-count-line">
-                  <p class="funnel-count" id="funnel-count">7,000</p>
+                  <p class="funnel-count" id="funnel-count">10,000</p>
                   <!-- zero-width anchor: the unit hangs off the number's
                        right edge without affecting its centring -->
                   <span class="funnel-count-unit-anchor"><span class="funnel-count-unit">stocks</span></span>
@@ -373,11 +373,11 @@
     })();
 
     // ─── Funnel dots: the investable universe, culled by the funnel ──
-    // A full-bleed constellation of dots (the ~7,000-stock universe) fills the
+    // A full-bleed constellation of dots (the ~10,000-stock universe) fills the
     // pinned viewport and diffuses upward, its density tapering smoothly
     // to zero at the section top.
     // Dots hold their positions and are culled — fading out in place,
-    // fully stationary — in four waves: a pre-filter race (7,000 → 700),
+    // fully stationary — in four waves: a pre-filter race (10,000 → 1,000),
     // then one per filter. The 15 survivors converge into a row above the
     // composition at the end. Scroll-scrubbed: no free-running animation loop.
     (function initFunnelDots() {
@@ -398,21 +398,21 @@
       // Cull waves — four, spread across the first ~78% of the (long) runway,
       // leaving the final stretch for a gather sized to the ORIGINAL scroll
       // pace (see conv below). Wave 0 is a pre-filter race: the count sprints
-      // 7,000 → 700 before the first filter enters; waves 1–3 then walk
-      // 700 → 15 across the three filters at a stretched pace.
+      // 10,000 → 1,000 before the first filter enters; waves 1–3 then walk
+      // 1,000 → SURVIVORS across the three filters at a stretched pace.
       var WINDOWS = [[0.04, 0.20], [0.18, 0.44], [0.44, 0.62], [0.62, 0.78]];
       var FADE = 0.06; // each dot's individual fade length, in progress units
 
       // Countdown milestones at the wave boundaries; each wave's numeric
       // weight derives from its gap, so the count lands exactly on these.
-      var COUNTS = [7000, 700, 300, 120, SURVIVORS];
+      var COUNTS = [10000, 1000, 300, 120, SURVIVORS];   // universe 10,000 -> 1,000 from 2026-10-19 (was 7,000 -> 700)
       var TOTAL = COUNTS[0];                 // displayed universe size
       var STAGE_W = COUNTS.slice(1).map(function (c, i) {
         return (COUNTS[i] - c) / (TOTAL - SURVIVORS);
       });
       // Caption cues are decoupled from the cull windows so "Strong Founder"
-      // can enter while the race is still closing in on 700 (its cull window
-      // opens a beat later, giving the count a short dwell at 700).
+      // can enter while the race is still closing in on 1,000 (its cull window
+      // opens a beat later, giving the count a short dwell at 1,000).
       var CAPTION_AT = [0.135, 0.44, 0.62];
       var lastCount = "";
 
