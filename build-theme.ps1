@@ -115,20 +115,20 @@ $html = [regex]::Replace($html, '(?s)<div class="insights-stack">.*?</div>', { p
 
 # Home performance figures -> Customizer-editable (Appearance > Customize >
 # "Ziller - Home Figures"), so month-end updates need no theme rebuild. The current
-# values become the defaults. 21.4 is the animated counter's data-count target;
-# 25.4 / 114.0 are static text in the "odd" stat cards.
+# values become the defaults. 19.7 is the animated counter's data-count target;
+# 21.7 / 105.2 are static text in the "odd" stat cards.
 $figReturnPa = @'
-data-count="<?php echo esc_attr( get_theme_mod( 'ziller_return_pa', '21.4' ) ); ?>"
+data-count="<?php echo esc_attr( get_theme_mod( 'ziller_return_pa', '19.7' ) ); ?>"
 '@
 $figOutperf = @'
-<span class="odd-figure"><?php echo esc_html( get_theme_mod( 'ziller_outperformance', '25.4' ) ); ?><span class="odd-unit">%</span></span>
+<span class="odd-figure"><?php echo esc_html( get_theme_mod( 'ziller_outperformance', '21.7' ) ); ?><span class="odd-unit">%</span></span>
 '@
 $figReturnIncep = @'
-<span class="odd-figure"><?php echo esc_html( get_theme_mod( 'ziller_return_incep', '114.0' ) ); ?><span class="odd-unit">%</span></span>
+<span class="odd-figure"><?php echo esc_html( get_theme_mod( 'ziller_return_incep', '105.2' ) ); ?><span class="odd-unit">%</span></span>
 '@
-$html = $html.Replace('data-count="21.4"', $figReturnPa.Trim())
-$html = $html.Replace('<span class="odd-figure">25.4<span class="odd-unit">%</span></span>', $figOutperf.Trim())
-$html = $html.Replace('<span class="odd-figure">114.0<span class="odd-unit">%</span></span>', $figReturnIncep.Trim())
+$html = $html.Replace('data-count="19.7"', $figReturnPa.Trim())
+$html = $html.Replace('<span class="odd-figure">21.7<span class="odd-unit">%</span></span>', $figOutperf.Trim())
+$html = $html.Replace('<span class="odd-figure">105.2<span class="odd-unit">%</span></span>', $figReturnIncep.Trim())
 
 # ── Split into header / front-page / footer ─────────────────────────────
 $hEnd   = $html.IndexOf('</header>') + '</header>'.Length
@@ -830,12 +830,12 @@ function ziller_customize_figures( $wp_customize ) {
 	$wp_customize->add_section( 'ziller_figures', array(
 		'title'       => 'Ziller - Home Figures',
 		'priority'    => 30,
-		'description' => 'Performance figures on the home page. Enter the number only, no % sign (e.g. 21.4).',
+		'description' => 'Performance figures on the home page. Enter the number only, no % sign (e.g. 19.7).',
 	) );
 	$ziller_fig = array(
-		'ziller_return_pa'      => array( 'Net return p.a. since inception (%)', '21.4' ),
-		'ziller_outperformance' => array( 'Outperformance since inception (%)', '25.4' ),
-		'ziller_return_incep'   => array( 'Total return since inception (%)', '114.0' ),
+		'ziller_return_pa'      => array( 'Net return p.a. since inception (%)', '19.7' ),
+		'ziller_outperformance' => array( 'Outperformance since inception (%)', '21.7' ),
+		'ziller_return_incep'   => array( 'Total return since inception (%)', '105.2' ),
 	);
 	foreach ( $ziller_fig as $id => $f ) {
 		$wp_customize->add_setting( $id, array(

@@ -986,7 +986,7 @@ const counterIO = new IntersectionObserver(
 );
 // Seed the animation's starting value from JS rather than hard-coding it in the
 // markup. The HTML carries the REAL figure so crawlers that don't run JS extract
-// 21.4, not a "0.0" placeholder; anyone with JS sees the same count-up as before.
+// 19.7, not a "0.0" placeholder; anyone with JS sees the same count-up as before.
 // Safe to do after paint: every counter sits well below the fold.
 counterTargets.forEach((el) => {
   const unit = el.querySelector(".perf-unit, .stat-unit, .odd-unit");
