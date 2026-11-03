@@ -64,6 +64,8 @@ $html = $html.Replace('"team.html"','"/people/"')
 $html = $html.Replace('"insights.html"','"/insights/"')
 $html = $html.Replace('"invest.html"','"/invest-with-us/"')
 $html = $html.Replace('"fund.html"','"/ziller-global-fund/"')
+
+$html = $html.Replace('"disclaimer.html', '"/disclaimer/')   # also catches disclaimer.html#zenith-rating
 $html = $html.Replace('href="#contact"','href="/contact/"')   # Contact nav/footer -> dedicated page
 $html = $html.Replace('"contact.html"','"/contact/"')
 $html = $html.Replace('"peter-beck-rocket-lab.html"','"/peter-beck-rocket-lab/"')
@@ -177,6 +179,8 @@ foreach ($slug in @('approach','team','invest','contact','disclaimer','subscribe
 	$p = $p.Replace('"insights.html"','"/insights/"')
 	$p = $p.Replace('"invest.html"','"/invest-with-us/"')
 	$p = $p.Replace('"fund.html"','"/ziller-global-fund/"')
+
+	$p = $p.Replace('"disclaimer.html', '"/disclaimer/')   # also catches disclaimer.html#zenith-rating
 	$p = $p.Replace('"peter-beck-rocket-lab.html"','"/peter-beck-rocket-lab/"')
 	$p = $p.Replace('"the-founders-advantage.html"','"/the-founders-advantage/"')
 	$p = $p.Replace('"catl.html"','"/catl/"')
@@ -236,6 +240,8 @@ $qu = $qu.Replace('"team.html"','"/people/"')
 $qu = $qu.Replace('"insights.html"','"/insights/"')
 $qu = $qu.Replace('"invest.html"','"/invest-with-us/"')
 $qu = $qu.Replace('"fund.html"','"/ziller-global-fund/"')
+
+$qu = $qu.Replace('"disclaimer.html', '"/disclaimer/')   # also catches disclaimer.html#zenith-rating
 $qu = $qu.Replace('player.vimeo.com/video/1181798546?', 'player.vimeo.com/video/<?php echo esc_attr( ziller_vimeo_id( ''1181798546'' ) ); ?>?')
 $qu = $qu.Replace('<link rel="stylesheet" href="styles.css" />', '')
 $qu = $qu.Replace('<script src="prefetch.js" defer></script>', '')
@@ -276,6 +282,8 @@ $f = $f.Replace('"team.html"','"/people/"')
 $f = $f.Replace('"insights.html"','"/insights/"')
 $f = $f.Replace('"invest.html"','"/invest-with-us/"')
 $f = $f.Replace('"fund.html"','"/ziller-global-fund/"')
+
+$f = $f.Replace('"disclaimer.html', '"/disclaimer/')   # also catches disclaimer.html#zenith-rating
 $f = $f.Replace('<link rel="stylesheet" href="styles.css" />', '')
 $f = $f.Replace('<script src="prefetch.js" defer></script>', '')
 $f = $f.Replace('<body class="page-fund">', "<body <?php body_class('page-fund'); ?>>")
@@ -456,6 +464,8 @@ $i = $i.Replace('"team.html"','"/people/"')
 $i = $i.Replace('"insights.html"','"/insights/"')
 $i = $i.Replace('"invest.html"','"/invest-with-us/"')
 $i = $i.Replace('"fund.html"','"/ziller-global-fund/"')
+
+$i = $i.Replace('"disclaimer.html', '"/disclaimer/')   # also catches disclaimer.html#zenith-rating
 $i = $i.Replace('<link rel="stylesheet" href="styles.css" />', '')
 $i = $i.Replace('<script src="prefetch.js" defer></script>', '')
 $i = $i.Replace('<body class="page-insights">', "<body <?php body_class('page-insights'); ?>>")
@@ -643,6 +653,8 @@ $s = $s.Replace('"team.html"','"/people/"')
 $s = $s.Replace('"insights.html"','"/insights/"')
 $s = $s.Replace('"invest.html"','"/invest-with-us/"')
 $s = $s.Replace('"fund.html"','"/ziller-global-fund/"')
+
+$s = $s.Replace('"disclaimer.html', '"/disclaimer/')   # also catches disclaimer.html#zenith-rating
 $s = $s.Replace(' aria-current="page"','')
 $s = $s.Replace('<link rel="stylesheet" href="styles.css" />', '')
 # Articles get the full essay treatment (page-essay: sticky hero portrait, content
