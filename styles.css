@@ -6224,3 +6224,17 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
     text-wrap: pretty;
   }
 }
+
+/* ─── PARDOT COOKIE CONSENT BANNER — HIDDEN ───────────────
+   Pardot (Salesforce Account Engagement) injects #pi_tracking_opt_in_div on
+   the WordPress site when its "tracking opt-in" setting is on, with its own
+   inline styles (a translucent white slab 100pt down the page with 2em YES/NO
+   links). A restyle as a navy bar and then a small corner card was tried on
+   2026-11-05; the user asked for it hidden entirely.
+   CONSEQUENCE, flagged at the time: with opt-in enabled, Pardot sets its
+   tracking cookies only after a visitor clicks Yes — so with the banner
+   hidden, new visitors are not tracked by Pardot at all. If marketing wants
+   that tracking back without a banner, the place to change it is Pardot's
+   opt-in setting (a marketing/legal call), not this rule. Deleting this rule
+   brings back Pardot's own unstyled banner. */
+#pi_tracking_opt_in_div { display: none !important; }
