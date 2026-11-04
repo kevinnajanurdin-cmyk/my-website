@@ -2465,8 +2465,8 @@ body.nav-open.over-hero .header-cta {
   padding: 0;
   display: grid;
   /* Four tracks, each card spanning two, so it still reads as a two-column
-     grid — but a lone card on the last row (the 5th, "Latest financial
-     report") can sit in the MIDDLE two tracks, centred under the pair above,
+     grid — but a lone card on the last row (the 5th, "Annual Financial
+     Statement (Audited)") can sit in the MIDDLE two tracks, centred under the pair above,
      instead of hanging off the left. Any odd count centres its last card. */
   grid-template-columns: repeat(4, 1fr);
   gap: 14px;
