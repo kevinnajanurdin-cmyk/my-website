@@ -691,11 +691,7 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
 }
 .stat-number {
   font-family: var(--serif);
-  /* Stepped down from clamp(64px, 9vw, 112px) after legal's review (Nov 2026):
-     "the font size has an impact on perception". About a fifth smaller at the
-     top end — still the headline figure of the section, no longer outsized
-     against the past-performance note now set directly beneath it. */
-  font-size: clamp(56px, 7.4vw, 92px);
+  font-size: clamp(64px, 9vw, 112px);
   font-weight: 500;
   line-height: 1;
   color: var(--ink);
@@ -717,17 +713,6 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
   max-width: none;
   letter-spacing: .02em;
   line-height: 1.5;
-}
-
-/* Past-performance note directly under the headline figure. "Prominent" was
-   legal's word, so it is body-adjacent rather than footnote-sized: 13px in
-   --ink-soft (well above AA), not the 12px muted grey of the page's footnotes. */
-.about-stat-note {
-  margin: 18px 0 0;
-  max-width: 560px;
-  font-size: 13px;
-  line-height: 1.55;
-  color: var(--ink-soft);
 }
 
 /* ─── SECTION TITLES ───────────────────────────────────── */
