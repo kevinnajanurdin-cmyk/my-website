@@ -672,6 +672,26 @@ body.over-hero .btn-outline:hover { background: var(--on-dark); color: var(--dar
           box-decoration-break: clone;
 }
 
+/* Sections hidden pending legal review (Nov 2026) use the `hidden` attribute;
+   both classes set their own display, which would otherwise override it. */
+.about-stat[hidden],
+.odds[hidden] { display: none !important; }
+/* While the Founder-led Advantage band is hidden, About and "What founders do
+   differently" are two off-white sections back to back with ~250px of air between
+   them, which read as a missing block rather than a pause. A hairline at About's
+   1000px measure marks the break, and the gap is tightened to ~170px so the rule
+   reads as intended. All of this switches off by itself when the band returns. */
+.about:has(+ .odds[hidden]) { padding-bottom: 0; }
+.about:has(+ .odds[hidden]) .about-inner::after {
+  /* Drawn inside About's own column so it starts and ends exactly where the
+     headline and button do (the same measure the stat's rule used to have). */
+  content: '';
+  display: block;
+  margin-top: clamp(56px, 8vh, 88px);
+  border-top: 1px solid var(--line);
+}
+.odds[hidden] + .advantage { padding-top: clamp(56px, 8vh, 88px); }
+
 .about-stat {
   margin-top: 72px;
   padding-top: 40px;

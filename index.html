@@ -283,7 +283,12 @@
           A Sydney-based global equity specialist, investing in
           <em>founder-led stocks</em> across key global growth themes.
         </h2>
-        <div class="about-stat">
+        <!-- HIDDEN for now (Nov 2026) pending LRC's review against ASIC RG 234 —
+             the headline return was judged too prominent without a 1-year return,
+             benchmark, as-at date or nearby risk warning. Kept in the markup (and
+             in the build's Customizer hook) so it can come back by deleting the
+             `hidden` attribute. -->
+        <div class="about-stat" hidden>
           <!-- Real figure in the markup so non-JS crawlers extract 19.7, not the
                animation's start value. script.js reseeds this to 0.0 before the
                count-up; see the counterTargets loop. -->
@@ -298,7 +303,10 @@
     </section>
 
     <!-- THE FOUNDER-LED ADVANTAGE -->
-    <section class="odds" id="invest">
+    <!-- HIDDEN for now (Nov 2026) pending LRC's review: the 10x / 3.3% alpha
+         research headline, the 20-year chart (methodology under review) and the
+         Fund's 21.7% / 105.2% figures. Restore by deleting the `hidden` attribute. -->
+    <section class="odds" id="invest" hidden>
       <aside class="odds-rail" aria-hidden="true">
         <span class="odds-rail-label">The Founder-led Advantage</span>
         <span class="odds-rail-mark"></span>
