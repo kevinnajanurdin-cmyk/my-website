@@ -118,15 +118,147 @@
     <section class="ins-archive" aria-label="All essays">
       <div class="container">
         <nav class="ins-tabs" aria-label="Filter essays">
-          <button class="ins-filter is-active" data-filter="founder">Founder in Focus</button>
-          <button class="ins-filter" data-filter="thought">Thought Piece</button>
-          <button class="ins-filter" data-filter="company">Company in Focus</button>
-        </nav>
+                  <button class="ins-filter is-active" data-filter="articles">Articles</button>
+                  <button class="ins-filter" data-filter="media">Media</button>
+                  <button class="ins-filter" data-filter="videos-webinars">Videos &amp; Webinars</button>
+                </nav>
+
+        <!-- "As featured in": shown only on the Media / Videos & Webinars tabs (CSS :has on .ins-grid[data-filter]).
+             The WordPress build swaps this row, the tabs and every card for its own PHP. -->
+        <div class="featured-in" aria-label="As featured in">
+          <span class="featured-in-label">As featured in</span>
+          <img class="outlet-logo" src="assets/outlets/afr.svg" alt="Australian Financial Review" style="--h:15px" loading="lazy" decoding="async"><span class="outlet-wordmark outlet-wordmark--aus">The Australian</span><img class="outlet-logo" src="assets/outlets/livewire.png" alt="Livewire" style="--h:17px" loading="lazy" decoding="async"><img class="outlet-logo" src="assets/outlets/morningstar.svg" alt="Morningstar" style="--h:15px" loading="lazy" decoding="async"><img class="outlet-logo" src="assets/outlets/financial-standard.png" alt="Financial Standard" style="--h:22px" loading="lazy" decoding="async">
+        </div>
+
 
         <div class="ins-grid">
-          <article class="ins-card" data-category="founder" data-reveal>
+          <article class="ins-card" data-category="articles" data-reveal>
+            <a class="ins-card-link" href="https://www.zillerfm.com/jensen-huang/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/1752703201173.jpg')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Founder in Focus</span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">Jensen Huang, Nvidia</h3>
+                  <p class="ins-card-byline">by Wendy Herringer</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="articles" data-reveal style="--d:0.06s">
+            <a class="ins-card-link" href="https://www.zillerfm.com/coinbase/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/merlin_186392295_8b82a578-bb84-4a24-92bd-ad87e194a0e8-mediumSquareAt3X-1024x1024.webp')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Company in Focus</span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">Coinbase</h3>
+                  <p class="ins-card-byline">by Kevin Najanurdin</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="videos-webinars" data-reveal style="--d:0.12s">
+            <a class="ins-card-link" href="https://www.zillerfm.com/buy-hold-sell-berkshire-palantir-and-3-more-founder-led-stocks/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/Buy-Hold-Sell-Berkshire-Palantir.png')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Videos &amp; Webinars</span>
+                <span class="ins-outlet-scrim" aria-hidden="true"></span><span class="ins-outlet"><img class="outlet-logo" src="assets/outlets/livewire.png" alt="Livewire" style="--h:17px" loading="lazy" decoding="async"></span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">Buy Hold Sell: Berkshire, Palantir and 3 more founder-led stocks</h3>
+                  <p class="ins-card-byline">by Ziller Funds Management</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="articles" data-reveal>
+            <a class="ins-card-link" href="https://www.zillerfm.com/fortinet/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/accelerate25-blog-hero-1024x768.jpg')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Company in Focus</span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">Fortinet</h3>
+                  <p class="ins-card-byline">by Wendy Herringer</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="videos-webinars" data-reveal style="--d:0.06s">
+            <a class="ins-card-link" href="https://www.zillerfm.com/buy-hold-sell-a-mega-mag-7-special/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/LW-Buy-Hold-Sell.png')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Videos &amp; Webinars</span>
+                <span class="ins-outlet-scrim" aria-hidden="true"></span><span class="ins-outlet"><img class="outlet-logo" src="assets/outlets/livewire.png" alt="Livewire" style="--h:17px" loading="lazy" decoding="async"></span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">Buy Hold Sell: A mega Mag 7 special</h3>
+                  <p class="ins-card-byline">by Ziller Funds Management</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="media" data-reveal style="--d:0.12s">
+            <a class="ins-card-link" href="https://www.zillerfm.com/benchmark-investors-face-growth-gap-as-firms-delay-listing/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/drop-feature-5.png')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Media</span>
+                <span class="ins-outlet-scrim" aria-hidden="true"></span><span class="ins-outlet"><img class="outlet-logo" src="assets/outlets/financial-newswire.png" alt="Financial Newswire" style="--h:24px" loading="lazy" decoding="async"></span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">Benchmark investors face growth gap as firms delay listing</h3>
+                  <p class="ins-card-byline">by pGunning</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="articles" data-reveal>
+            <a class="ins-card-link" href="https://www.zillerfm.com/the-founder-constant/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/206981fgsdl-1024x744.jpg')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Thought Piece</span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">The Founder Constant</h3>
+                  <p class="ins-card-byline">by Kevin Najanurdin</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="media" data-reveal style="--d:0.06s">
+            <a class="ins-card-link" href="https://www.zillerfm.com/saaspocalypse-was-a-buying-opportunity-this-manager-took-it/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/fundie-Joseph-Ziller_primary-1024x576.jpg')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Media</span>
+                <span class="ins-outlet-scrim" aria-hidden="true"></span><span class="ins-outlet"><img class="outlet-logo" src="assets/outlets/livewire.png" alt="Livewire" style="--h:17px" loading="lazy" decoding="async"></span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">SaaSpocalypse was a buying opportunity. This manager took it</h3>
+                  <p class="ins-card-byline">by Ziller Funds Management</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="articles" data-reveal style="--d:0.12s">
+            <a class="ins-card-link" href="https://www.zillerfm.com/spacex/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/Starship-Flight-9-cosmic-perspective-XL-1.jpg')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Company in Focus</span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">SpaceX</h3>
+                  <p class="ins-card-byline">by Kevin Najanurdin</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="videos-webinars" data-reveal>
+            <a class="ins-card-link" href="https://www.zillerfm.com/brilliant-investment-thinkers-podcast/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/Built-to-compound-1024x512.png')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Videos &amp; Webinars</span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">Brilliant Investment Thinkers. Podcast</h3>
+                  <p class="ins-card-byline">by Ziller Funds Management</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="articles" data-reveal style="--d:0.06s">
             <a class="ins-card-link" href="peter-beck-rocket-lab.html">
-              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('assets/essays/Peter_Beck_KNZM_(cropped).jpg')">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/Peter_Beck_KNZM_cropped-1024x683.webp')">
                 <span class="ins-card-kicker"><span class="ins-card-dot"></span>Founder in Focus</span>
                 <div class="ins-card-cap">
                   <h3 class="ins-card-title">Peter Beck, Rocket Lab</h3>
@@ -136,25 +268,189 @@
             </a>
           </article>
 
-          <article class="ins-card" data-category="thought" data-reveal style="--d:.06s">
-            <a class="ins-card-link" href="the-founders-advantage.html">
-              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('assets/essays/founders-advantage-hero.jpg'); --ins-pos:center center;">
-                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Thought Piece</span>
+          <article class="ins-card" data-category="videos-webinars" data-reveal style="--d:0.12s">
+            <a class="ins-card-link" href="https://www.zillerfm.com/livewire-growth-series-may-2026/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/Growth_Interview_Joe-Ziller_Ziller-Funds-Management_inline-1024x576.jpg')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Videos &amp; Webinars</span>
+                <span class="ins-outlet-scrim" aria-hidden="true"></span><span class="ins-outlet"><img class="outlet-logo" src="assets/outlets/livewire.png" alt="Livewire" style="--h:17px" loading="lazy" decoding="async"></span>
                 <div class="ins-card-cap">
-                  <h3 class="ins-card-title">The Founders&rsquo; Advantage</h3>
+                  <h3 class="ins-card-title">Livewire Growth Series &#8211; May 2026</h3>
+                  <p class="ins-card-byline">by Ziller Funds Management</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="articles" data-reveal>
+            <a class="ins-card-link" href="https://www.zillerfm.com/money-forward/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/money-forward-offices-chennai-11-e1783147960817-1024x837.jpg')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Company in Focus</span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">Money Forward</h3>
                   <p class="ins-card-byline">by Wendy Herringer</p>
                 </div>
               </div>
             </a>
           </article>
 
-          <article class="ins-card" data-category="company" data-reveal style="--d:.12s">
-            <a class="ins-card-link" href="catl.html">
-              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('assets/essays/CATL_Arnstadt_2crop_2020-04.jpg'); --ins-pos:center center;">
+          <article class="ins-card" data-category="videos-webinars" data-reveal style="--d:0.06s">
+            <a class="ins-card-link" href="https://www.zillerfm.com/morningstar-meet-the-manager/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/Drop.png')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Videos &amp; Webinars</span>
+                <span class="ins-outlet-scrim" aria-hidden="true"></span><span class="ins-outlet"><img class="outlet-logo" src="assets/outlets/morningstar.svg" alt="Morningstar" style="--h:15px" loading="lazy" decoding="async"></span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">Morningstar: Meet the Manager</h3>
+                  <p class="ins-card-byline">by Ziller Funds Management</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="articles" data-reveal style="--d:0.12s">
+            <a class="ins-card-link" href="https://www.zillerfm.com/sam-hupert-pro-medicus/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/4ab53f8e38d50b61bbee95fea4aa22fb-1024x576.avif')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Founder in Focus</span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">Sam Hupert, Pro Medicus</h3>
+                  <p class="ins-card-byline">by Wendy Herringer</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="videos-webinars" data-reveal>
+            <a class="ins-card-link" href="https://www.zillerfm.com/financial-standard-product-showcase/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/Ziller-Financial-Standard-1024x576.png')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Videos &amp; Webinars</span>
+                <span class="ins-outlet-scrim" aria-hidden="true"></span><span class="ins-outlet"><img class="outlet-logo" src="assets/outlets/financial-standard.png" alt="Financial Standard" style="--h:22px" loading="lazy" decoding="async"></span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">Financial Standard &#8211; Product Showcase</h3>
+                  <p class="ins-card-byline">by Ziller Funds Management</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="articles" data-reveal style="--d:0.06s">
+            <a class="ins-card-link" href="the-founders-advantage.html">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/Ziller-Founders-1024x544.png')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Thought Piece</span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">The Founders’ Advantage</h3>
+                  <p class="ins-card-byline">by Wendy Herringer</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="media" data-reveal style="--d:0.12s">
+            <a class="ins-card-link" href="https://www.zillerfm.com/ziller-doubles-down-on-tech-bets-and-launches-etf-on-the-asx/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/JZ-domain-feature-image.png')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Media</span>
+                <span class="ins-outlet-scrim" aria-hidden="true"></span><span class="ins-outlet"><img class="outlet-logo" src="assets/outlets/afr.svg" alt="Australian Financial Review" style="--h:15px" loading="lazy" decoding="async"></span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">Ziller doubles down on tech bets and launches ETF on the ASX</h3>
+                  <p class="ins-card-byline">by Ziller Funds Management</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="articles" data-reveal>
+            <a class="ins-card-link" href="https://www.zillerfm.com/portfolio-founder-in-focus-marcos-galperin-mercado-libre/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/marcos-galperin-el-creador-de-la-compania-en-el-ZLP7C7SMJJG2NFEA5J5ZEWE6OE-1024x683.jpg')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Founder in Focus</span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">Marcos Galperin, Mercado Libre</h3>
+                  <p class="ins-card-byline">by Wendy Herringer</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="articles" data-reveal style="--d:0.06s">
+            <a class="ins-card-link" href="https://www.zillerfm.com/portfolio-holding-in-focus-lumine-group/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/Lumine-group_MWC25Booth.webp')">
                 <span class="ins-card-kicker"><span class="ins-card-dot"></span>Company in Focus</span>
                 <div class="ins-card-cap">
-                  <h3 class="ins-card-title">Contemporary Amperex Technology Co. (CATL)</h3>
+                  <h3 class="ins-card-title">Lumine Group</h3>
+                  <p class="ins-card-byline">by Wendy Herringer</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="media" data-reveal style="--d:0.12s">
+            <a class="ins-card-link" href="https://www.zillerfm.com/fund-manager-joseph-ziller-reveals-stocks-behind-his-39pc-returns/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/Joe-rock.png')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Media</span>
+                <span class="ins-outlet-scrim" aria-hidden="true"></span><span class="ins-outlet"><span class="outlet-wordmark outlet-wordmark--aus">The Australian</span></span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">Fund manager Joseph Ziller reveals stocks behind his 39pc returns</h3>
+                  <p class="ins-card-byline">by Ziller Funds Management</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="articles" data-reveal>
+            <a class="ins-card-link" href="https://www.zillerfm.com/investing-through-volatility/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/volatile-water-drops.png')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Thought Piece</span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">Investing Through Volatility</h3>
                   <p class="ins-card-byline">by Joseph Ziller</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="articles" data-reveal style="--d:0.06s">
+            <a class="ins-card-link" href="https://www.zillerfm.com/portfolio-holding-in-focus-contemporary-amperex-technology-co-catl/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/CATL_Arnstadt_2crop_2020-04-2-1024x584.jpg')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Company in Focus</span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">Contemporary Amperex Technology Co (CATL)</h3>
+                  <p class="ins-card-byline">by Joseph Ziller</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="media" data-reveal style="--d:0.12s">
+            <a class="ins-card-link" href="https://www.zillerfm.com/former-maple-brown-abbott-fundie-makes-first-big-hire-under-perennial/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/WH-feature-image.png')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Media</span>
+                <span class="ins-outlet-scrim" aria-hidden="true"></span><span class="ins-outlet"><img class="outlet-logo" src="assets/outlets/afr.svg" alt="Australian Financial Review" style="--h:15px" loading="lazy" decoding="async"></span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">Former Maple-Brown Abbott fundie makes first big hire under Perennial</h3>
+                  <p class="ins-card-byline">by Ziller Funds Management</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="media" data-reveal>
+            <a class="ins-card-link" href="https://www.zillerfm.com/perennial-buys-stake-in-ex-maple-brown-abbott-fundies-shop/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/JZ-Loue-Douvis-AFR-feature-image.png')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Media</span>
+                <span class="ins-outlet-scrim" aria-hidden="true"></span><span class="ins-outlet"><img class="outlet-logo" src="assets/outlets/afr.svg" alt="Australian Financial Review" style="--h:15px" loading="lazy" decoding="async"></span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">Perennial buys stake in ex-Maple-Brown Abbott fundie’s shop</h3>
+                  <p class="ins-card-byline">by Ziller Funds Management</p>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="ins-card" data-category="media" data-reveal style="--d:0.06s">
+            <a class="ins-card-link" href="https://www.zillerfm.com/this-fundie-returned-50pc-and-is-all-in-on-figma/">
+              <div class="ins-card-media ins-card-media--photo" style="--ins-img:url('https://www.zillerfm.com/wp-content/uploads/JZ-city-feature-image.png')">
+                <span class="ins-card-kicker"><span class="ins-card-dot"></span>Media</span>
+                <span class="ins-outlet-scrim" aria-hidden="true"></span><span class="ins-outlet"><img class="outlet-logo" src="assets/outlets/afr.svg" alt="Australian Financial Review" style="--h:15px" loading="lazy" decoding="async"></span>
+                <div class="ins-card-cap">
+                  <h3 class="ins-card-title">How these founder-led stocks rocketed Ziller to a 50pc return</h3>
+                  <p class="ins-card-byline">by Ziller Funds Management</p>
                 </div>
               </div>
             </a>

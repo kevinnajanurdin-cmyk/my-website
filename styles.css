@@ -6265,3 +6265,45 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
    opt-in setting (a marketing/legal call), not this rule. Deleting this rule
    brings back Pardot's own unstyled banner. */
 #pi_tracking_opt_in_div { display: none !important; }
+
+/* ─── INSIGHTS: OUTLET MASTHEADS (Nov 2026) ─────────────────────────────────
+   Media / Videos & Webinars cards carry the publication's mark top-right, and an
+   "As featured in" row sits under the tabs on those two tabs only. The outlet is
+   detected from the post (ziller_post_outlet() in functions.php) - no admin field.
+   Marks are white on the photo cards over a soft corner scrim; dark grey in the row. */
+.ins-outlet-scrim {
+  position: absolute; top: 0; right: 0; z-index: 2;
+  width: 60%; height: 96px; pointer-events: none;
+  background: radial-gradient(ellipse at 100% 0%, rgba(10,16,28,.55) 0%, rgba(10,16,28,0) 70%);
+}
+.ins-outlet {
+  position: absolute; top: 14px; right: 14px; z-index: 3;
+  line-height: 1; pointer-events: none; color: #fff;
+}
+.outlet-logo { display: block; height: var(--h, 16px); width: auto; }
+.ins-outlet .outlet-logo { filter: drop-shadow(0 1px 6px rgba(0,0,0,.35)); }
+.outlet-wordmark--aus {
+  display: block; white-space: nowrap;
+  font: 700 13px/1 Georgia, "Times New Roman", serif; letter-spacing: .12em; text-transform: uppercase;
+}
+.ins-outlet .outlet-wordmark { text-shadow: 0 1px 8px rgba(0,0,0,.35); }
+
+.featured-in {
+  display: none; align-items: center; justify-content: center; flex-wrap: wrap;
+  gap: 18px 44px; margin: 0 auto 40px; padding: 22px 0;
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+.ins-archive:has(.ins-grid[data-filter="media"]) .featured-in,
+.ins-archive:has(.ins-grid[data-filter="videos-webinars"]) .featured-in { display: flex; }
+.featured-in-label {
+  font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.featured-in .outlet-logo { height: calc(var(--h, 16px) * 1.25); filter: brightness(0); opacity: .72; }
+.featured-in .outlet-wordmark { opacity: .72; font-size: 15px; }
+@media (max-width: 640px) {
+  .featured-in { gap: 14px 26px; padding: 18px 0; }
+  .featured-in-label { flex-basis: 100%; text-align: center; }
+  .ins-outlet { top: 12px; right: 12px; }
+}

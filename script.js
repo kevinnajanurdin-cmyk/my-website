@@ -20,7 +20,7 @@ if (toggle) {
 // ─── Founders data ─────────────────────────────────────
 // Deck order: the carousel opens on the MIDDLE card so the fan is symmetric —
 // cards spread evenly left and right instead of trailing off to one side (see
-// `cfPos` in the coverflow block). Jensen Huang, the founder we lead with, is
+// `cfPos` in the coverflow block). The opening card (Jensen Huang until he was hidden, Nov 2026) is
 // therefore placed at the centre index rather than first; everyone else keeps
 // their relative order. Move a founder here and the opening card moves with it.
 const founders = [
@@ -67,23 +67,26 @@ const founders = [
     thesis: "Marcos built Latin America’s leading digital commerce ecosystem, integrating e-commerce, payments, logistics and financial services into a platform that has become essential infrastructure for millions of consumers and businesses."
   },
   {
+    // ── Centre of the deck: the card the carousel opens on (16 visible → index 7) ──
+    first: "Alex", last: "Karp", company: "Palantir",
+    role: "Co-founder & CEO", founded: "2003", sector: "AI Platforms",
+    geo: "United States", accent: "#0a1a2f",
+    thesis: "Alex built Palantir to turn a company’s scattered data into a living model of its operations — one system where employees and agents can see what’s happening, decide what to do, and act."
+  },
+  {
     first: "David", last: "Baszucki", company: "Roblox",
     role: "Co-founder & CEO", founded: "2004", sector: "Digital Media",
     geo: "United States", accent: "#e2241a",
     thesis: "David built Roblox as a platform rather than a collection of games, giving users the tools to create experiences, attract audiences and earn from the worlds they build."
   },
   {
-    // ── Centre of the deck: the card the carousel opens on ──
+    // HIDDEN (Nov 2026): Jensen Huang stepped down as Nvidia CEO. Delete `hidden`
+    // to bring the card back; it was the centre/opening card before.
+    hidden: true,
     first: "Jensen", last: "Huang", company: "Nvidia",
     role: "Co-founder & CEO", founded: "1993", sector: "AI Hardware",
     geo: "United States", accent: "#76b900",
     thesis: "Jensen recognised that GPUs could power far more than graphics, then spent three decades building the chips, software and developer ecosystem that underpins today’s AI revolution."
-  },
-  {
-    first: "Alex", last: "Karp", company: "Palantir",
-    role: "Co-founder & CEO", founded: "2003", sector: "AI Platforms",
-    geo: "United States", accent: "#0a1a2f",
-    thesis: "Alex built Palantir to turn a company’s scattered data into a living model of its operations — one system where employees and agents can see what’s happening, decide what to do, and act."
   },
   {
     first: "Brian", last: "Armstrong", company: "Coinbase",
@@ -127,13 +130,13 @@ const founders = [
     geo: "Kazakhstan", accent: "#f14635",
     thesis: "Mikheil turned a regional bank into one of the world’s most embedded super apps outside China — integrating payments, shopping and financial services so deeply that most of Kazakhstan transacts through Kaspi every day."
   }
-];
+].filter((f) => !f.hidden);  // hidden founders stay in the data, off the carousel
 
 // Map company → portrait filename in assets/founders/ (null = no portrait)
 const PORTRAIT_FILES = {
   "Tesla": "elon.webp",  // transparent cutout (from elon.png master) — keep alpha, never JPG
   "Nvidia": "jensen.jpg",
-  "Palantir": "alex.jpg",
+  "Palantir": "alex-karp.jpg",  // renamed Nov 2026 (recentred): the host caches images for 10 years
   "Coinbase": "brian.jpg",
   "XPeng": "xiaopeng.jpg",
   "Figma": "dylan.jpg",

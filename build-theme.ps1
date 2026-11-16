@@ -159,7 +159,7 @@ $front  = "<?php get_header(); ?>`r`n" + $main + "`r`n<?php get_footer(); ?>`r`n
 # WP silently keeps serving the old WPBakery content. The template also declares a
 # "Template Name", so it can be picked by hand under Page > Page Attributes as a
 # fallback if the slug ever moves.
-$ziller_wpslug = @{ 'approach' = 'investment-philosophy-and-process'; 'team' = 'people'; 'invest' = 'invest-with-us'; 'contact' = 'contact'; 'disclaimer' = 'disclaimer'; 'subscribe' = 'subscribe'; 'founder-led-advantage' = 'the-founder-led-advantage' }
+$ziller_wpslug = @{ 'approach' = 'investment-philosophy-and-process'; 'team' = 'people'; 'invest' = 'invest-with-us'; 'contact' = 'contact'; 'disclaimer' = 'disclaimer'; 'subscribe' = 'subscribe'; 'founder-led-advantage' = 'global-fund-active-etf' }
 foreach ($slug in @('approach','team','invest','contact','disclaimer','subscribe','founder-led-advantage')) {
 	$p = [System.IO.File]::ReadAllText((Join-Path $src "$slug.html"))
 	$cls = "page-$slug"
@@ -185,7 +185,7 @@ foreach ($slug in @('approach','team','invest','contact','disclaimer','subscribe
 	$p = $p.Replace('"the-founders-advantage.html"','"/the-founders-advantage/"')
 	$p = $p.Replace('"catl.html"','"/catl/"')
 	$p = $p.Replace('"subscribe.html"','"/subscribe/"')
-	$p = $p.Replace('"founder-led-advantage.html"','"/the-founder-led-advantage/"')
+	$p = $p.Replace('"founder-led-advantage.html"','"/global-fund-active-etf/"')
 
 	# styles.css enqueued globally; prefetch dropped
 	$p = $p.Replace('<link rel="stylesheet" href="styles.css" />', '')
@@ -200,8 +200,8 @@ foreach ($slug in @('approach','team','invest','contact','disclaimer','subscribe
 	# already live (uat.zillerfm.com/.../file2.mp4). Prefer a Media Library copy
 	# when one is uploaded as "founder-led-advantage.mp4", so the page can be moved
 	# off the staging host without another theme build.
-	$p = $p.Replace('src="https://uat.zillerfm.com/wp-content/uploads/file2.mp4"',
-		'src="<?php $zv = ziller_advantage_video_url(); echo esc_url( $zv ? $zv : ''https://uat.zillerfm.com/wp-content/uploads/file2.mp4'' ); ?>"')
+	$p = $p.Replace('src="https://www.zillerfm.com/wp-content/uploads/file2.mp4"',
+		'src="<?php $zv = ziller_advantage_video_url(); echo esc_url( $zv ? $zv : ''https://www.zillerfm.com/wp-content/uploads/file2.mp4'' ); ?>"')
 
 	# Body class via WP (keeps admin bar working, preserves page-xxx)
 	$p = $p.Replace("<body class=""$cls"">", "<body <?php body_class('$cls'); ?>>")
@@ -489,8 +489,14 @@ $insTabs = @'
           <button class="ins-filter<?php echo $ins_first ? ' is-active' : ''; ?>" data-filter="<?php echo esc_attr( $ins_term->slug ); ?>"><?php echo esc_html( $ins_term->name ); ?></button>
 <?php $ins_first = false; endforeach; ?>
         </nav>
+        <?php // "As featured in": shown only while the Media / Videos & Webinars tab is active (CSS :has on .ins-grid[data-filter]). ?>
+        <div class="featured-in" aria-label="As featured in">
+          <span class="featured-in-label">As featured in</span>
+          <?php foreach ( array( 'afr', 'aus', 'lw', 'ms', 'fs' ) as $ins_fk ) { echo ziller_outlet_mark( $ins_fk ); } ?>
+        </div>
 '@
-$i = [regex]::Replace($i, '(?s)<nav class="ins-tabs" aria-label="Filter essays">.*?</nav>', { param($m) $insTabs.Trim() })
+# The static page's own "As featured in" row (GitHub preview) goes too: $insTabs brings the PHP one.
+$i = [regex]::Replace($i, '(?s)<nav class="ins-tabs" aria-label="Filter essays">.*?</nav>(\s*<!-- "As featured in".*?<div class="featured-in".*?</div>)?', { param($m) $insTabs.Trim() })
 
 $insGrid = @'
 <?php
@@ -517,12 +523,14 @@ $insGrid = @'
           $ins_cat = $ins_sub ? $ins_sub : $ins_top;   // label
           $ins_filt = $ins_top ? $ins_top : $ins_cat;  // filter slug
           $ins_img = get_the_post_thumbnail_url( get_the_ID(), 'large' );
+          $ins_outlet = ( $ins_filt && in_array( $ins_filt->slug, array( 'media', 'videos-webinars' ), true ) ) ? ziller_post_outlet( get_the_ID() ) : '';
         ?>
           <?php $ins_d = ( $ins_q->current_post % 3 ) * 0.06; // stagger the scroll-reveal like the static page (0/.06s/.12s per row) ?>
           <article class="ins-card" data-category="<?php echo esc_attr( $ins_filt ? $ins_filt->slug : 'insight' ); ?>" data-reveal<?php if ( $ins_d > 0 ) : ?> style="--d:<?php echo esc_attr( $ins_d ); ?>s"<?php endif; ?>>
             <a class="ins-card-link" href="<?php the_permalink(); ?>">
               <div class="ins-card-media ins-card-media--photo"<?php if ( $ins_img ) echo " style=\"--ins-img:url('" . esc_url( $ins_img ) . "')\""; ?>>
                 <span class="ins-card-kicker"><span class="ins-card-dot"></span><?php echo esc_html( $ins_cat ? $ins_cat->name : 'Insight' ); ?></span>
+                <?php if ( $ins_outlet ) : ?><span class="ins-outlet-scrim" aria-hidden="true"></span><span class="ins-outlet"><?php echo ziller_outlet_mark( $ins_outlet ); ?></span><?php endif; ?>
                 <div class="ins-card-cap">
                   <h3 class="ins-card-title"><?php the_title(); ?></h3>
                   <p class="ins-card-byline">by <?php the_author(); ?></p>
@@ -887,6 +895,54 @@ function ziller_customize_figures( $wp_customize ) {
 function ziller_sanitize_figure( $value, $setting ) {
 	$value = str_replace( array( '%', ',', ' ' ), '', trim( (string) $value ) );
 	return preg_match( '/^-?\d+(\.\d+)?$/', $value ) ? $value : $setting->default;
+}
+
+// ── Insights: outlet masthead on Media / Videos & Webinars cards ─────────────
+// No admin field: the outlet is worked out from the post itself. An explicit title
+// keyword wins (e.g. "Buy Hold Sell" = Livewire); otherwise the publication whose
+// domain is linked most often in the post body (every media post links its source).
+// Logos live in the theme at assets/outlets/. To add an outlet: one row in each map.
+function ziller_post_outlet( $post_id ) {
+	$title = get_the_title( $post_id );
+	foreach ( array(
+		'Buy Hold Sell'      => 'lw',
+		'Livewire'           => 'lw',
+		'Morningstar'        => 'ms',
+		'Financial Standard' => 'fs',
+		'Financial Newswire' => 'fnw',
+	) as $kw => $key ) {
+		if ( stripos( $title, $kw ) !== false ) { return $key; }
+	}
+	$body = (string) get_post_field( 'post_content', $post_id );
+	$best = ''; $hits = 0;
+	foreach ( array(
+		'afr'  => 'afr\.com',
+		'aus'  => 'theaustralian\.com\.au',
+		'lw'   => 'livewiremarkets\.com',
+		'ms'   => 'morningstar\.com',
+		'fs'   => 'financialstandard\.com\.au',
+		'fnw'  => 'financialnewswire\.com\.au',
+	) as $key => $re ) {
+		$n = preg_match_all( '~' . $re . '~i', $body );
+		if ( $n > $hits ) { $hits = $n; $best = $key; }
+	}
+	return $best;
+}
+
+// The mark itself: an image where we hold official artwork, else a text wordmark.
+function ziller_outlet_mark( $key ) {
+	$img = array(
+		'afr' => array( 'afr.svg', 'Australian Financial Review', 15 ),
+		'lw'  => array( 'livewire.png', 'Livewire', 17 ),
+		'ms'  => array( 'morningstar.svg', 'Morningstar', 15 ),
+		'fs'  => array( 'financial-standard.png', 'Financial Standard', 22 ),
+		'fnw' => array( 'financial-newswire.png', 'Financial Newswire', 24 ),
+	);
+	if ( isset( $img[ $key ] ) ) {
+		return '<img class="outlet-logo" src="' . esc_url( get_template_directory_uri() . '/assets/outlets/' . $img[ $key ][0] ) . '" alt="' . esc_attr( $img[ $key ][1] ) . '" style="--h:' . (int) $img[ $key ][2] . 'px" loading="lazy" decoding="async">';
+	}
+	if ( 'aus' === $key ) { return '<span class="outlet-wordmark outlet-wordmark--aus">The Australian</span>'; }
+	return '';
 }
 
 // Quarterly video ID from the Customizer field (accepts a bare ID or any Vimeo URL);
