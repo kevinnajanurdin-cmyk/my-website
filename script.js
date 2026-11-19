@@ -67,17 +67,17 @@ const founders = [
     thesis: "Marcos built Latin America’s leading digital commerce ecosystem, integrating e-commerce, payments, logistics and financial services into a platform that has become essential infrastructure for millions of consumers and businesses."
   },
   {
-    // ── Centre of the deck: the card the carousel opens on (16 visible → index 7) ──
+    first: "Dario", last: "Amodei", company: "Anthropic",
+    role: "Co-founder & CEO", founded: "2021", sector: "AI Platforms",
+    geo: "United States", accent: "#d97757",
+    thesis: "Dario foresaw the transformative potential of AI before most and assembled arguably the finest AI research team on the planet, united by a culture of intellectual honesty and a shared ambition to push the frontiers of intelligence."
+  },
+  {
+    // ── Centre of the deck: the card the carousel opens on (17 visible → index 8) ──
     first: "Alex", last: "Karp", company: "Palantir",
     role: "Co-founder & CEO", founded: "2003", sector: "AI Platforms",
     geo: "United States", accent: "#0a1a2f",
     thesis: "Alex built Palantir to turn a company’s scattered data into a living model of its operations — one system where employees and agents can see what’s happening, decide what to do, and act."
-  },
-  {
-    first: "David", last: "Baszucki", company: "Roblox",
-    role: "Co-founder & CEO", founded: "2004", sector: "Digital Media",
-    geo: "United States", accent: "#e2241a",
-    thesis: "David built Roblox as a platform rather than a collection of games, giving users the tools to create experiences, attract audiences and earn from the worlds they build."
   },
   {
     // HIDDEN (Nov 2026): Jensen Huang stepped down as Nvidia CEO. Delete `hidden`
@@ -119,6 +119,12 @@ const founders = [
     thesis: "Peter turned a rocket built in a garage into a reliable launch service, then expanded into the satellites and systems needed to run complete space missions."
   },
   {
+    first: "David", last: "Baszucki", company: "Roblox",
+    role: "Co-founder & CEO", founded: "2004", sector: "Digital Media",
+    geo: "United States", accent: "#e2241a",
+    thesis: "David built Roblox as a platform rather than a collection of games, giving users the tools to create experiences, attract audiences and earn from the worlds they build."
+  },
+  {
     first: "Yosuke", last: "Tsuji", company: "Money Forward",
     role: "Founder & CEO", founded: "2012", sector: "FinTech",
     geo: "Japan", accent: "#0099a8",
@@ -151,6 +157,7 @@ const PORTRAIT_FILES = {
   "Roblox": "baszucki.jpg",
   "Kaspi": "mikheil.png",
   "Waaree": "hitesh.jpg",
+  "Anthropic": "dario-amodei.jpg",
 };
 const portraitUrl = (company) => {
   const f = PORTRAIT_FILES[company];
@@ -177,6 +184,7 @@ const LOGO_FILES = {
   "Kaspi": "kaspi.png",
   "SpaceX": "spacex.svg",
   "Waaree": "waaree.png",
+  "Anthropic": "anthropic.svg",  // official wordmark from anthropic.com
 };
 const logoUrl = (company) =>
   `assets/companies/${encodeURIComponent(LOGO_FILES[company] || "").replace(/%2F/g, "/")}`;
@@ -214,6 +222,7 @@ const LOGO_HEIGHTS = {
   "Kaspi":         50,   // filled disc, stencil cutouts (dense)
   "SpaceX":        21,   // very wide wordmark (aspect ~8.1, same class as Fortinet)
   "Waaree":        26,   // wordmark + underline bar, tagline cropped off (aspect ~5.4, dense)
+  "Anthropic":     21,   // very wide wordmark (aspect ~8.9, same class as Fortinet / SpaceX)
 };
 
 // Map company → scene/brand photo in assets/scenes/ (null = none yet)
@@ -235,6 +244,7 @@ const SCENE_FILES = {
   "Roblox": "roblox.jpg",
   "Kaspi": "kaspi.webp",
   "Waaree": "waaree.jpg",
+  "Anthropic": "anthropic.jpg",
 };
 const sceneUrl = (company) => {
   const f = SCENE_FILES[company];
@@ -298,6 +308,7 @@ const SCENE_YOUTUBE = {
   "Lumine":        { id: "oMKR10UfxNQ", zoom: 1.36, biasX: 0.35 },
   "Fortinet":      { id: "o0btrmZcmGI" },
   "Kaspi":         { id: "Gbw18iKpqP8", start: 2, zoom: 1.6, biasY: 0.35, biasX: 0.7 }, // subs bottom, watermark top-left
+  "Anthropic":     { id: "JDsFHmq9hlA" },
   "Roblox":        { id: "VL6rYNmfrjM", start: 5 },               // skip the "1989" title card
   "Figma":         { id: "IVON-e6gOG8", start: 3 },
   "CATL":          { id: "Z75mVvU7MPQ", zoom: 1.5, biasY: 0.38 }, // subtitles at the bottom
