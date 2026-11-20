@@ -37,10 +37,10 @@ const founders = [
     thesis: "David is applying the Constellation Software playbook to communications and media, acquiring niche software businesses and compounding value through disciplined capital allocation and decentralised management."
   },
   {
-    first: "Ken", last: "Xie", company: "Fortinet",
-    role: "Co-founder, Chair & CEO", founded: "2000", sector: "Cyber Security",
-    geo: "United States", accent: "#ee3124",
-    thesis: "Ken built one of the world’s leading cybersecurity platforms by combining proprietary hardware and software, creating a differentiated architecture that enables faster, lower-cost network security at scale."
+    first: "David", last: "Baszucki", company: "Roblox",
+    role: "Co-founder & CEO", founded: "2004", sector: "Digital Media",
+    geo: "United States", accent: "#e2241a",
+    thesis: "David built Roblox as a platform rather than a collection of games, giving users the tools to create experiences, attract audiences and earn from the worlds they build."
   },
   {
     first: "Robin", last: "Zeng", company: "CATL",
@@ -119,10 +119,10 @@ const founders = [
     thesis: "Peter turned a rocket built in a garage into a reliable launch service, then expanded into the satellites and systems needed to run complete space missions."
   },
   {
-    first: "David", last: "Baszucki", company: "Roblox",
-    role: "Co-founder & CEO", founded: "2004", sector: "Digital Media",
-    geo: "United States", accent: "#e2241a",
-    thesis: "David built Roblox as a platform rather than a collection of games, giving users the tools to create experiences, attract audiences and earn from the worlds they build."
+    first: "Ken", last: "Xie", company: "Fortinet",
+    role: "Co-founder, Chair & CEO", founded: "2000", sector: "Cyber Security",
+    geo: "United States", accent: "#ee3124",
+    thesis: "Ken built one of the world’s leading cybersecurity platforms by combining proprietary hardware and software, creating a differentiated architecture that enables faster, lower-cost network security at scale."
   },
   {
     first: "Yosuke", last: "Tsuji", company: "Money Forward",
@@ -700,7 +700,16 @@ if (coverflow && cards.length) {
   // Tunables — feel free to adjust
   // Phones get a tighter arc so the (larger) mobile cards still show their
   // neighbours peeking in at the edges; desktop keeps the original 240.
-  const SPREAD_X = matchMedia("(max-width: 560px)").matches ? 205 : 240;
+  // On large monitors the CSS grows the cards past 280px (HERO CAROUSEL:
+  // RESPONSIVE FIT in styles.css); widen the fan in proportion so they don't
+  // bunch up. Never tighter than the original 240 on desktop / tablet.
+  let SPREAD_X = 240;
+  const measureSpread = () => {
+    if (matchMedia("(max-width: 560px)").matches) { SPREAD_X = 205; return; }
+    const w = cards[0] ? cards[0].offsetWidth : 280;
+    SPREAD_X = Math.max(240, Math.round(w * 240 / 280));
+  };
+  measureSpread();
   const DEPTH_Z = 160;      // px each card pushes back per step
   const ROTATE_Y = 32;      // deg rotation per step
   const FALLOFF = 0.26;     // opacity falloff per step (1 - x*FALLOFF)
@@ -780,7 +789,7 @@ if (coverflow && cards.length) {
 
   // Initial paint
   renderCoverflow();
-  window.addEventListener("resize", renderCoverflow, { passive: true });
+  window.addEventListener("resize", () => { measureSpread(); renderCoverflow(); }, { passive: true });
 
   // The cards beyond the opening fan are loading="lazy", and — translated up
   // to ~1400px off to the sides — the browser rightly hasn't fetched them. But

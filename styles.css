@@ -6307,3 +6307,102 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
   .featured-in-label { flex-basis: 100%; text-align: center; }
   .ins-outlet { top: 12px; right: 12px; }
 }
+
+/* ─── HERO CAROUSEL: RESPONSIVE FIT (Nov 2026) ─────────────────────────────
+   Feedback: the hero looked messy away from 1920×1080. On short laptops the
+   cards overlapped the headline and the founder name; on tall / large screens
+   the cards sat small in big dead gaps. Cause: the cards are absolutely
+   positioned inside a 1fr grid row that never reserved their height, and the
+   spacing was a stack of fixed translateY nudges. Now the stage reserves
+   exactly one card height, the pieces stack with viewport-scaled gaps, the
+   group centres in the screen, the card size follows the viewport height, and
+   on very short screens the hero grows past one screen instead of overlapping.
+   (The rules above are kept for history; this block overrides them.) */
+.coverflow,
+.coverflow-pin,
+body.page-home .coverflow-pin,
+body.home .coverflow-pin { height: auto; }
+.coverflow-inner {
+  /* Card height tracks the viewport: 380px (the original 280×380 card) once
+     the screen is ~870px tall, shrinking to 240px on short laptops (1366×768 fits whole). */
+  --cf-h: clamp(240px, calc(100vh - 505px), 380px);
+  --cf-w: calc(var(--cf-h) * 280 / 380);
+  /* (named --cf-h / --cf-w because .cover-card above defines its own --ch / --cw,
+     which would shadow anything inherited from here) */
+  --cf-gap: clamp(20px, calc(7vh - 20px), 96px);
+  min-height: calc(100vh - 35px);   /* the topbar sits above the hero */
+  /* Phones: 100vh is the height with the browser's address bar HIDDEN, so a
+     100vh hero ran its bottom line (the "click a founder" hint) under the
+     search bar. svh = the height with the bars showing. */
+  min-height: calc(100svh - 35px);
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  padding: calc(93px + clamp(12px, calc(5vh - 20px), 56px)) 24px clamp(16px, calc(4vh - 10px), 48px);
+  transform: none;
+}
+.coverflow-head { margin: 0 0 var(--cf-gap); }
+.coverflow-head .section-title {
+  font-size: clamp(28px, min(3.5vw, 5.4vh), 48px);
+  transform: none;
+}
+.coverflow-stage {
+  flex: none;
+  height: var(--cf-h);
+  margin-bottom: var(--cf-gap);
+  transform: none;
+}
+.cover-card {
+  width: var(--cf-w);
+  height: var(--cf-h);
+  margin-left: calc(var(--cf-w) / -2);
+  margin-top: calc(var(--cf-h) / -2);
+}
+.coverflow-meta { transform: none; min-height: 64px; }
+.coverflow-progress { transform: none; margin: clamp(14px, 2.4vh, 28px) auto 0; }
+.coverflow-hint { transform: none; margin-top: clamp(14px, 2.4vh, 28px); }
+
+/* Large monitors (1440p and up): let the cards grow so they don't float small
+   in the middle of the screen. script.js widens the fan to match. */
+@media (min-width: 1600px) and (min-height: 1200px) {
+  .coverflow-inner { --cf-h: clamp(380px, calc(100vh - 560px), 520px); }
+}
+/* Tablets: a touch larger than the old fixed 200×280 when there's height for it. */
+@media (max-width: 900px) {
+  .coverflow-inner { --cf-h: clamp(280px, calc(100vh - 560px), 360px); }
+}
+/* Phones: the original 232×315 lead card. */
+@media (max-width: 560px) {
+  .coverflow-inner {
+    /* the original 232×315, easing down a little on short phones (360×740)
+       so the hint line isn't clipped at the bottom of the first screen */
+    --cf-h: clamp(200px, calc(100vh - 445px), 315px);
+    --cf-h: clamp(200px, calc(100svh - 445px), 315px);
+    --cf-w: calc(var(--cf-h) * 232 / 315);
+    --cf-gap: clamp(16px, calc(100svh * .07 - 24px), 40px);
+    padding-top: calc(76px + clamp(12px, calc(100svh * .05 - 20px), 40px));
+    padding-bottom: 16px;
+  }
+}
+/* Short laptops shrink the card to ~180px wide, where the name and company in
+   the photo tag ran into each other: stack them instead. */
+@media (min-width: 561px) and (max-height: 820px) {
+  .cover-card-tag {
+    flex-direction: column; align-items: flex-start; gap: 4px;
+    left: 14px; right: 14px; bottom: 14px; font-size: 11px;
+  }
+}
+/* Small phones with the browser bars showing (iPhone SE: ~553px visible):
+   tighten everything a notch more so the hint still lands on the first screen. */
+@media (max-width: 560px) and (max-height: 620px) {
+  .coverflow-inner { --cf-h: 168px; --cf-gap: 14px; padding-top: calc(76px + 8px); padding-bottom: 10px; }
+  .coverflow-head .section-title { font-size: 24px; margin-top: 10px; }
+  .coverflow-meta { min-height: 54px; }
+  .coverflow-active-name { font-size: 22px; }
+  .coverflow-progress { margin-top: 10px; }
+  .coverflow-hint { margin-top: 12px; }
+}
+/* 320px phones: keep the hint on one line. */
+@media (max-width: 359px) { .coverflow-hint { font-size: 10px; letter-spacing: .08em; } }
