@@ -6324,12 +6324,12 @@ body.page-home .coverflow-pin,
 body.home .coverflow-pin { height: auto; }
 .coverflow-inner {
   /* Card height tracks the viewport: 380px (the original 280×380 card) once
-     the screen is ~870px tall, shrinking to 240px on short laptops (1366×768 fits whole). */
-  --cf-h: clamp(240px, calc(100vh - 505px), 380px);
+     the screen is ~935px tall, shrinking to 240px on short laptops (1366×768 fits whole). */
+  --cf-h: clamp(240px, calc(100vh - 555px), 380px);
   --cf-w: calc(var(--cf-h) * 280 / 380);
   /* (named --cf-h / --cf-w because .cover-card above defines its own --ch / --cw,
      which would shadow anything inherited from here) */
-  --cf-gap: clamp(20px, calc(7vh - 20px), 96px);
+  --cf-gap: clamp(20px, calc(6vh - 16px), 96px);
   min-height: calc(100vh - 35px);   /* the topbar sits above the hero */
   /* Phones: 100vh is the height with the browser's address bar HIDDEN, so a
      100vh hero ran its bottom line (the "click a founder" hint) under the

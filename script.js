@@ -20,7 +20,7 @@ if (toggle) {
 // ─── Founders data ─────────────────────────────────────
 // Deck order: the carousel opens on the MIDDLE card so the fan is symmetric —
 // cards spread evenly left and right instead of trailing off to one side (see
-// `cfPos` in the coverflow block). The opening card (Jensen Huang until he was hidden, Nov 2026) is
+// `cfPos` in the coverflow block). The opening card (Jensen Huang; Alex Karp while Jensen was hidden, Nov 2026) is
 // therefore placed at the centre index rather than first; everyone else keeps
 // their relative order. Move a founder here and the opening card moves with it.
 const founders = [
@@ -73,20 +73,17 @@ const founders = [
     thesis: "Dario foresaw the transformative potential of AI before most and assembled arguably the finest AI research team on the planet, united by a culture of intellectual honesty and a shared ambition to push the frontiers of intelligence."
   },
   {
-    // ── Centre of the deck: the card the carousel opens on (17 visible → index 8) ──
-    first: "Alex", last: "Karp", company: "Palantir",
-    role: "Co-founder & CEO", founded: "2003", sector: "AI Platforms",
-    geo: "United States", accent: "#0a1a2f",
-    thesis: "Alex built Palantir to turn a company’s scattered data into a living model of its operations — one system where employees and agents can see what’s happening, decide what to do, and act."
-  },
-  {
-    // HIDDEN (Nov 2026): Jensen Huang stepped down as Nvidia CEO. Delete `hidden`
-    // to bring the card back; it was the centre/opening card before.
-    hidden: true,
+    // ── Centre of the deck: the card the carousel opens on (18 founders → index 8) ──
     first: "Jensen", last: "Huang", company: "Nvidia",
     role: "Co-founder & CEO", founded: "1993", sector: "AI Hardware",
     geo: "United States", accent: "#76b900",
     thesis: "Jensen recognised that GPUs could power far more than graphics, then spent three decades building the chips, software and developer ecosystem that underpins today’s AI revolution."
+  },
+  {
+    first: "Alex", last: "Karp", company: "Palantir",
+    role: "Co-founder & CEO", founded: "2003", sector: "AI Platforms",
+    geo: "United States", accent: "#0a1a2f",
+    thesis: "Alex built Palantir to turn a company’s scattered data into a living model of its operations — one system where employees and agents can see what’s happening, decide what to do, and act."
   },
   {
     first: "Brian", last: "Armstrong", company: "Coinbase",
