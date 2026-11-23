@@ -6329,7 +6329,7 @@ body.home .coverflow-pin { height: auto; }
   --cf-w: calc(var(--cf-h) * 280 / 380);
   /* (named --cf-h / --cf-w because .cover-card above defines its own --ch / --cw,
      which would shadow anything inherited from here) */
-  --cf-gap: clamp(20px, calc(6vh - 16px), 96px);
+  --cf-gap: clamp(20px, calc(13vh - 72px), 96px);
   min-height: calc(100vh - 35px);   /* the topbar sits above the hero */
   /* Phones: 100vh is the height with the browser's address bar HIDDEN, so a
      100vh hero ran its bottom line (the "click a founder" hint) under the
@@ -6338,14 +6338,21 @@ body.home .coverflow-pin { height: auto; }
   height: auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* Top-anchored so "The founders we back" sits exactly where it always did
+     (eyebrow top = 92px + 9.2vh, measured off the pre-Nov-2026 layout); the
+     gaps below then scale with height. Phones centre instead (see below). */
+  justify-content: flex-start;
   gap: 0;
-  padding: calc(93px + clamp(12px, calc(5vh - 20px), 56px)) 24px clamp(16px, calc(4vh - 10px), 48px);
+  padding: calc(57px + 9.2vh) 24px clamp(16px, calc(4vh - 10px), 48px);
   transform: none;
 }
 .coverflow-head { margin: 0 0 var(--cf-gap); }
 .coverflow-head .section-title {
   font-size: clamp(28px, min(3.5vw, 5.4vh), 48px);
+  /* was margin 16px + translateY(-16px). The eyebrow's own bottom margin
+     collapses with this one, so -16px is what restores the original tight
+     eyebrow-to-title gap without leaving a phantom 16px in the layout. */
+  margin-top: -16px;
   transform: none;
 }
 .coverflow-stage {
@@ -6382,6 +6389,7 @@ body.home .coverflow-pin { height: auto; }
     --cf-h: clamp(200px, calc(100svh - 445px), 315px);
     --cf-w: calc(var(--cf-h) * 232 / 315);
     --cf-gap: clamp(16px, calc(100svh * .07 - 24px), 40px);
+    justify-content: center;
     padding-top: calc(76px + clamp(12px, calc(100svh * .05 - 20px), 40px));
     padding-bottom: 16px;
   }
