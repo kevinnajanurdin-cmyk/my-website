@@ -700,14 +700,14 @@ if (coverflow && cards.length) {
   // The fan spacing follows the card width (desktop's 240px step on a 280px
   // card), so neighbours tuck behind the lead card at every size. Phones use a
   // tighter step (0.7 × card width) so the overlap reads on a narrow screen.
-  // (A fixed 205px step there left gaps between the cards.)
-  // Desktop / tablet never go tighter than the original 240.
+  // (A fixed 205px step there left gaps between the cards; the same happened
+  // on short laptops, so desktop has no 240px floor any more.)
   let SPREAD_X = 240;
   const measureSpread = () => {
     const w = cards[0] ? cards[0].offsetWidth : 280;
     SPREAD_X = matchMedia("(max-width: 560px)").matches
       ? Math.round(w * 0.7)
-      : Math.max(240, Math.round(w * 240 / 280));
+      : Math.round(w * 240 / 280);
   };
   measureSpread();
   const DEPTH_Z = 160;      // px each card pushes back per step
