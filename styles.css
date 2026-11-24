@@ -6323,18 +6323,18 @@ html:not(.js) .ins-card:first-child .ins-card-dot::before { animation-delay: -1s
 body.page-home .coverflow-pin,
 body.home .coverflow-pin { height: auto; }
 .coverflow-inner {
-  /* Card height tracks the viewport HEIGHT (the browser window, not the
-     monitor: a 1920×1080 screen leaves ~1900×940 after tabs, address bar and
-     taskbar). The stack around the card grows ~0.44px per px of height, so
-     the card takes the remaining 0.56 minus ~40px of breathing room under the
-     hint. Reaches the full 380px (original 280×380 card) at ~1015px tall;
-     190px floor keeps 1366×768 / 1280×800 laptops whole.
-     (Was 100vh - 555px: it left ~0px under the hint at 800–940px tall.) */
-  --cf-h: clamp(190px, calc(56vh - 188px), 380px);
+  /* Desktop keeps the original full-size 280×380 card on any normal monitor
+     (down to ~880px of browser window, i.e. 1920×1080 / 1680×1050 with tabs,
+     address bar and taskbar). Room for the hint comes from the gaps instead:
+     --cf-gap tightens between ~1080 and ~880px tall. Only below ~880px does
+     the card shrink, keeping ~35px under the "click a founder" hint.
+     (Nov 2026: 100vh - 555px left 0px under the hint at 800–940px; then
+     56vh - 188px fixed that but shrank the card, which wasn't wanted.) */
+  --cf-h: clamp(180px, min(calc(82vh - 359px), calc(30vh + 99px)), 380px);
   --cf-w: calc(var(--cf-h) * 280 / 380);
   /* (named --cf-h / --cf-w because .cover-card above defines its own --ch / --cw,
      which would shadow anything inherited from here) */
-  --cf-gap: clamp(20px, calc(13vh - 72px), 96px);
+  --cf-gap: clamp(16px, calc(26vh - 213px), 96px);
   min-height: calc(100vh - 35px);   /* the topbar sits above the hero */
   /* Phones: 100vh is the height with the browser's address bar HIDDEN, so a
      100vh hero ran its bottom line (the "click a founder" hint) under the
