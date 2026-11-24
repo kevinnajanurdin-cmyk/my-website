@@ -695,16 +695,17 @@ if (coverflow && cards.length) {
   let cfPos = START_INDEX;  // floating active index (0 … total-1), hover-driven
 
   // Tunables — feel free to adjust
-  // Phones get a tighter arc so the (larger) mobile cards still show their
-  // neighbours peeking in at the edges; desktop keeps the original 240.
-  // On large monitors the CSS grows the cards past 280px (HERO CAROUSEL:
-  // RESPONSIVE FIT in styles.css); widen the fan in proportion so they don't
-  // bunch up. Never tighter than the original 240 on desktop / tablet.
+  // The fan spacing follows the card width (desktop's 240px step on a 280px
+  // card), so neighbours tuck behind the lead card at every size. Phones use a
+  // tighter step (0.7 × card width) so the overlap reads on a narrow screen.
+  // (A fixed 205px step there left gaps between the cards.)
+  // Desktop / tablet never go tighter than the original 240.
   let SPREAD_X = 240;
   const measureSpread = () => {
-    if (matchMedia("(max-width: 560px)").matches) { SPREAD_X = 205; return; }
     const w = cards[0] ? cards[0].offsetWidth : 280;
-    SPREAD_X = Math.max(240, Math.round(w * 240 / 280));
+    SPREAD_X = matchMedia("(max-width: 560px)").matches
+      ? Math.round(w * 0.7)
+      : Math.max(240, Math.round(w * 240 / 280));
   };
   measureSpread();
   const DEPTH_Z = 160;      // px each card pushes back per step
