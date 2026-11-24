@@ -136,25 +136,27 @@ const founders = [
 ].filter((f) => !f.hidden);  // hidden founders stay in the data, off the carousel
 
 // Map company → portrait filename in assets/founders/ (null = no portrait)
+// "-g" files: colour-matched to the set (Nov 2026; Robin + Marcos re-cropped).
+// New names, not overwrites: the live host caches images for 10 years.
 const PORTRAIT_FILES = {
-  "Tesla": "elon.webp",  // transparent cutout (from elon.png master) — keep alpha, never JPG
+  "Tesla": "elon-g.webp",  // colour-matched Nov 2026; transparent cutout (from elon.png master) — keep alpha, never JPG
   "Nvidia": "jensen.jpg",
   "Palantir": "alex-karp.jpg",  // renamed Nov 2026 (recentred): the host caches images for 10 years
-  "Coinbase": "brian.jpg",
-  "XPeng": "xiaopeng.jpg",
+  "Coinbase": "brian-g.jpg",
+  "XPeng": "xiaopeng-g.jpg",
   "Figma": "dylan.jpg",
   "Rocket Lab": "peter.jpg",
-  "Money Forward": "yosuke.jpg",
-  "Axon": "rick.jpg",
+  "Money Forward": "yosuke-g.jpg",
+  "Axon": "rick-g.jpg",
   "Lumine": "nyland.jpg",
-  "Fortinet": "ken.jpg",
-  "CATL": "robin.jpg",
-  "Pro Medicus": "sam.jpg",
-  "Mercado Libre": "marcos.jpg",
+  "Fortinet": "ken-g.jpg",
+  "CATL": "robin-g.jpg",
+  "Pro Medicus": "sam-g.jpg",
+  "Mercado Libre": "marcos-g.jpg",
   "Roblox": "baszucki.jpg",
   "Kaspi": "mikheil.png",
-  "Waaree": "hitesh.jpg",
-  "Anthropic": "dario-amodei.jpg",
+  "Waaree": "hitesh-g.jpg",
+  "Anthropic": "dario-amodei-g.jpg",
 };
 const portraitUrl = (company) => {
   const f = PORTRAIT_FILES[company];
