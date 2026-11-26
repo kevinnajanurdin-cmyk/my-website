@@ -663,7 +663,9 @@ if ( '' === $ziller_epigraph && has_category( 'founder-in-focus' ) && preg_match
       <div class="essay-body">
         <div class="container essay-container">
           <?php echo $ziller_body; // the_content filters already applied above (epigraph hoisted out) ?>
+          <?php if ( ! has_category( array( 'media', 'videos-webinars' ) ) ) : // writer's-views note is for our own articles, not media coverage or videos ?>
           <p class="essay-disclaimer">Please note that these are the views of the writer and not necessarily the views of Ziller. This article does not take into account your investment objectives, particular needs, or financial situation.</p>
+          <?php endif; ?>
         </div>
       </div>
       <footer class="essay-foot">
