@@ -365,7 +365,59 @@
   }
   /* Governance strip: closing line sits at the foot of the first panel */
   .jn .jn-gov > div:first-child { display: flex; flex-direction: column; }
-  .jn .jn-gov .jn-welcome { margin-top: auto; padding-top: 14px; color: var(--ink); font-weight: 500; }
+  .jn .jn-gov .jn-welcome { margin-top: 0; padding-top: 1.6em; color: var(--ink); font-weight: 500; }
+
+  /* -- Entrance + hover layer -- */
+  .jn .jn-strip b .num, .jn .jn-team strong .num { display: inline; font: inherit; color: inherit; margin: 0; white-space: nowrap; }
+  /* Panels and strips: cells rise in one after another */
+  .js .jn .jn-takeaways > div, .js .jn .jn-strip > div, .js .jn .jn-steps > li {
+    opacity: 0; transform: translateY(14px);
+    transition: opacity .6s ease, transform .8s cubic-bezier(.2,.7,.2,1), border-color .3s ease; }
+  .js .jn .jn-takeaways.in > div, .js .jn .jn-strip.in > div, .js .jn .jn-steps.in > li { opacity: 1; transform: none; }
+  .js .jn .jn-takeaways.in > :nth-child(2), .js .jn .jn-strip.in > :nth-child(2), .js .jn .jn-steps.in > :nth-child(2) { transition-delay: .12s, .12s, 0s; }
+  .js .jn .jn-takeaways.in > :nth-child(3), .js .jn .jn-strip.in > :nth-child(3), .js .jn .jn-steps.in > :nth-child(3) { transition-delay: .24s, .24s, 0s; }
+  .js .jn .jn-takeaways.in > :nth-child(4), .js .jn .jn-strip.in > :nth-child(4), .js .jn .jn-steps.in > :nth-child(4) { transition-delay: .36s, .36s, 0s; }
+  /* Strip top rule draws across */
+  .jn .jn-strip { position: relative; }
+  .js .jn .jn-strip { border-top-color: transparent; }
+  .js .jn .jn-strip::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: var(--ink); transform: scaleX(0); transform-origin: left; transition: transform 1s cubic-bezier(.65,0,.35,1); }
+  .js .jn .jn-strip.in::before { transform: none; }
+  /* Timeline: each node pops as its step arrives; hovering a step inks its chip */
+  .js .jn .jn-steps > li::before { transform: scale(0); transition: transform .45s cubic-bezier(.3,1.6,.5,1) .2s; }
+  .js .jn .jn-steps.in > li::before { transform: none; }
+  .js .jn .jn-steps.in > li:nth-child(2)::before { transition-delay: .32s; }
+  .js .jn .jn-steps.in > li:nth-child(3)::before { transition-delay: .44s; }
+  .js .jn .jn-steps.in > li:nth-child(4)::before { transition-delay: .56s; }
+  .jn .jn-steps > li .state { transition: background .3s ease, color .3s ease; }
+  .jn .jn-steps > li:hover .state { background: var(--ink); color: #fff; }
+  .jn .jn-steps > li:not(.now):hover { border-left-color: var(--ink); }
+  /* Tesla aside: the rule grows, then the text settles in */
+  .jn .jn-aside { position: relative; }
+  .js .jn .jn-aside { border-left-color: transparent; }
+  .js .jn .jn-aside::before { content: ""; position: absolute; left: -2px; top: 0; bottom: 0; width: 2px; background: var(--terracotta-on-light); transform: scaleY(0); transform-origin: top; transition: transform .9s cubic-bezier(.65,0,.35,1); }
+  .js .jn .jn-aside.in::before { transform: none; }
+  .js .jn .jn-aside > * { opacity: 0; transform: translateX(-8px); transition: opacity .6s ease .35s, transform .8s cubic-bezier(.2,.7,.2,1) .35s; }
+  .js .jn .jn-aside.in > * { opacity: 1; transform: none; }
+  /* Bars: values count up with the bars; hovering one quietens the other */
+  .js .jn .jn-bars .v { transition-delay: .25s; }
+  .js .jn .jn-bars .jn-bar-r { transition: transform 1.1s cubic-bezier(.2,.7,.2,1), opacity .3s ease; }
+  .jn .jn-bars svg.hov .jn-bar-r:not(.hot) { opacity: .35; }
+  /* Team tiles: gentle lift on hover */
+  /* Share price: crosshair read-out follows the pointer */
+  .jn .jn-chart svg { touch-action: pan-y; }
+  .jn .jn-hit { fill: transparent; cursor: crosshair; }
+  .jn .jn-xh { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 3 4; opacity: .55; }
+  .jn .jn-xd { fill: #fff; stroke: var(--ink); stroke-width: 2; }
+  .jn .jn-ro { pointer-events: none; opacity: 0; transition: opacity .18s ease; }
+  .jn svg.ro-on .jn-ro { opacity: 1; }
+  .jn .jn-tip rect { fill: var(--ink); }
+  .jn .jn-tip text { fill: #fff; font-family: var(--sans); font-size: 14px; dominant-baseline: central; text-anchor: start; }
+  .jn .jn-tip text tspan.p { font-weight: 700; }
+  .jn .jn-svg-m .jn-tip text { font-size: 15px; }
+  @media (prefers-reduced-motion: reduce) {
+    .js .jn .jn-takeaways > div, .js .jn .jn-strip > div, .js .jn .jn-steps > li, .js .jn .jn-aside > * { opacity: 1; transform: none; transition: none; }
+    .js .jn .jn-strip::before, .js .jn .jn-aside::before, .js .jn .jn-steps > li::before { transform: none; transition: none; }
+  }
 
 </style>
 
@@ -402,7 +454,7 @@
 
         <p class="jn-lede">On 23 November, eleven days after announcing his resignation, Nvidia said its board had voted unanimously to reinstate Jensen Huang as President and CEO, and was satisfied with his candour and his ability to lead the company.<sup><a href="#n1">1</a></sup> After an extraordinary two weeks, this note sets out what happened and how our process guided each decision.</p>
 
-        <div class="jn-takeaways">
+        <div class="jn-takeaways" data-jn-reveal>
           <div><b>We applied our process</b><span>When Jensen left, and again when he returned.</span></div>
           <div><b>We remain cautious</b><span>We have marked down our expected return for the risk that these matters distract Jensen.</span></div>
           <div><b>We remain shareholders</b><span>Nvidia is stronger with Jensen back, and remains a high-conviction holding for us.</span></div>
@@ -475,9 +527,9 @@
 
         <h2>What happens when a founder returns?</h2>
         <p>Twelve of those founders later came back. In those cases, returns went from trailing the index while the founder was away to beating it once the founder returned: a median return of more than 20% p.a., and a median excess return over the benchmark of more than 9% p.a.<sup><a href="#n6">6</a></sup> That margin is wider than the 3.3% p.a. by which founder-led companies as a group outperformed in the same back-test.</p>
-        <div class="jn-fig jn-strip" style="--n:2">
-          <div><b class="fig">More than 20% p.a.</b><span>Median return once the founder returned.<sup><a href="#n6">6</a></sup></span></div>
-          <div><b class="fig">More than 9% p.a.</b><span>Median excess return over the benchmark once the founder returned.<sup><a href="#n6">6</a></sup></span></div>
+        <div class="jn-fig jn-strip" style="--n:2" data-jn-reveal>
+          <div><b class="fig">More than <span class="num">20</span>% p.a.</b><span>Median return once the founder returned.<sup><a href="#n6">6</a></sup></span></div>
+          <div><b class="fig">More than <span class="num">9</span>% p.a.</b><span>Median excess return over the benchmark once the founder returned.<sup><a href="#n6">6</a></sup></span></div>
         </div>
         <p class="jn-caveat">This analysis is hypothetical and does not represent the returns of Ziller Global Fund. Past performance is not a reliable indicator of future performance.</p>
         <p>We read these figures with caution. Twelve companies is a small sample, and Jensen was away for less than two weeks, not years. Nvidia sits somewhere between a founder who never left and a founder who came back. On either reading, companies in our back-testing did better with their founder than without.</p>
@@ -485,7 +537,7 @@
         <h2>A disciplined process</h2>
         <p>A founder’s departure does not mean we become forced sellers overnight. We reassess the expected returns and plan an orderly exit over an appropriate timeframe, guided by our investment process and risk adjusted expected returns, rather than reacting to headlines.</p>
         <p>Our response began before Jensen’s departure as CEO. Following the public disclosure of his personal matters, we applied a discount under the Focus criterion in our quantitative checklist, reflecting the risk that personal, regulatory, political and internal pressures could divert his attention from the business. This lowered our five-year expected total return and led us to moderately reduce the position. With Jensen’s departure as CEO, we further lowered our valuation, reflecting greater uncertainty around Nvidia’s product roadmap, supplier relationships and CUDA’s competitive moat.</p>
-        <ol class="jn-steps">
+        <ol class="jn-steps" data-jn-reveal>
           <li>
             <span class="when">8 to 12 November</span>
             <span class="state">Focus discount applied</span>
@@ -511,7 +563,7 @@
             <p>The Focus discount stays while the situation remains fluid. Nvidia remains a high-conviction holding, with an internally estimated five-year return well above our 15% p.a. hurdle.<sup><a href="#n7">7</a></sup></p>
           </li>
         </ol>
-        <aside class="jn-aside">
+        <aside class="jn-aside" data-jn-reveal>
           <p class="jn-label">We have applied the same discipline before</p>
           <p>Tesla provides a useful example of how we assess founder attention and influence. Following the 2024 US election, Elon Musk’s political commitments, including his role with DOGE, raised questions about how much attention he could devote to his businesses. We applied a discount to Tesla’s expected returns and reduced our position. When his focus returned to the business, we reassessed the investment and increased the position weight.</p>
         </aside>
@@ -522,7 +574,7 @@
         <p>These are the risks our Focus discount captures: anything that limits the time and authority Jensen can bring to the business over the medium term. The discount stays and, as with Tesla, we will reassess as these matters resolve.</p>
 
         <h2>Stronger governance structure</h2>
-        <div class="jn-fig jn-strip jn-gov">
+        <div class="jn-fig jn-strip jn-gov" data-jn-reveal>
           <div><b>An independent Chair</b><span>Nvidia now has an independent Chair for the first time. Harvey Jones, a director since 1993, was appointed on 11 November and stays on.<sup><a href="#n1">1</a></sup></span><span class="jn-welcome">We welcome this stronger governance structure.</span></div>
           <div><b>Two new committees</b><span>Two new committees of independent directors run the board’s investigation and oversee national security and export controls.<sup><a href="#n1">1</a></sup></span></div>
           <div><b>One share, one vote</b><span>This has not changed. Jensen owns about 3.6% of Nvidia and every share carries only one vote.<sup><a href="#n9">9</a></sup> Compared with some of our other founder-led holdings, that is an appropriate balance of control, and it gives the board’s oversight real weight.</span></div>
@@ -531,10 +583,10 @@
         <h2>Why his return matters</h2>
         <p>Jensen Huang has spent three decades building Nvidia into one of the most important companies in the AI revolution. Under his leadership, Nvidia has been one of the strongest contributors to the fund, and its stock price is up approximately 10x since our initial investment. Few founders have created value like Jensen. Of more than 29,000 US stocks since 1926, Nvidia has the highest annualised return of any with a 20-year track record.<sup><a href="#n10">10</a></sup> On that record we regard him as a once-in-a-generation CEO.</p>
         <p><strong>Much of what he has built is the team: in our view, one of the most impressive groups of mission-driven, high-performing people in the world.</strong></p>
-        <div class="jn-fig jn-team" data-jn-reveal>
+        <div class="jn-fig jn-team" data-jn-reveal data-jn-at="0.6">
           <div>
             <svg class="jn-dots" viewBox="0 0 100 100" aria-hidden="true"><circle cx="5" cy="5" r="3.1"/><circle cx="15" cy="5" r="3.1"/><circle cx="25" cy="5" r="3.1"/><circle cx="35" cy="5" r="3.1"/><circle cx="45" cy="5" r="3.1"/><circle cx="55" cy="5" r="3.1"/><circle cx="65" cy="5" r="3.1"/><circle cx="75" cy="5" r="3.1"/><circle cx="85" cy="5" r="3.1"/><circle cx="95" cy="5" r="3.1"/><circle cx="5" cy="15" r="3.1"/><circle cx="15" cy="15" r="3.1"/><circle cx="25" cy="15" r="3.1"/><circle cx="35" cy="15" r="3.1"/><circle cx="45" cy="15" r="3.1"/><circle cx="55" cy="15" r="3.1"/><circle cx="65" cy="15" r="3.1"/><circle cx="75" cy="15" r="3.1"/><circle cx="85" cy="15" r="3.1"/><circle cx="95" cy="15" r="3.1"/><circle cx="5" cy="25" r="3.1"/><circle cx="15" cy="25" r="3.1"/><circle cx="25" cy="25" r="3.1"/><circle cx="35" cy="25" r="3.1"/><circle cx="45" cy="25" r="3.1"/><circle cx="55" cy="25" r="3.1"/><circle cx="65" cy="25" r="3.1"/><circle cx="75" cy="25" r="3.1"/><circle cx="85" cy="25" r="3.1"/><circle cx="95" cy="25" r="3.1"/><circle cx="5" cy="35" r="3.1"/><circle cx="15" cy="35" r="3.1"/><circle cx="25" cy="35" r="3.1"/><circle cx="35" cy="35" r="3.1"/><circle cx="45" cy="35" r="3.1"/><circle cx="55" cy="35" r="3.1"/><circle cx="65" cy="35" r="3.1"/><circle cx="75" cy="35" r="3.1"/><circle cx="85" cy="35" r="3.1"/><circle cx="95" cy="35" r="3.1"/><circle cx="5" cy="45" r="3.1"/><circle cx="15" cy="45" r="3.1"/><circle cx="25" cy="45" r="3.1"/><circle cx="35" cy="45" r="3.1"/><circle cx="45" cy="45" r="3.1"/><circle cx="55" cy="45" r="3.1"/><circle cx="65" cy="45" r="3.1"/><circle cx="75" cy="45" r="3.1"/><circle cx="85" cy="45" r="3.1"/><circle cx="95" cy="45" r="3.1"/><circle cx="5" cy="55" r="3.1"/><circle cx="15" cy="55" r="3.1"/><circle cx="25" cy="55" r="3.1"/><circle cx="35" cy="55" r="3.1"/><circle cx="45" cy="55" r="3.1"/><circle cx="55" cy="55" r="3.1"/><circle cx="65" cy="55" r="3.1"/><circle cx="75" cy="55" r="3.1"/><circle cx="85" cy="55" r="3.1"/><circle cx="95" cy="55" r="3.1"/><circle cx="5" cy="65" r="3.1"/><circle cx="15" cy="65" r="3.1"/><circle cx="25" cy="65" r="3.1"/><circle cx="35" cy="65" r="3.1"/><circle cx="45" cy="65" r="3.1"/><circle cx="55" cy="65" r="3.1"/><circle cx="65" cy="65" r="3.1"/><circle cx="75" cy="65" r="3.1"/><circle cx="85" cy="65" r="3.1"/><circle cx="95" cy="65" r="3.1"/><circle cx="5" cy="75" r="3.1"/><circle cx="15" cy="75" r="3.1"/><circle cx="25" cy="75" r="3.1"/><circle cx="35" cy="75" r="3.1"/><circle cx="45" cy="75" r="3.1"/><circle cx="55" cy="75" r="3.1"/><circle cx="65" cy="75" r="3.1"/><circle cx="75" cy="75" r="3.1"/><circle cx="85" cy="75" r="3.1"/><circle cx="95" cy="75" r="3.1"/><circle cx="5" cy="85" r="3.1"/><circle cx="15" cy="85" r="3.1"/><circle cx="25" cy="85" r="3.1"/><circle cx="35" cy="85" r="3.1"/><circle cx="45" cy="85" r="3.1"/><circle cx="55" cy="85" r="3.1"/><circle cx="65" cy="85" r="3.1"/><circle cx="75" cy="85" r="3.1"/><circle cx="85" cy="85" r="3.1"/><circle cx="95" cy="85" r="3.1"/><circle cx="5" cy="95" r="3.1"/><circle cx="15" cy="95" r="3.1"/><circle cx="25" cy="95" r="3.1"/><circle cx="35" cy="95" r="3.1"/><circle cx="45" cy="95" r="3.1"/><circle cx="55" cy="95" r="3.1"/><circle cx="65" cy="95" r="3.1"/><circle cx="75" cy="95" r="3.1"/><circle cx="85" cy="95" r="3.1"/><circle cx="95" cy="95" r="3.1" class="off"/></svg>
-            <div><strong>99%</strong><span><b>approval of Jensen as CEO</b> in employee reviews on Glassdoor to May 2026, the highest on its 2026 list<sup><a href="#n11">11</a></sup></span></div>
+            <div><strong><span class="num">99</span>%</strong><span><b>approval of Jensen as CEO</b> in employee reviews on Glassdoor to May 2026, the highest on its 2026 list<sup><a href="#n11">11</a></sup></span></div>
           </div>
           <div class="alt">
             <svg viewBox="0 0 104 62" aria-hidden="true"><g class="jn-person fill"><circle cx="18" cy="15" r="8.5"/><path d="M3 60v-6a15 15 0 0 1 30 0v6z"/></g><g class="jn-person"><circle cx="52" cy="15" r="8.5"/><path d="M37 60v-6a15 15 0 0 1 30 0v6z"/></g><g class="jn-person"><circle cx="86" cy="15" r="8.5"/><path d="M71 60v-6a15 15 0 0 1 30 0v6z"/></g></svg>
@@ -590,12 +642,13 @@
 </main>
 <script>
   (function () {
+
     /* Charts draw in as they scroll into view (static without JS / IO). */
     var els = [].slice.call(document.querySelectorAll('[data-jn-reveal]'));
     var check = function () {
       var vh = window.innerHeight || document.documentElement.clientHeight;
       els = els.filter(function (e) {
-        if (e.getBoundingClientRect().top < vh * 0.82) { e.classList.add('in'); return false; }
+        if (e.getBoundingClientRect().top < vh * (parseFloat(e.getAttribute('data-jn-at')) || 0.82)) { e.classList.add('in'); return false; }
         return true;
       });
       if (!els.length) { window.removeEventListener('scroll', check); window.removeEventListener('resize', check); }
@@ -616,6 +669,58 @@
         el.addEventListener('mouseleave', function () { set(null); });
       });
     }
+
+    /* Share price read-out: nearest trading day under the pointer.
+       Closes rounded to the dollar (traced from the source chart). */
+    var DAYS = ['30 Oct','2 Nov','3 Nov','4 Nov','5 Nov','6 Nov','9 Nov','10 Nov','11 Nov','12 Nov','13 Nov','16 Nov','17 Nov','18 Nov','19 Nov','20 Nov','23 Nov'];
+    var PX = [204.5,201.9,206.3,199.6,181.3,186.2,178.4,168.7,173.73,166.0,162.7,156.0,155.2,150.7,145.9,125.08,164.5];
+    var EV = { 6: '1', 9: '2', 12: '3', 15: '4', 16: '5' };
+    var NS = 'http://www.w3.org/2000/svg';
+    var mk = function (tag, attrs, parent) { var n = document.createElementNS(NS, tag); for (var k in attrs) n.setAttribute(k, attrs[k]); parent.appendChild(n); return n; };
+    if (chart) chart.querySelectorAll('svg').forEach(function (svg) {
+      var line = svg.querySelector('.jn-line'); if (!line) return;
+      var pts = line.getAttribute('d').replace(/[ML]/g, ' ').trim().split(/\s+/).map(function (p) { var a = p.split(','); return [+a[0], +a[1]]; });
+      var vb = svg.viewBox.baseVal, x0 = pts[0][0] - 16, x1 = pts[pts.length - 1][0] + 16;
+      var g = mk('g', { 'class': 'jn-ro' }, svg);
+      var xh = mk('line', { 'class': 'jn-xh', y1: 40, y2: 272 }, g);
+      var xd = mk('circle', { 'class': 'jn-xd', r: 5 }, g);
+      var tip = mk('g', { 'class': 'jn-tip' }, g);
+      var tr = mk('rect', { rx: 3, height: 28 }, tip);
+      var tt = mk('text', { x: 10, y: 14 }, tip);
+      var hit = mk('rect', { 'class': 'jn-hit', x: x0, y: 30, width: x1 - x0, height: 250 }, svg);
+      var last = -1;
+      var show = function (i) {
+        if (i === last) return; last = i;
+        var x = pts[i][0], y = pts[i][1];
+        xh.setAttribute('x1', x); xh.setAttribute('x2', x);
+        xd.setAttribute('cx', x); xd.setAttribute('cy', y);
+        while (tt.firstChild) tt.removeChild(tt.firstChild);
+        mk('tspan', {}, tt).textContent = DAYS[i] + ' ';
+        mk('tspan', { 'class': 'p' }, tt).textContent = 'US$' + Math.round(PX[i]);
+        var w = tt.getComputedTextLength() + 20;
+        tr.setAttribute('width', w);
+        var tx = Math.max(vb.x + 2, Math.min(x - w / 2, vb.x + vb.width - w - 2));
+        var ty = y - 50 < 4 ? y + 16 : y - 46;
+        tip.setAttribute('transform', 'translate(' + tx + ',' + ty + ')');
+        set(EV[i] || null);
+      };
+      var move = function (ev) {
+        var m = svg.getScreenCTM(); if (!m) return;
+        var px = (ev.clientX - m.e) / m.a, best = 0, bd = 1e9;
+        pts.forEach(function (p, i) { var d = Math.abs(p[0] - px); if (d < bd) { bd = d; best = i; } });
+        svg.classList.add('ro-on'); show(best);
+      };
+      hit.addEventListener('pointermove', move);
+      hit.addEventListener('pointerdown', move);
+      hit.addEventListener('pointerleave', function () { svg.classList.remove('ro-on'); last = -1; set(null); });
+    });
+    /* Bars: hovering one quietens the other. */
+    document.querySelectorAll('.jn-bars svg').forEach(function (svg) {
+      svg.querySelectorAll('.jn-bar-r').forEach(function (b) {
+        b.addEventListener('mouseenter', function () { svg.classList.add('hov'); b.classList.add('hot'); });
+        b.addEventListener('mouseleave', function () { svg.classList.remove('hov'); b.classList.remove('hot'); });
+      });
+    });
   })();
 </script>
 <footer class="site-footer">
