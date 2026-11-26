@@ -352,6 +352,20 @@
   .jn .jn-list li::before { content: ""; position: absolute; left: -33px; top: .62em; width: 12px; height: 12px; border-radius: 50%; background: var(--ink); }
   .jn .jn-list b { font-weight: 600; color: var(--ink); }
   .jn .jn-team > div { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "num icon" "txt txt"; gap: 14px 20px; align-items: center; align-content: start; }
+  /* 1 in 3: the three figures rise in one by one, then the first fills in */
+  .js .jn .jn-team .jn-person { opacity: 0; transform: translateY(10px); transform-box: fill-box; transition: opacity .5s ease, transform .7s cubic-bezier(.2,.7,.2,1), fill .6s ease; }
+  .js .jn .jn-team .jn-person.fill { fill: transparent; }
+  .js .jn .jn-team.in .jn-person { opacity: 1; transform: none; }
+  .js .jn .jn-team.in .jn-person:nth-child(1) { transition-delay: .25s, .25s, 1.25s; fill: var(--ink); }
+  .js .jn .jn-team.in .jn-person:nth-child(2) { transition-delay: .45s; }
+  .js .jn .jn-team.in .jn-person:nth-child(3) { transition-delay: .65s; }
+  @media (prefers-reduced-motion: reduce) {
+    .js .jn .jn-team .jn-person { opacity: 1; transform: none; transition: none; }
+    .js .jn .jn-team .jn-person.fill { fill: var(--ink); }
+  }
+  /* Governance strip: closing line sits at the foot of the first panel */
+  .jn .jn-gov > div:first-child { display: flex; flex-direction: column; }
+  .jn .jn-gov .jn-welcome { margin-top: auto; padding-top: 14px; color: var(--ink); font-weight: 500; }
 
 </style>
 
@@ -390,7 +404,7 @@
 
         <div class="jn-takeaways">
           <div><b>We applied our process</b><span>When Jensen left, and again when he returned.</span></div>
-          <div><b>The Focus discount stays</b><span>Matters are still unresolved, so the discount we applied to Nvidia remains in place.</span></div>
+          <div><b>We remain cautious</b><span>We have marked down our expected return for the risk that these matters distract Jensen.</span></div>
           <div><b>We remain shareholders</b><span>Nvidia is stronger with Jensen back, and remains a high-conviction holding for us.</span></div>
         </div>
         <figure class="jn-fig jn-chart" data-jn-reveal aria-labelledby="jn-c1">
@@ -432,7 +446,7 @@
           </svg>
           <ol class="jn-events">
             <li data-e="1"><span class="n">1</span><b>9 Nov</b><span class="t">Jensen acknowledges personal matters on 8 Nov. The board opens an investigation.</span></li>
-            <li data-e="2" class="ours"><span class="n">2</span><b>12 Nov</b><span class="t">Having weighed public developments since 8 Nov, we apply our Focus discount and reduce the position by about one-third. Jensen’s resignation is announced after we apply the discount.</span></li>
+            <li data-e="2" class="ours"><span class="n">2</span><b>12 Nov</b><span class="t">Having weighed public developments since 8 Nov, we lower our expected return for the risk to Jensen’s focus (our Focus discount) and reduce the position by about one-third. Jensen’s resignation is announced after we apply the discount.</span></li>
             <li data-e="3"><span class="n">3</span><b>17 Nov</b><span class="t">Quarterly revenue is up 103% yoy.<sup><a href="#n3">3</a></sup> The board says it does not intend to reinstate him.</span></li>
             <li data-e="4"><span class="n">4</span><b>20 Nov</b><span class="t">The low, 28% below the last close before the resignation.</span></li>
             <li data-e="5"><span class="n">5</span><b>23 Nov</b><span class="t">Jensen is reinstated. The shares close 31.5% higher on the day, within 1% of their 12 Nov close.</span></li>
@@ -504,18 +518,17 @@
 
         <h2>Still fluid, so the Focus discount stays</h2>
         <p>Jensen is back, but the position is not settled. The board’s independent investigation continues, as do government investigations and inquiries.<sup><a href="#n1">1</a></sup> We cannot rule out further regulatory action, or a further change in his role, including that he does not remain CEO. Personal and family matters also remain.</p>
+        <p>The matters under investigation are serious, and they are for the board and the authorities to assess, not for us. Jensen has trust to rebuild, and we have lowered our founder ranking of him to reflect that.<sup><a href="#n8">8</a></sup></p>
         <p>These are the risks our Focus discount captures: anything that limits the time and authority Jensen can bring to the business over the medium term. The discount stays and, as with Tesla, we will reassess as these matters resolve.</p>
 
-        <h2>What has changed at Nvidia</h2>
-        <div class="jn-fig jn-strip">
-          <div><b>An independent Chair</b><span>Nvidia now has an independent Chair for the first time. Harvey Jones, a director since 1993, was appointed on 11 November and stays on.<sup><a href="#n1">1</a></sup></span></div>
+        <h2>Stronger governance structure</h2>
+        <div class="jn-fig jn-strip jn-gov">
+          <div><b>An independent Chair</b><span>Nvidia now has an independent Chair for the first time. Harvey Jones, a director since 1993, was appointed on 11 November and stays on.<sup><a href="#n1">1</a></sup></span><span class="jn-welcome">We welcome this stronger governance structure.</span></div>
           <div><b>Two new committees</b><span>Two new committees of independent directors run the board’s investigation and oversee national security and export controls.<sup><a href="#n1">1</a></sup></span></div>
-          <div><b>One share, one vote</b><span>Jensen owns about 3.6% of Nvidia and every share carries only one vote,<sup><a href="#n8">8</a></sup> so that oversight has real weight.</span></div>
+          <div><b>One share, one vote</b><span>This has not changed. Jensen owns about 3.6% of Nvidia and every share carries only one vote.<sup><a href="#n9">9</a></sup> Compared with some of our other founder-led holdings, that is an appropriate balance of control, and it gives the board’s oversight real weight.</span></div>
         </div>
-        <p>We welcome this stronger governance structure.</p>
 
         <h2>Why his return matters</h2>
-        <p>The matters under investigation are serious, and they are for the board and the authorities to assess, not for us. Jensen has trust to rebuild, and we have lowered our founder ranking of him to reflect that.<sup><a href="#n9">9</a></sup> What he has built is a separate question.</p>
         <p>Jensen Huang has spent three decades building Nvidia into one of the most important companies in the AI revolution. Under his leadership, Nvidia has been one of the strongest contributors to the fund, and its stock price is up approximately 10x since our initial investment. Few founders have created value like Jensen. Of more than 29,000 US stocks since 1926, Nvidia has the highest annualised return of any with a 20-year track record.<sup><a href="#n10">10</a></sup> On that record we regard him as a once-in-a-generation CEO.</p>
         <p><strong>Much of what he has built is the team: in our view, one of the most impressive groups of mission-driven, high-performing people in the world.</strong></p>
         <div class="jn-fig jn-team" data-jn-reveal>
@@ -535,7 +548,7 @@
         <blockquote class="essay-inline-quote">
           <p>“Players and coaches alone don’t win championships. Organizations win championships.”</p>
         </blockquote>
-        <p>Michael Jordan left the following year. The Bulls remained, but they never won another championship. He had left once before, in 1993. He returned in 1995, and the Bulls won three more titles.</p>
+        <p>Michael Jordan left the following year. The Bulls remained, but they never won another championship.</p>
         <p>Founder-led investing requires conviction in the individuals behind the businesses and, equally, the discipline to act when their influence changes. We applied that discipline when Jensen left, and we are applying it again now that he is back. Much remains unresolved, and our Focus discount reflects that. But we remain shareholders, and we believe the importance of his return may be under-appreciated: it anchors one of the world’s most talented teams, focused on building the computing power the AI era depends on.</p>
 
         <div class="jn-notes">
@@ -548,8 +561,8 @@
           <li id="n5">Same dataset and method as note 4. ‘While the founder led the business’ measures each company’s annualised return from its listing date to the founder’s departure as CEO, managing director or equivalent primary executive role. ‘After the founder departed’ measures the period from departure to March 2026, or to delisting if earlier. The figures are simple averages across the approximately 2,600 companies in the dataset with a founder departure, using those with return data for each period (approximately 650 while the founder led the business and 2,300 after the founder departed). Hypothetical results; not the returns of Ziller Global Fund.</li>
           <li id="n6">The returning-founder figures cover the small subset of the companies in note 4 whose founder left and later returned to lead the business, comparing annualised stock returns (USD) with the MSCI World Index while the founder was away and after the return. Founder-led companies were identified by Ziller with the benefit of hindsight. Hypothetical results have inherent limitations and are not the returns of Ziller Global Fund.</li>
           <li id="n7">Ziller’s internal estimate of Nvidia’s five-year total return, after the Focus discount, at the 23 November 2026 closing price. It rests on assumptions that may not prove correct and is not a forecast or a guarantee of the return of the stock or of the fund.</li>
-          <li id="n8">Jensen Huang beneficially owned 3.58% of Nvidia’s single class of common stock at 23 March 2026 (NVIDIA 2026 proxy statement).</li>
-          <li id="n9">Jensen Huang remains a Quartile 1 Founder under Ziller’s investment process methodology.</li>
+          <li id="n8">Jensen Huang remains a Quartile 1 Founder under Ziller’s investment process methodology.</li>
+          <li id="n9">Jensen Huang beneficially owned 3.58% of Nvidia’s single class of common stock at 23 March 2026 (NVIDIA 2026 proxy statement).</li>
           <li id="n10">Bessembinder, H. (2024), “Which U.S. Stocks Generated the Highest Long-Term Returns?”, SSRN Working Paper No. 4897069. Analysis of 29,078 US common stocks in the CRSP database, December 1925 to December 2023. Nvidia recorded an annualised compound return of 33.38%, the highest of any stock with at least 20 years of return data.</li>
           <li id="n11">Glassdoor, “Best CEOs 2026”, published 12 August 2026. The list covers US employers with more than 1,000 employees and is based on anonymous, voluntary reviews by current and former US-based employees submitted between 16 May 2025 and 15 May 2026, with no nominations or surveys. The reviews pre-date the events of October and November 2026.</li>
           <li id="n12">Anonymous poll on Blind, June 2024, of about 3,000 respondents identifying as Nvidia employees: 76% said their net worth exceeded US$1 million and 37% said it exceeded US$20 million (as reported by Blind, September 2024; earlier reports of the same poll cited about one-third). Responses are self-selected, self-reported and unverified: indicative only.</li>
