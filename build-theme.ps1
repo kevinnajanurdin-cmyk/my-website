@@ -252,6 +252,38 @@ $qu = $qu -replace '\s*<title>.*?</title>', ''
 $qu = $qu -replace '\s*<meta name="description"[^>]*>', ''
 [System.IO.File]::WriteAllText((Join-Path $theme "page-quarterly-performance-update.php"), $qu, $utf8)
 
+# ── Standalone articles -> page-{slug}.php. Long-form pieces with their own
+#    charts and layout (no WP editor content, no theme chrome on top). Each one is
+#    a self-contained .html in the source; on WordPress create an EMPTY Page with
+#    the same slug (or a Post with that slug, which also lists it on /insights/)
+#    and WP picks the template automatically. Add new ones to the
+#    list below. ─────────────────────────────────────────────────────────────────
+foreach ($art in @('jensen-huang-returns-to-nvidia')) {
+	$a = [System.IO.File]::ReadAllText((Join-Path $src "$art.html"))
+	$a = $a.Replace('"assets/', '"' + $T + '/assets/')
+	$a = $a.Replace("'assets/", "'" + $T + '/assets/')
+	$a = $a.Replace('index.html#contact', '/contact/')
+	$a = $a.Replace('"contact.html"','"/contact/"')
+	$a = $a.Replace('index.html', '/')
+	$a = $a.Replace('"approach.html"','"/investment-philosophy-and-process/"')
+	$a = $a.Replace('"team.html"','"/people/"')
+	$a = $a.Replace('"insights.html"','"/insights/"')
+	$a = $a.Replace('"invest.html"','"/invest-with-us/"')
+	$a = $a.Replace('"fund.html"','"/ziller-global-fund/"')
+	$a = $a.Replace('"disclaimer.html', '"/disclaimer/')
+	$a = $a.Replace('<link rel="stylesheet" href="styles.css" />', '')
+	$a = $a -replace '<body class="([^"]+)">', '<body <?php body_class(''$1''); ?>>'
+	$a = $a.Replace('</head>', "<?php wp_head(); ?>`r`n</head>")
+	$a = $a.Replace('</body>', "<?php wp_footer(); ?>`r`n</body>")
+	$a = $a -replace '\s*<title>.*?</title>', ''
+	$a = $a -replace '\s*<meta name="description"[^>]*>', ''
+	[System.IO.File]::WriteAllText((Join-Path $theme "page-$art.php"), $a, $utf8)
+	# Same markup as a single-post template too (WP hierarchy: single-post-{slug}.php),
+	# so it can be published as a normal Post: listed on /insights/ with its
+	# featured image and category, while the page itself renders standalone.
+	[System.IO.File]::WriteAllText((Join-Path $theme "single-post-$art.php"), $a, $utf8)
+}
+
 # ── Fund page -> page-ziller-global-fund.php (serves the existing "Fund Information" page; old slug /ziller-global-fund/). Live
 #    figures render SERVER-SIDE into the design's own markup via the existing
 #    plugins: getPrice() (entry/exit, DB), the unitprices CSV (current NAV +
@@ -1017,6 +1049,12 @@ Copy-Item (Join-Path $src "founder-chart.js") (Join-Path $theme "founder-chart.j
 Copy-Item (Join-Path $src "assets") (Join-Path $theme "assets") -Recurse
 $essayImgDir = Join-Path $theme "assets\essays"
 if (Test-Path $essayImgDir) { Remove-Item $essayImgDir -Recurse -Force }
+# Standalone-article heroes stay in the theme: those pages are templates, not
+# Media Library posts, so their images must ship with the theme.
+foreach ($h in @('jensen-huang-hero.png')) {
+	New-Item -ItemType Directory -Force $essayImgDir | Out-Null
+	Copy-Item (Join-Path $src "assets\essays\$h") (Join-Path $essayImgDir $h)
+}
 # Drop the founder-panel scene VIDEOS (~45 MB): they are served from the Media
 # Library (see ziller_scene_video_map in functions.php), not the theme. The scene
 # STILLS stay — they are the video posters and the fallback for missing clips.
@@ -1072,7 +1110,8 @@ $errs = @()
 $expect = @('style.css','functions.php','header.php','footer.php','front-page.php','index.php','single.php',
             'page-investment-philosophy-and-process.php','page-people.php','page-invest-with-us.php',
             'page-ziller-global-fund.php','page-contact.php','page-insights.php',
-            'page-disclaimer.php','page-subscribe.php','page-quarterly-performance-update.php')
+            'page-disclaimer.php','page-subscribe.php','page-quarterly-performance-update.php',
+            'page-jensen-huang-returns-to-nvidia.php','single-post-jensen-huang-returns-to-nvidia.php')
 $z = [System.IO.Compression.ZipFile]::OpenRead($zip)
 try {
   $names = @($z.Entries | ForEach-Object { $_.FullName })
